@@ -1,6 +1,6 @@
 # Nextflow-RNAseq
 
-A bioinformatics analysis pipeline used for RNA sequencing data, written in the new nextflow DSL2 language syntax, leveraging nextflow modules.
+A bioinformatics analysis pipeline used for RNA sequencing data, written in the new nextflow DSL2 language syntax, leveraging nextflow modules.  
 Tested with Nextlfow version 19.09.o-edge (https://github.com/nextflow-io/nextflow)
 
 # Credits
