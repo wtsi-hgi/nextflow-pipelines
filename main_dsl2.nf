@@ -11,6 +11,7 @@ params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
 params.runtag = 'interval_basic' // used by mapsummary and multiqc
+params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 
 params.run_star = true
 def pick_aligner(String aligner) {
@@ -54,6 +55,8 @@ include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdi
 include salmon from './modules/salmon.nf' params(run: true, outdir: params.outdir)
 include merge_salmoncounts from './modules/merge_salmoncounts.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
+include tximport from './modules/tximport.nf' params(run: true, outdir: params.outdir,
+						    : params.runtag)
 include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
 include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
@@ -146,6 +149,7 @@ workflow {
 	    mapsummary.out.collect().ifEmpty([]),
 	    ch_multiqc_fc_aligner.collect().ifEmpty([]),
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-	    star_2pass_basic.out[2].collect().ifEmpty([]))
+	    star_2pass_basic.out[2].collect().ifEmpty([]),
+	    salmon.out[2].collect().ifEmpty([]))
     
 }
