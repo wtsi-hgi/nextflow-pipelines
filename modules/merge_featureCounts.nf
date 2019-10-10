@@ -7,6 +7,9 @@ process merge_featureCounts {
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     label 'merge_feature'
+    memory = '100G'
+    cpus 2
+    time '300m'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
 
