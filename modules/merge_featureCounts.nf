@@ -25,7 +25,7 @@ process merge_featureCounts {
     outputname = "${params.runtag}-${aligner}-fc-genecounts.txt"
     thesuffix  = suffix[aligner] ?: '.txt'
     '''
-    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
     python3 !{workflow.projectDir}/bin/merge_featurecounts.py        \\
       --rm-suffix !{thesuffix}                                       \\

@@ -3,14 +3,17 @@ params.runtag = 'runtag'
 
 process merge_salmoncounts {
     tag "${input_trans}/${input_genes}"
+    container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     time '120m'
 
     input:
-    file input_trans from ch_salmon_trans.map { it.toString() }.collectFile(name: 'trans.meta', newLine: true)
-    file input_genes from ch_salmon_genes.map { it.toString() }.collectFile(name: 'genes.meta', newLine: true)
+    file input_trans //from ch_salmon_trans.map { it.toString() }.collectFile(name: 'trans.meta', newLine: true)
+    file (all_quant_sf)
+    file input_genes //from ch_salmon_genes.map { it.toString() }.collectFile(name: 'genes.meta', newLine: true)
+    file (all_quant_genes_sf)
 
     when:
     params.run
@@ -24,6 +27,8 @@ process merge_salmoncounts {
     def outtranstpm   = "${params.runtag}-salmon-transtpm.txt"
     def outgenestpm   = "${params.runtag}-salmon-genetpm.txt"
     """
+    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
       -c -1 --skip-comments --header                                  \\
