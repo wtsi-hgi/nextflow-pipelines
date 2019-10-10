@@ -28,9 +28,17 @@ all(file.exists(files))
 # gene-level summarization 
 txi <- tximport(files, type = "salmon", tx2gene = tx2gene)
 head(txi$counts)
+write.csv(txi$counts, "txi_gene_counts.csv")
 
 # We can avoid gene-level summarization by setting txOut=TRUE,
 # giving the original transcript level estimates as a list of matrices.
 txi.tx <- tximport(files, type = "salmon", txOut = TRUE)
+write.csv(txi$counts, "txi_transcript_counts.csv")
+                                        #
+# count table from TPM 
+# accounts for transcript length changes across samples and library size differences.
+tx.salmon.scale <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene, 
+                            countsFromAbundance = "lengthScaledTPM")
+write.csv(txi$counts, "txi_lengthScaledTPM_gene_counts.csv")
 
 saveRDS(sce, file="./tximport.rds")
