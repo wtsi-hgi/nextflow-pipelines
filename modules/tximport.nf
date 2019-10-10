@@ -22,8 +22,9 @@ process tximport {
     // file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
 
     script:
+    def edb_lib= "EnsDb.Hsapiens.v91"
     """
-    Rscript $workflow.projectDir/bin/tximport.R
+    /usr/bin/Rscript --vanilla $workflow.projectDir/bin/tximport.R $edb_lib
     """
 
     // TODO: prepare columns for merging; extract correct column and transpose (paste) it.
