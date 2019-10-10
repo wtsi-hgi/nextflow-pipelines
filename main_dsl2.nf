@@ -35,9 +35,23 @@ Channel.fromPath(params.biotypes_header)
     .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
     .set { ch_biotypes_header }
 
+// params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
+params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index"
+Channel.fromPath(params.salmon_index)
+    .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
+    .set {ch_salmon_index}
+
+// params.salmon_trans_gene = params.genome ? params.genomes[ params.genome ].salmon_trans_gene ?: false : false
+params.salmon_trans_gene = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/trans_gene.txt"
+Channel.fromPath(params.salmon_trans_gene)
+    .ifEmpty { exit 1, "Salmon trans gene file not found: ${params.salmon_trans_gene}" }
+    .set {ch_salmon_trans_gene}
+
+
 include crams_to_fastq_gz from './modules/crams_to_fastq.nf' params(run:true, outdir: params.outdir,
 								    min_reads: params.min_reads)
 include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdir)
+include salmon from './modules/salmon.nf' params(run: true, outdir: params.outdir)
 include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
 include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
@@ -70,8 +84,10 @@ workflow {
     
     fastqc(crams_to_fastq_gz.out[0])
 
+    salmon(crams_to_fastq_gz.out[0], ch_salmon_index.collect(), ch_trans_gene.collect())
+
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
-    
+
     leafcutter_bam2junc(star_2pass_basic.out[0])
 
     leafcutter_bam2junc.out.set{leaf1} // duplication seem required for resume to work on clustering
