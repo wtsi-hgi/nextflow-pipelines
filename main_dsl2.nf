@@ -100,7 +100,7 @@ workflow {
 	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', newLine: true), salmon_out_0_2,
 	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', newLine: true), salmon_out_1_2)
 
-    tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.csv', newLine: true), salmon_out_0_2)
+    tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', newLine: true), salmon_out_0_2)
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
 
