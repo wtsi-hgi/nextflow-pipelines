@@ -3,8 +3,11 @@ params.run = true
 process samtools_index_idxstats {
     tag "${samplename}"
     container "nfcore-rnaseq"
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    memory = '8G'
+    cpus 1
+    time '300m'
+    errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
+    maxRetries 5
 
     when:
     params.run
