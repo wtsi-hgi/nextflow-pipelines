@@ -12,8 +12,8 @@ process featureCounts {
     memory = '15G'
     time '300m'
     cpus 1
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
+    maxRetries 5
     publishDir "${params.outdir}/featureCounts/", mode: 'symlink',
         saveAs: {filename ->
             if (filename.indexOf(".biotype_counts_mqc.txt") > 0) "biotype_counts/$filename"
