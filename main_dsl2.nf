@@ -86,6 +86,15 @@ workflow {
 
     salmon(crams_to_fastq_gz.out[0], ch_salmon_index.collect(), ch_trans_gene.collect())
 
+    salmon.out[0].set{salmon_out_0_1}
+    salmon.out[0].set{salmon_out_0_2}
+    salmon.out[1].set{salmon_out_1_1}
+    salmon.out[1].set{salmon_out_1_2}
+    
+    merge_salmoncounts(
+	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', newLine: true), salmon_out_0_1,
+	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', newLine: true), salmon_out_1_1)
+
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
 
     leafcutter_bam2junc(star_2pass_basic.out[0])
