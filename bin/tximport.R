@@ -2,21 +2,26 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)==0) {
-  stop("At least one argument must be supplied (input file).n", call.=FALSE)
-}
+  stop("At least one argument must be supplied", call.=FALSE)}
 
-library(ensembldb)
-library(args[1]) # EnsDb.Hsapiens.v91
-edb <- args[1] 
-organism(edb)
-
+library(AnnotationHub)
+queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+edb = queries[[1]]
+edb
 Tx <- transcripts(edb, return.type="DataFrame")
+head(Tx)
 tx2gene <- Tx[,c(1,7)]
+## tx_id         gene_id
+##           <character>     <character>
+##1      ENST00000387314 ENSG00000210049
 head(tx2gene)
 
-library(readr)
 library(tximport)
-files <- file.path(dir, "salmon", samples$run, "quant.sf.gz")
+library(magrittr)
+library(readr)
+files_df = read.csv(args[2], header = FALSE)
+files <- file.path(files_df[,1])
+
 names(files) <- paste0("sample", 1:6)
 all(file.exists(files))
 
