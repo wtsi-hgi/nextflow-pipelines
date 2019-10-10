@@ -14,7 +14,8 @@ process tximport {
     params.run
 
     input:
-    file (quant_sf_all) 
+    file (quantf_list_txt)
+    file (quant_sf_files)  // from collect()
 
     output:
     //file "${samplename}.quant.sf" // into ch_salmon_trans
@@ -22,9 +23,9 @@ process tximport {
     // file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
 
     script:
-    def edb_lib= "EnsDb.Hsapiens.v91"
+    def edb_lib = "Ensembl 91 EnsDb"
     """
-    /usr/bin/Rscript --vanilla $workflow.projectDir/bin/tximport.R $edb_lib
+    /usr/bin/Rscript --vanilla $workflow.projectDir/bin/tximport.R \"$edb_lib\" \"$quantf_list_txt\" 
     """
 
     // TODO: prepare columns for merging; extract correct column and transpose (paste) it.

@@ -3,7 +3,7 @@ params.run = true
 process 'leafcutter_clustering' {
     cache 'deep'
     container "leafcutter"
-    memory = '5G'
+    memory ='100G'
     cpus 1
     time '300m'
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
