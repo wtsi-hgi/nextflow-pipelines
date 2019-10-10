@@ -1,4 +1,5 @@
 params.run = true 
+
 process salmon {
     tag "salmon $samplename"
     memory = '10G'
