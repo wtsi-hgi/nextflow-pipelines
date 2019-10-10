@@ -3,7 +3,7 @@ params.run = true
 process 'leafcutter_bam2junc' {
     tag "${samplename}"
     container "leafcutter"
-    memory = '5G'
+    memory = '8G'
     cpus 1
     time '120m'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
