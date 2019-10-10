@@ -94,8 +94,8 @@ workflow {
     salmon.out[1].set{salmon_out_1_2}
     
     merge_salmoncounts(
-	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', newLine: true), salmon_out_0_1,
-	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', newLine: true), salmon_out_1_1)
+	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', newLine: true), salmon_out_0_2,
+	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', newLine: true), salmon_out_1_2)
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
 
