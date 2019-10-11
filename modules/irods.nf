@@ -33,8 +33,8 @@ paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to
 
 cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
 do
-   iget -K --retries 2 -f -v \${line} ${samplename}.cram
-   iget -K --retries 2 -f -v \${line}.crai ${samplename}.cram.crai
+   iget -K -f -v \${line} ${samplename}.cram
+   iget -K -f -v \${line}.crai ${samplename}.cram.crai
 done
    """
 }
