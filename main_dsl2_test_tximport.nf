@@ -89,9 +89,7 @@ workflow {
 	.take(2)
 	.set{crams_to_fastq_gz_out}
 	
-    fastqc(crams_to_fastq_gz_out)
-
-    salmon(crams_to_fastq_gz_out, ch_salmon_index.collect(), ch_trans_gene.collect())
+    salmon(crams_to_fastq_gz_out, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
 
     salmon.out[0].set{salmon_out_0_1}
     salmon.out[0].set{salmon_out_0_2}
