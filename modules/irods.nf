@@ -6,8 +6,8 @@ process 'iget' {
     time '120m'
     cpus 1
     maxForks 12
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
+    maxRetries 1
     // Singularity nfcore-rnaseq.img:~> fastqc --version
     // FastQC v0.11.8
     
