@@ -1,7 +1,7 @@
 params.run = true
 
 process 'iget' {
-    tag "iget $sample"
+    tag "iget $samplename"
     memory = '3G'
     time '120m'
     cpus 1
@@ -19,7 +19,7 @@ process 'iget' {
     params.run 
 
     input:
-    set val(study_id), val(sample)
+    set val(samplename), val(sample), val(study_id)
     
   output:
     set file "*.cram", file "*.crai"
@@ -28,12 +28,12 @@ process 'iget' {
     """
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}'` > collection.txt
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}'` > dataObj.txt
-paste -d '\/' collection.txt dataObj.txt > ${sample}.${studyid}.to_iget.txt
+paste -d '\/' collection.txt dataObj.txt > ${samplename}.${sample}.${studyid}.to_iget.txt
 
-cat ${sample}.${studyid}.to_iget.txt | while read line
+cat ${samplename}.${sample}.${studyid}.to_iget.txt | while read line
 do
-   iget -K --retries 2 -f -v \${line} ${sample}.cram
-   iget -K --retries 2 -f -v \${line}.crai ${sample}.cram.crai
+   iget -K --retries 2 -f -v \${line} ${samplename}.cram
+   iget -K --retries 2 -f -v \${line}.crai ${samplename}.cram.crai
 done
    """
 }
