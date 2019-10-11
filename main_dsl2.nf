@@ -56,7 +56,7 @@ include salmon from './modules/salmon.nf' params(run: true, outdir: params.outdi
 include merge_salmoncounts from './modules/merge_salmoncounts.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
 include tximport from './modules/tximport.nf' params(run: true, outdir: params.outdir,
-						    : params.runtag)
+						 ensembl_lib: params.ensembl_lib)
 include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
 include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
