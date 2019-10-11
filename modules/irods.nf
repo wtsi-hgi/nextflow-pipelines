@@ -5,6 +5,7 @@ process 'iget' {
     memory = '3G'
     time '120m'
     cpus 1
+    maxForks 12
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     // Singularity nfcore-rnaseq.img:~> fastqc --version
