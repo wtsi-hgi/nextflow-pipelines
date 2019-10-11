@@ -78,27 +78,17 @@ include multiqc from './modules/multiqc.nf' params(run: true, outdir: params.out
 						   runtag : params.runtag)
 include lostcause from './modules/lostcause.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
+include iget from './modules/irods.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
-    Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/fastq12.csv')
+    Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv')
 	.splitCsv(header: true)
-	.map { row -> tuple("${row.fastq_path}", "${row.ID}", "${row.ID_12}") }
-	.map { a,b,c -> [b.toString(), file(a)] }
-	.groupTuple()
+	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
 	.take(2)
-	.set{crams_to_fastq_gz_out}
+	.set{ch_to_iget}
+
+    ch_to_iget.view()
 	
-    salmon(crams_to_fastq_gz_out, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
-
-    salmon.out[0].set{salmon_out_0_1}
-    salmon.out[0].set{salmon_out_0_2}
-    salmon.out[1].set{salmon_out_1_1}
-    salmon.out[1].set{salmon_out_1_2}
-    
-    merge_salmoncounts(
-	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', newLine: true), salmon_out_0_2,
-	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', newLine: true), salmon_out_1_2)
-
-    tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', newLine: true), salmon_out_0_2)
+    iget(ch_to_iget)
 }
