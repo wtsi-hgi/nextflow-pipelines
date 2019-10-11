@@ -6,6 +6,7 @@ process tximport {
     memory = '80G'
     container "singularity-rstudio-seurat-tximport"
     time '400m'
+    cpus 1
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
