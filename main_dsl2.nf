@@ -37,7 +37,7 @@ Channel.fromPath(params.biotypes_header)
     .set { ch_biotypes_header }
 
 // params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
-params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index"
+params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/salmon"
 Channel.fromPath(params.salmon_index)
     .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
     .set {ch_salmon_index}
