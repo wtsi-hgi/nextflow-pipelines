@@ -6,6 +6,9 @@ process mapsummary {
     publishDir "${params.outdir}/mapsummary/", mode: 'symlink'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
+    memory = '8G'
+    cpus 1
+    time '300m'
 
     input:
     set val(samplename), file(thestats) // from ch_mapsummary

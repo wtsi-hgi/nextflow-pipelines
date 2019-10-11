@@ -5,8 +5,8 @@ process 'leafcutter_bam2junc' {
     container "leafcutter"
     memory = '8G'
     cpus 1
-    time '120m'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    time '180m'
+    errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     
     publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'symlink', pattern: "*.junc"
