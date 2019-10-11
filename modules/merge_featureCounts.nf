@@ -9,7 +9,7 @@ process merge_featureCounts {
     label 'merge_feature'
     memory = '100G'
     cpus 2
-    time '300m'
+    time '1400m'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
 
