@@ -37,7 +37,7 @@ process salmon {
         -o . \\
         -1 ${reads[0]} \\
         -2 ${reads[1]} \\
-        -g ${salmon_trans_gene_txt} \\ 
+        -g ${salmon_trans_gene_txt} \\
         --useVBOpt \\
         --numBootstraps 100
     mv quant.sf ${samplename}.quant.sf
