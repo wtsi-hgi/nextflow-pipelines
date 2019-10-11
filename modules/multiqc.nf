@@ -5,6 +5,9 @@ process multiqc {
     container "nfcore-rnaseq"
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
+    memory = '10G'
+    cpus 2
+    time '300m'
 
     publishDir "${params.outdir}", mode: 'copy',
       saveAs: {filename ->

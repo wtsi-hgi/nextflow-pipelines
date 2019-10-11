@@ -4,8 +4,8 @@ process 'leafcutter_clustering' {
     cache 'deep'
     container "leafcutter"
     memory ='100G'
-    cpus 1
-    time '300m'
+    cpus 4
+    time '1300m'
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
     
