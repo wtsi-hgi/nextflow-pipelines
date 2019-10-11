@@ -38,6 +38,3 @@ do
 done
    """
 }
-
-//iget -K --retries 2 -f -v \$c ${sample}.cram
-//iget -K --retries 2 -f -v \$c.crai ${sample}.cram.crai
