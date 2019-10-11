@@ -49,36 +49,36 @@ Channel.fromPath(params.salmon_trans_gene)
     .set {ch_salmon_trans_gene}
 
 
-include crams_to_fastq_gz from './modules/crams_to_fastq.nf' params(run:true, outdir: params.outdir,
+include crams_to_fastq_gz from '../modules/crams_to_fastq.nf' params(run:true, outdir: params.outdir,
 								    min_reads: params.min_reads)
-include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdir)
-include salmon from './modules/salmon.nf' params(run: true, outdir: params.outdir)
-include merge_salmoncounts from './modules/merge_salmoncounts.nf' params(run: true, outdir: params.outdir,
+include fastqc from '../modules/fastqc.nf' params(run: true, outdir: params.outdir)
+include salmon from '../modules/salmon.nf' params(run: true, outdir: params.outdir)
+include merge_salmoncounts from '../modules/merge_salmoncounts.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
-include tximport from './modules/tximport.nf' params(run: true, outdir: params.outdir,
+include tximport from '../modules/tximport.nf' params(run: true, outdir: params.outdir,
 						 ensembl_lib: params.ensembl_lib)
 
-include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
-include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
+include star_2pass_basic from '../modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
+include filter_star_aln_rate from '../modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
-include leafcutter_bam2junc from './modules/leafcutter_bam2junc.nf' params(run: true, outdir: params.outdir)
-include leafcutter_clustering from './modules/leafcutter_clustering.nf' params(run: true, outdir: params.outdir)
-include featureCounts from './modules/featurecounts.nf' params(run: true,outdir: params.outdir,
+include leafcutter_bam2junc from '../modules/leafcutter_bam2junc.nf' params(run: true, outdir: params.outdir)
+include leafcutter_clustering from '../modules/leafcutter_clustering.nf' params(run: true, outdir: params.outdir)
+include featureCounts from '../modules/featurecounts.nf' params(run: true,outdir: params.outdir,
 							       fcextra: params.fcextra,
 							       singleend: params.singleend, 
 							       forward_stranded: params.forward_stranded,
 							       reverse_stranded: params.reverse_stranded,
 							       unstranded: params.unstranded)
-include samtools_index_idxstats from './modules/samtools_index_idxstats.nf' params(run: true, outdir: params.outdir)
-include mapsummary from './modules/mapsummary.nf' params(run: true, outdir: params.outdir,
+include samtools_index_idxstats from '../modules/samtools_index_idxstats.nf' params(run: true, outdir: params.outdir)
+include mapsummary from '../modules/mapsummary.nf' params(run: true, outdir: params.outdir,
 							 mito_name: params.mito_name)
-include merge_featureCounts from './modules/merge_featureCounts.nf' params(run: true, outdir: params.outdir,
+include merge_featureCounts from '../modules/merge_featureCounts.nf' params(run: true, outdir: params.outdir,
 									   runtag : params.runtag)
-include multiqc from './modules/multiqc.nf' params(run: true, outdir: params.outdir,
+include multiqc from '../modules/multiqc.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
-include lostcause from './modules/lostcause.nf' params(run: true, outdir: params.outdir,
+include lostcause from '../modules/lostcause.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
-include iget from './modules/irods.nf' params(run: true, outdir: params.outdir)
+include iget from '../modules/irods.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
