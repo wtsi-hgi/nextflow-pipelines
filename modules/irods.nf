@@ -8,12 +8,6 @@ process 'iget' {
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
-    // Singularity nfcore-rnaseq.img:~> fastqc --version
-    // FastQC v0.11.8
-    
-    // singularity pull --name nfcore-rnaseq.img docker://nfcore/rnaseq
-    // have fastqc version FastQC v0.11.8, was pulled Thursday May 16th 2019
-    // publishDir "${params.outdir}/STAR_2pass_bams/${samplename}/", mode: 'copy'
     publishDir "${params.outdir}/iget/", mode: 'symlink'
 
     when:
