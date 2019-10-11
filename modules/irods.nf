@@ -23,7 +23,7 @@ process 'iget' {
     set val(samplename), val(sample), val(study_id)
     
   output:
-    set file("*.cram"), file ("*.crai") optional true
+    set val(samplename), file("*.cram"), file ("*.crai") optional true
 
   script:
     """
