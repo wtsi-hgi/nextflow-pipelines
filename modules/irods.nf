@@ -9,7 +9,6 @@ process 'iget' {
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
     publishDir "${params.outdir}/iget/", mode: 'symlink'
-    publishDir "${params.outdir}/iget_move/", mode: 'move'
 
     when:
     params.run 
@@ -26,10 +25,12 @@ imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
 paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to_iget.txt
 
+num = 1
 cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
 do
-   iget -K -f -v \${line} ${samplename}.cram
-   iget -K -f -v \${line}.crai ${samplename}.cram.crai
+   iget -K -f -v \${line} ${samplename}.\${num}cram
+   iget -K -f -v \${line}.crai ${samplename}.\${num}.cram.crai
+   num++
 done
    """
 }
