@@ -82,7 +82,8 @@ include iget from '../modules/irods.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
-    Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv')
+    //Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv')
+    Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
 	.take(2)
