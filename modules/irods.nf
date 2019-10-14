@@ -37,7 +37,7 @@ do
         iget -K -f -v \${line} ${samplename}.cram
         iget -K -f -v \${line}.crai ${samplename}.cram.crai
     fi
-   num++
+    ((num++))
 done
    """
 }
