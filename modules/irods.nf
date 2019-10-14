@@ -8,7 +8,8 @@ process 'iget' {
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
-    publishDir "${params.outdir}/iget/", mode: 'move'
+    publishDir "${params.outdir}/iget/", mode: 'symlink'
+    publishDir "${params.outdir}/iget_move/", mode: 'move'
 
     when:
     params.run 
