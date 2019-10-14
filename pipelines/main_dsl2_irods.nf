@@ -88,7 +88,5 @@ workflow {
 	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
 	.set{ch_to_iget}
 
-    ch_to_iget.view()
-	
     iget(ch_to_iget)
 }
