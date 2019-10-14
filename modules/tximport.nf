@@ -2,9 +2,10 @@ params.run = true
 params.ensembl_lib = "Ensembl 91 EnsDb"
 
 process tximport {
-    tag "tximport $samplename"
+    tag "tximport $params.ensembl_lib"
     memory = '80G'
     container "singularity-rstudio-seurat-tximport"
+    containerOptions = "--bind /tmp"
     time '400m'
     cpus 1
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
