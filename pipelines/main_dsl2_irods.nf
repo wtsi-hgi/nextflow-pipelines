@@ -86,7 +86,6 @@ workflow {
     Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
-	.take(2)
 	.set{ch_to_iget}
 
     ch_to_iget.view()
