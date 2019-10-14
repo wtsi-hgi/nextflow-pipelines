@@ -25,7 +25,8 @@ imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
 paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to_iget.txt
 
-num = 1
+sort -o ${samplename}.${sample}.${study_id}.to_iget.txt ${samplename}.${sample}.${study_id}.to_iget.txt
+num=1
 cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
 do
    iget -K -f -v \${line} ${samplename}.\${num}cram
