@@ -97,9 +97,8 @@ workflow {
 	enable: true,
 	mode: 'copy', overwrite: true,
 	saveAs: { filename ->
-        if (filename ==~ /.*\_1.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R1_001.fastq.gz")
+        if      (filename ==~ /.*\_1.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R1_001.fastq.gz")
         else if (filename ==~ /.*\_2.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R2_001.fastq.gz")
-        else if filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S888_L001_R1_001.fastq.gz")
-	else null
+        else filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S888_L001_R1_001.fastq.gz")
     }
 }
