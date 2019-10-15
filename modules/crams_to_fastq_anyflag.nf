@@ -45,6 +45,7 @@ process crams_to_fastq_gz {
 
     f1=${samplename}_1.fastq.gz
     f2=${samplename}_2.fastq.gz
+    f0=${samplename}.fastq.gz
 
     numreads=\$(samtools view -c -F 0x900 $cramfile)
     if (( numreads >= ${params.min_reads} )); then
@@ -60,10 +61,10 @@ process crams_to_fastq_gz {
           -N              \\
           -F 0x900        \\
           -@ ${task.cpus} \\
-          -1 \$f1 -2 \$f2 \\
+          -1 \$f1 -2 \$f2  -0 \$f0 \\
           -
-      sync \$f1 \$f2          # this line and next to tackle k8s weirdness (see k8s)
-      sleep 1
+      sleep 2
+      find . -name \"*.fastq.gz\" -type 'f' -size -160k -delete
     else
       echo -e "${samplename}\\tcram\\tlowreads" > ${samplename}.lostcause.txt
     fi
