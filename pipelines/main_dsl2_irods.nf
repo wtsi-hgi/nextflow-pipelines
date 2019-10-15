@@ -92,5 +92,5 @@ workflow {
 
     iget.out.take(2).view()
 
-    crams_to_fastq_gz(iget.out.map{[samplename,crams,crais] -> [samplename, crams]})
+    crams_to_fastq_gz(iget.out.map{samplename,crams,crais -> [samplename, crams]})
 }
