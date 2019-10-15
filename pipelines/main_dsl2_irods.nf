@@ -49,7 +49,7 @@ Channel.fromPath(params.salmon_trans_gene)
     .set {ch_salmon_trans_gene}
 
 
-include crams_to_fastq_gz from '../modules/crams_to_fastq.nf' params(run:true, outdir: params.outdir,
+include crams_to_fastq_gz from '../modules/crams_to_fastq_anyflag.nf' params(run:true, outdir: params.outdir,
 								    min_reads: params.min_reads)
 include fastqc from '../modules/fastqc.nf' params(run: true, outdir: params.outdir)
 include salmon from '../modules/salmon.nf' params(run: true, outdir: params.outdir)
@@ -90,7 +90,7 @@ workflow {
 
     iget(ch_to_iget)
 
-    iget.out.take(2).view()
+    // iget.out.take(2).view()
 
     crams_to_fastq_gz(iget.out.map{samplename,crams,crais -> [samplename, crams]})
 }
