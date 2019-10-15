@@ -95,11 +95,6 @@ workflow {
     crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
     publish:
     fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_15oct/',
-	enable: true,
-	mode: 'copy', overwrite: true,
-	saveAs: { filename ->
-        if      (filename ==~ /.*\_1.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R1_001.fastq.gz")
-        else if (filename ==~ /.*\_2.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R2_001.fastq.gz")
-        else filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S888_L001_R1_001.fastq.gz")
+	enable: false, mode: 'copy', overwrite: true
     }
 }
