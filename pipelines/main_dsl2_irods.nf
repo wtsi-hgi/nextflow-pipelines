@@ -89,8 +89,16 @@ workflow {
 	.set{ch_to_iget}
 
     iget(ch_to_iget)
-
-    // iget.out.take(2).view()
-
+    
     crams_to_fastq_gz(iget.out.map{samplename,crams,crais -> [samplename, crams]})
+    
+    publish:
+    crams_to_fastq_gz[0].map{a,b -> b} to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_15oct/',
+	mode: 'copy',
+	saveAs: { filename ->
+        if (filename ==~ /.*\_1.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R1_001.fastq.gz")
+        else if (filename ==~ /.*\_2.fastq\.gz/) filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S999_L001_R2_001.fastq.gz")
+        else if filename.toString().replaceAll(~/(.*).fastq.gz/, "\$1_S888_L001_R1_001.fastq.gz")
+	else null
+    }
 }
