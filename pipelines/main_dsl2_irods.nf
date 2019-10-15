@@ -92,8 +92,9 @@ workflow {
     
     crams_to_fastq_gz(iget.out.map{samplename,crams,crais -> [samplename, crams]})
     
+    crams_to_fastq_gz[0].map{a,b -> b}.set{fastq_to_publish}
     publish:
-    crams_to_fastq_gz[0].map{a,b -> b} to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_15oct/',
+    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_15oct/',
 	enable: true,
 	mode: 'copy', overwrite: true,
 	saveAs: { filename ->
