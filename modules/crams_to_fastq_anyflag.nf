@@ -27,7 +27,7 @@ process crams_to_fastq_gz {
     input: 
         set val(samplename), file(crams) 
     output: 
-        set val(samplename), file("${samplename}_?.fastq.gz") optional true 
+        set val(samplename), file("*.fastq.gz")
         file('*.lostcause.txt') optional true 
         file('numreads.txt') optional true 
     script:
