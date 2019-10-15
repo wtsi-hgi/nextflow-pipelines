@@ -89,4 +89,6 @@ workflow {
 	.set{ch_to_iget}
 
     iget(ch_to_iget)
+
+    iget.out.view()
 }
