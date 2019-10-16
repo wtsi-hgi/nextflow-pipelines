@@ -24,7 +24,7 @@ process merge_featureCounts {
 
     shell:
     suffix=['star':'.star.gene.fc.txt', 'hisat2':'.hisat2.gene.fc.txt']
-    aligner = metafile.baseName   // not strictly necessary
+    aligner = "star"  // not strictly necessary
     outputname = "${params.runtag}-${aligner}-fc-genecounts.txt"
     thesuffix  = suffix[aligner] ?: '.txt'
     '''
