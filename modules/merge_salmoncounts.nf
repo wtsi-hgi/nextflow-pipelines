@@ -37,18 +37,21 @@ process merge_salmoncounts {
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
       -c -1 --skip-comments --header                                  \\
-      -o $outgenescount -I $input_genes
+      -o $outgenescount -I fofn_quant_genes_sf_salmon.txt
+
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.sf                                           \\
       -c -1 --skip-comments --header                                  \\
-      -o $outtranscount -I $input_trans
+      -o $outtranscount -I fofn_quant_sf_salmon.txt
+
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
       -c -2 --skip-comments --header                                  \\
-      -o $outgenestpm -I $input_genes
+      -o $outgenestpm -I fofn_quant_genes_sf_salmon.txt
+
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.sf                                           \\
       -c -2 --skip-comments --header                                  \\
-      -o $outtranstpm -I $input_trans
+      -o $outtranstpm -I fofn_quant_sf_salmon.txt
     """
 }
