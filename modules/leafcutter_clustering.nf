@@ -15,8 +15,8 @@ process 'leafcutter_clustering' {
     // publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'copy', pattern: "*.bam.bed"
 
     input:
-    file (juncfiles_txt) //from ch_juncfiles
     file (junc_files) //from star_bam2junc.collect()
+    file("fofn_junctions_files.txt")
 
     when:
     params.run
@@ -29,7 +29,8 @@ process 'leafcutter_clustering' {
   """
   export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:\$PATH
 
-  leafcutter_cluster.py -j ${juncfiles_txt} -m 50 -o clust -l 500000
+  ls . | grep .junc\$ > fofn_junctions_files.txt
+  leafcutter_cluster.py -j fofn_junctions_files.txt -m 50 -o clust -l 500000
   """
 }
 

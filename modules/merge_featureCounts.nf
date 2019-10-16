@@ -30,7 +30,7 @@ process merge_featureCounts {
     '''
     export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
 
-    ls . | grep gene.fc.txt > fofn_gene_featurecount.txt
+    ls . | grep gene.fc.txt\$ > fofn_gene_featurecount.txt
 
     python3 !{workflow.projectDir}/bin/merge_featurecounts.py        \\
       --rm-suffix !{thesuffix}                                       \\
