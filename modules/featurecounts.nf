@@ -16,9 +16,11 @@ process featureCounts {
     maxRetries 5
     publishDir "${params.outdir}/featureCounts/", mode: 'symlink',
         saveAs: {filename ->
-            if (filename.indexOf(".biotype_counts_mqc.txt") > 0) "biotype_counts/$filename"
-            else if (filename.indexOf(".gene.featureCounts.txt.summary") > 0) "gene_count_summaries/$filename"
-            else if (filename.indexOf(".gene.featureCounts.txt") > 0) "gene_counts/$filename"
+            if (filename.indexOf(".biotype_counts_mqc.txt") > 0) "biotype_counts_mqc/$filename"
+            else if (filename.indexOf(".biotype.fc.txt") > 0) "biotype_counts/$filename"
+            else if (filename.indexOf(".biotype.fc.txt.summary") > 0) "biotype_counts_summaries/$filename"
+            else if (filename.indexOf(".gene.fc.txt.summary") > 0) "gene_count_summaries/$filename"
+            else if (filename.indexOf(".gene.fc.txt") > 0) "gene_counts/$filename"
             else "$filename"
         }
 
