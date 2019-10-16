@@ -20,7 +20,7 @@ process merge_featureCounts {
 
     output:
     file '*-fc-genecounts.txt'
-    file("fofn.gene.fc.txt")
+    file("fofn_gene_featurecount.txt")
 
     shell:
     suffix=['star':'.star.gene.fc.txt', 'hisat2':'.hisat2.gene.fc.txt']
@@ -30,11 +30,11 @@ process merge_featureCounts {
     '''
     export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
 
-    ls . | grep gene.fc.txt > fofn.gene.fc.txt
+    ls . | grep gene.fc.txt > fofn_gene_featurecount.txt
 
     python3 !{workflow.projectDir}/bin/merge_featurecounts.py        \\
       --rm-suffix !{thesuffix}                                       \\
       -c 1 --skip-comments --header                                  \\
-      -o !{outputname} -I fofn.gene.fc.txt
+      -o !{outputname} -I fofn_gene_featurecount.txt
     '''
 }
