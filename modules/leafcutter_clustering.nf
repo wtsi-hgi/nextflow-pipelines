@@ -16,13 +16,13 @@ process 'leafcutter_clustering' {
 
     input:
     file (junc_files) //from star_bam2junc.collect()
-    file("fofn_junctions_files.txt")
 
     when:
     params.run
     
   output:
     set file('clust_perind.counts.gz'), file('clust_perind_numers.counts.gz'), file('clust_pooled'),file('clust_refined'),file('clust_sortedlibs'), file('*.junc.clust.sorted.gz') //into star_clustering
+    file("fofn_junctions_files.txt")
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
 
     script:
