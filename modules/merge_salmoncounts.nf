@@ -7,12 +7,12 @@ process merge_salmoncounts {
     publishDir "${params.outdir}/combined", mode: 'symlink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
-    time '120m'
+    // memory = '10G'
+    memory = {  20.GB + 20.GB * (task.attempt-1) }
+    time '400m'
 
     input:
-    file input_trans //from ch_salmon_trans.map { it.toString() }.collectFile(name: 'trans.meta', newLine: true)
     file (all_quant_sf)
-    file input_genes //from ch_salmon_genes.map { it.toString() }.collectFile(name: 'genes.meta', newLine: true)
     file (all_quant_genes_sf)
 
     when:
@@ -20,7 +20,9 @@ process merge_salmoncounts {
 
     output:
     set file('*counts.txt'), file('*tpm.txt')
-
+    file("fofn_quant_sf_salmon.txt")
+    file("fofn_quant_genes_sf_salmon.txt")
+    
     script:
     def outtranscount = "${params.runtag}-salmon-transcounts.txt"
     def outgenescount = "${params.runtag}-salmon-genecounts.txt"
@@ -28,6 +30,9 @@ process merge_salmoncounts {
     def outgenestpm   = "${params.runtag}-salmon-genetpm.txt"
     """
     export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+
+    ls . | grep *.quant.sf > fofn_quant_sf_salmon.txt
+    ls . | grep *.quant.genes.sf > fofn_quant_genes_sf_salmon.txt
 
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
