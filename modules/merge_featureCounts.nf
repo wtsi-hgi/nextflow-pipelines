@@ -2,7 +2,6 @@ params.run = true
 params.runtag = 'runtag'
 
 process merge_featureCounts {
-    cache 'deep'
     tag "$aligner"
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
@@ -17,10 +16,11 @@ process merge_featureCounts {
     params.run
 
     input:
-    file metafile //from ch_merge_fc_byaligner
+    file(collected_fc_gene_txt)
 
     output:
     file '*-fc-genecounts.txt'
+    file("fofn.gene.fc.txt")
 
     shell:
     suffix=['star':'.star.gene.fc.txt', 'hisat2':'.hisat2.gene.fc.txt']
@@ -28,11 +28,13 @@ process merge_featureCounts {
     outputname = "${params.runtag}-${aligner}-fc-genecounts.txt"
     thesuffix  = suffix[aligner] ?: '.txt'
     '''
-    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+
+    ls . | grep gene.fc.txt > fofn.gene.fc.txt
 
     python3 !{workflow.projectDir}/bin/merge_featurecounts.py        \\
       --rm-suffix !{thesuffix}                                       \\
       -c 1 --skip-comments --header                                  \\
-      -o !{outputname} -I !{metafile}
+      -o !{outputname} -I fofn.gene.fc.txt
     '''
 }

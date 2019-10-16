@@ -128,17 +128,17 @@ workflow {
     
     featureCounts(star_2pass_basic_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
 
-    merge_featureCounts(featureCounts.out[0]
-		       .transpose()
-			.groupTuple(sort: true)
-			.map{ aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] }
-			.collectFile(sort:true) ) 
+    merge_featureCounts(featureCounts.out[0].collect())
 			//.collectFile(sort:true) { aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] })
+		       // .transpose()
+		//	.groupTuple(sort: true)
+		//	.map{ aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] }
+		//	.collectFile(sort:true) ) 
 
     crams_to_fastq_gz.out[1]
 	.mix(star_2pass_basic_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
 	.set{ch_lostcause }
-    lostcause(ch_lostcause.collectFile{ ['lostcause.txt', it.text]})
+    lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
 
     featureCounts.out[1]
 	.filter{ pick_aligner(it[0]) }
