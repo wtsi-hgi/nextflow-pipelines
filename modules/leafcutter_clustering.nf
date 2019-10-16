@@ -12,7 +12,7 @@ process 'leafcutter_clustering' {
     publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "*.junc.clust.sorted.gz"
     publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "clust_*"
     publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "juncfiles.txt"
-    // publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'copy', pattern: "*.bam.bed"
+    publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "fofn_junctions_files.txt"
 
     input:
     file (junc_files) //from star_bam2junc.collect()
