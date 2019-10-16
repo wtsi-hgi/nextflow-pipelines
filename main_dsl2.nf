@@ -93,14 +93,7 @@ workflow {
 
     salmon(crams_to_fastq_gz.out[0], ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
 
-    salmon.out[0].set{salmon_out_0_1}
-    salmon.out[0].set{salmon_out_0_2}
-    salmon.out[1].set{salmon_out_1_1}
-    salmon.out[1].set{salmon_out_1_2}
-    
-    merge_salmoncounts(
-	salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'trans.meta', sort:true, newLine: true), salmon_out_0_2,
-	salmon_out_1_1.map{it -> it.getName()}.collectFile(name: 'genes.meta', sort:true, newLine: true), salmon_out_1_2)
+    merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
     tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
 
