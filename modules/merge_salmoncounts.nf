@@ -31,8 +31,8 @@ process merge_salmoncounts {
     """
     export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
-    ls . | grep *.quant.sf > fofn_quant_sf_salmon.txt
-    ls . | grep *.quant.genes.sf > fofn_quant_genes_sf_salmon.txt
+    ls . | grep .quant.sf\$ > fofn_quant_sf_salmon.txt
+    ls . | grep .quant.genes.sf\$ > fofn_quant_genes_sf_salmon.txt
 
     python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
