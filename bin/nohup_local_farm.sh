@@ -7,5 +7,3 @@ export CONDA_ENVS_DIRS=/lustre/scratch115/realdata/mdt2/projects/bioaid/mercury_
 export CONDA_PKGS_DIRS=/lustre/scratch115/realdata/mdt2/projects/bioaid/mercury_gn5/bioaid/.conda
 export PATH=/software/singularity-v3.2.0/bin:$PATH
 rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./bin/nextflow.sh > nohup.log 2>&1 &
-
-# rm -f nohup.log && rm -f nohup.out && nohup bash gn5_scripts/qc_and_plots.sh > nohup.log 2>&1 &
