@@ -94,7 +94,6 @@ workflow {
     
     crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
     publish:
-    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_15oct/',
-	enabled: false, mode: 'copy', overwrite: true
+    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_17oct/',
+	enabled: true, mode: 'copy', overwrite: true
     }
-}
