@@ -5,7 +5,7 @@ process salmon {
     //memory = '10G'
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     container "salmon"
-    time '400m'
+    time '800m'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     
