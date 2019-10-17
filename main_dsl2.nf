@@ -96,7 +96,6 @@ workflow {
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
     tximport(salmon.out[0].collect())
-    // tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
 
@@ -146,6 +145,7 @@ workflow {
 	    salmon.out[2].collect().ifEmpty([]))
     
 }
+    // tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
 
 			//.collectFile(sort:true) { aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] })
 		       // .transpose()
