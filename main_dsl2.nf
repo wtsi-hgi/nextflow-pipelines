@@ -95,7 +95,8 @@ workflow {
 
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
-    tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
+    tximport(salmon.out[0].collect())
+    // tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
 
@@ -120,11 +121,6 @@ workflow {
     featureCounts(star_2pass_basic_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
 
     merge_featureCounts(featureCounts.out[0].collect())
-			//.collectFile(sort:true) { aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] })
-		       // .transpose()
-		//	.groupTuple(sort: true)
-		//	.map{ aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] }
-		//	.collectFile(sort:true) ) 
 
     crams_to_fastq_gz.out[1]
 	.mix(star_2pass_basic_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
@@ -150,3 +146,9 @@ workflow {
 	    salmon.out[2].collect().ifEmpty([]))
     
 }
+
+			//.collectFile(sort:true) { aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] })
+		       // .transpose()
+		//	.groupTuple(sort: true)
+		//	.map{ aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] }
+		//	.collectFile(sort:true) ) 
