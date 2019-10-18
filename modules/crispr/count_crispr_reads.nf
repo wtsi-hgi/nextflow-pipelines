@@ -2,7 +2,7 @@ params.run = true
 params.runtag = 'runtag'
 params.read2 = 'discard'
 
-process read_counts {
+process counts_crispr_reads {
     tag "read_counts $samplename"
     // container "nfcore-rnaseq"
     publishDir "${params.outdir}/read_counts", mode: 'symlink'
@@ -16,7 +16,8 @@ process read_counts {
     params.run
 
     input:
-    set val(samplename), file(fastqs)
+    set val(samplename), file(fastsq)
+    file(library)
 
     output:
     file("${samplename}.counts.txt")
