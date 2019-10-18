@@ -13,7 +13,7 @@ edb = queries[[1]]
 edb
 Tx <- transcripts(edb, return.type="DataFrame")
 head(Tx)
-tx2gene <- Tx[,c(1,7)]
+tx2gene <- Tx[,c(9,7)]
 ## tx_id         gene_id
 ##           <character>     <character>
 ##1      ENST00000387314 ENSG00000210049
