@@ -16,8 +16,9 @@ process counts_crispr_reads {
     params.run
 
     input:
-    set val(samplename), file(fastsq)
-    file(library)
+    set val(samplename), file(fastq_files)
+    val(library) 
+    file(library_files)
 
     output:
     file("${samplename}.counts.txt")
