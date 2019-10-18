@@ -5,6 +5,9 @@ if (length(args)==0) {
   stop("At least one argument must be supplied", call.=FALSE)}
 
 library(AnnotationHub)
+library(tximport)
+library(magrittr)
+library(readr)
 queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
 edb = queries[[1]]
 edb
@@ -16,9 +19,6 @@ tx2gene <- Tx[,c(1,7)]
 ##1      ENST00000387314 ENSG00000210049
 head(tx2gene)
 
-library(tximport)
-library(magrittr)
-library(readr)
 files_df = read.csv(args[2], header = FALSE)
 files <- file.path(files_df[,1])
 
