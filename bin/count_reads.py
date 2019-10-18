@@ -2,6 +2,37 @@ import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
 
+guide = pd.read_csv(sys.argv[1], sep='\t')
+getSeq = lambda x: x[1:] if len(x) == 20 else x
+guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
+# guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
+
+fastq_file = [x for x in os.listdir() if re.search('fastq$',x)][0]
+if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
+else: f = open(fastq_file,'rt')
+
+count = 0
+total, mapped = 0, 0
+for record in SeqIO.parse(f, 'fastq'):
+    if includeG: seq = str(record.seq)[1:20]
+    else: seq = str(record.seq)[:19]
+    if seq in guide_counts:
+        guide_counts[seq] += 1
+        mapped += 1
+    else: 
+        count += 1
+        #if count > 1000 and count < 1100:
+        #    print(record.seq)
+    total += 1
+f.close()
+
+
+
+
+
+
+
+
 
 if len(sys.argv) not in [4,5,6]:
     print('Usage: count_reads.py gzfile library(pilot/main3/main5/test/June) outfile <(opt)plasmid_only> <(opt)includeG>')
