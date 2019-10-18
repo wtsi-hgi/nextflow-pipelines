@@ -8,7 +8,7 @@ process merge_salmoncounts {
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     // memory = '10G'
-    memory = {  20.GB + 20.GB * (task.attempt-1) }
+    memory = {  80.GB + 20.GB * (task.attempt-1) }
     time '400m'
 
     input:
