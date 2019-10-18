@@ -21,6 +21,10 @@ process tximport {
 
     output:
     file("fofn_quantfiles.txt")
+    file("txi_gene_counts.csv")
+    file("txi_transcript_counts.csv")
+    file("txi_lengthScaledTPM_gene_counts.csv")
+    file("tximport.rdata")
     //file "${samplename}.quant.sf" // into ch_salmon_trans
     //file "${samplename}.quant.genes.sf" //into ch_salmon_genes
     // file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
