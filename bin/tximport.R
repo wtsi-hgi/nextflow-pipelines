@@ -22,7 +22,7 @@ head(tx2gene)
 files_df = read.csv(args[2], header = FALSE)
 files <- file.path(files_df[,1])
 
-names(files) <- paste0("sample", 1:6)
+names(files) <- as.character(files)
 all(file.exists(files))
 
 # gene-level summarization 
