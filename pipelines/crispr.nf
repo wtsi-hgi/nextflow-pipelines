@@ -65,7 +65,7 @@ workflow {
     collate_crispr_counts(count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)})
 
     // collate libs in separate count matrix:
-    collate_crispr_counts(count_crispr_reads.out[0].groupTuple(by: 0, sort: true))
+    // collate_crispr_counts(count_crispr_reads.out[0].groupTuple(by: 0, sort: true))
     
     // publish output files
 //    crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
