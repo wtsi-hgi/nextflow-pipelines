@@ -14,10 +14,10 @@ process 'iget' {
     params.run 
 
     input:
-    set val(samplename), val(sample), val(study_id)
+    set val(samplename), val(batch), val(sample), val(study_id)
     
   output:
-    set val(samplename), file("*.cram"), file ("*.crai")
+    set val(samplename), val(batch), file("*.cram"), file ("*.crai")
 
   script:
     """
