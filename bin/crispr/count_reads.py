@@ -47,7 +47,7 @@ fout = io.open(outfile,'w')
 fout.write(u'Guide Sequence\tCount\n')
 # fout.write(u'unmapped\t%d\t\n' % (total-mapped))
 for guide in guide_counts:
-    fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide]))
+    fout.write('%s\t%s\n' % (guide, guide_counts[guide]))
     # fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_type[guide]))
     fout.close()
     
