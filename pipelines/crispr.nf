@@ -1,5 +1,6 @@
 nextflow.preview.dsl=2
 params.read2 = 'discard' // used by count_crispr_reads
+params.min_reads = 500   // used by crams_to_fastq_gz
 
 // list irods study id and sample names:
 //Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
