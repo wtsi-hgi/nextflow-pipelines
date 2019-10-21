@@ -10,12 +10,12 @@ Channel.fromPath(params_sample_manifest_irods)
     .set{ch_to_iget}
 
 // collect library tables:
-params.guide_libraries = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/*.guide_library.txt'
+params.guide_libraries = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/*.guide_library.csv'
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
 // add guide library of each sample:
-params.samplename_library = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/samplename_library.csv'
+params.samplename_library = "${baseDir}/inputs/crispr/walkup101.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}") }
@@ -41,15 +41,15 @@ workflow {
     // crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
 
     // 1.B: directly from fastq (if from basespace/lustre location rather than irods)
-    Channel.fromPath('path_to_csv.scv')
+    Channel.fromPath("${baseDir}/inputs/crispr/dolcetto_xin_fastqs.scv")
 	.splitCsv(header: true)
-	.map { row -> tuple("${row.samplename}", "${row.batch}",  "${row.fastq}") }
+	.map { row -> tuple("${row.samplename}", "${row.batch}",  file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
 
     // 2: merge fastqs across batches -> read counts -> collate counts
     ch_samplename_batch_fastqs
 	.groupTuple(by: 0, sort: true)
-	.map{ samplename, fastq, batch -> tuple( groupKey(samplename, batch.size()), batch, fastq ) }
+	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
 	.set{ch_samplename_fastq_to_merge}
 
     merge_fastq_batches(ch_samplename_fastqs_to_merge)
