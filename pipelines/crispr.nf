@@ -11,12 +11,12 @@ Channel.fromPath(params_sample_manifest_irods)
     .set{ch_to_iget}
 
 // collect library tables:
-params.guide_libraries = "${baseDir}/assets/crispr/*.guide_library.csv"
+params.guide_libraries = "${baseDir}/../assets/crispr/*.guide_library.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
 // add guide library of each sample:
-params.samplename_library = "${baseDir}/inputs/crispr/walkup101_libraries.csv"
+params.samplename_library = "${baseDir}/../inputs/crispr/walkup101_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}") }
@@ -42,7 +42,7 @@ workflow {
     // crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
 
     // 1.B: directly from fastq (if from basespace/lustre location rather than irods)
-    Channel.fromPath("${baseDir}/inputs/crispr/walkup101_fastqs.scv")
+    Channel.fromPath("${baseDir}/../inputs/crispr/walkup101_fastqs.scv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}",  file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
