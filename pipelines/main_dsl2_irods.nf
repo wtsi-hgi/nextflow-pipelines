@@ -12,6 +12,7 @@ params.biotypes_header= "$baseDir/assets/biotypes_header.txt" // used by feature
 params.mito_name = 'MT' // used by mapsummary
 params.runtag = 'interval_basic' // used by mapsummary and multiqc
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
+params.read2 = 'discard' // used by count_crispr_reads
 
 params.run_star = true
 def pick_aligner(String aligner) {
@@ -48,9 +49,33 @@ Channel.fromPath(params.salmon_trans_gene)
     .ifEmpty { exit 1, "Salmon trans gene file not found: ${params.salmon_trans_gene}" }
     .set {ch_salmon_trans_gene}
 
+// list irods study id and sample names:
+//Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
+params_sample_manifest_irods = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv'
+Channel.fromPath(params_sample_manifest_irods)
+    .splitCsv(header: true)
+    .map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
+    .set{ch_to_iget}
+
+// collect library tables:
+params.guide_libraries = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/*.guide_library.txt'
+Channel.fromPath(params.guide_libraries)
+    .set{ch_library_files}
+
+// add guide library of each sample:
+params.samplename_library = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/samplename_library.csv'
+Channel.fromPath(params.samplename_library)
+    .splitCsv(header: true)
+    .map { row -> tuple("${row.samplename}", "${row.library}") }
+    .set{ch_samplename_library}
+
+
 
 include crams_to_fastq_gz from '../modules/crams_to_fastq_anyflag.nf' params(run:true, outdir: params.outdir,
 								    min_reads: params.min_reads)
+include count_crispr_reads from '../modules/count_crispr_reads.nf' params(run: true, outdir: params.outdir,
+							 read2: params.read2)
+
 include fastqc from '../modules/fastqc.nf' params(run: true, outdir: params.outdir)
 include salmon from '../modules/salmon.nf' params(run: true, outdir: params.outdir)
 include merge_salmoncounts from '../modules/merge_salmoncounts.nf' params(run: true, outdir: params.outdir,
@@ -80,20 +105,29 @@ include lostcause from '../modules/lostcause.nf' params(run: true, outdir: param
 						   runtag : params.runtag)
 include iget from '../modules/irods.nf' params(run: true, outdir: params.outdir)
 
-workflow {
 
-    //Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
-    Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv')
-	.splitCsv(header: true)
-	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
-	.set{ch_to_iget}
+
+workflow {
 
     iget(ch_to_iget)
     
     crams_to_fastq_gz(iget.out.map{samplename,crams,crais -> [samplename, crams]})
     
+    crams_to_fastq_gz.out[0]
+	.combine(ch_samplename_library, by: 0)
+	.set{ch_samplename_fastq_library}
+    
+    count_crispr_reads(ch_samplename_fastq_library, ch_library_files.collect())
+
+    collate_crispr_counts(count_crispr_reads.out[0].collect())
+
+
+    // publish output files
     crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
     publish:
-    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkups_x2_irods_17oct/',
+    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
 	enabled: true, mode: 'copy', overwrite: true
-    }
+    collate_crispr_counts.out[0] to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
+	enabled: true, mode: 'copy', overwrite: true
+    
+}
