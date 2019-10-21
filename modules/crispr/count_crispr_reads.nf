@@ -22,6 +22,7 @@ process counts_crispr_reads {
     output:
     file("${samplename}.counts.txt")
     file("${samplename}.mapping.txt")
+    stdout
 
     shell:
     """
@@ -29,6 +30,6 @@ process counts_crispr_reads {
     rm *_2.fastq.gz
     fi
 
-    python3 ${workflow.projectDir}/bin/crispr/read_counts.py \"${guide_library}\"
+    python3 ${workflow.projectDir}/bin/crispr/read_counts.py \$(ls *.fastq.gz) \"${guide_library}\"
     """
 }
