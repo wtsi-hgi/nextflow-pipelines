@@ -30,7 +30,7 @@ for record in SeqIO.parse(f, 'fastq'):
         #    print(record.seq)
     total += 1
     if total % 1000 == 0:
-    print("%d" % (total))
+        print("%d" % (total))
 f.close()
 
 fout = io.open(outfile,'w')
