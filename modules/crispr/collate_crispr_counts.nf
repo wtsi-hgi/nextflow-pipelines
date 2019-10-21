@@ -23,7 +23,13 @@ process collate_crispr_counts {
 
     shell:
     """
-    ls . | grep .counts.txt\$ > fofn_countsfiles.txt
+    echo count_file > fofn_files.txt
+    ls . | grep .counts.txt\$ > fofn_files.txt
+
+    echo samplename > fofn_samplenames.txt
+    ls . | grep .counts.txt\$ | sed > fofn_samplenames.txt
+
+    paste -d ',' fofn_samplenames.txt fofn_files.txt > fofn_countsfiles.txt
 
     python3 ${workflow.projectDir}/bin/crispr/collate_counts.py fofn_countsfiles.txt
     """
