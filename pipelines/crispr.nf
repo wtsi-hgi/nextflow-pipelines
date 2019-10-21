@@ -62,7 +62,7 @@ workflow {
     count_crispr_reads(ch_samplename_fastq_library, ch_library_files.collect())
 
     // collate all libs in the same counts matrix:
-    collate_crispr_counts("all_libs", count_crispr_reads.out[0].map{lib,counts -> counts}.collect())
+    collate_crispr_counts(count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)})
 
     // collate libs in separate count matrix:
     collate_crispr_counts(count_crispr_reads.out[0].groupTuple(by: 0, sort: true))
