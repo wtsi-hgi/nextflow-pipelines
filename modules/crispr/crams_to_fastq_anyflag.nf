@@ -25,11 +25,11 @@ process crams_to_fastq_gz {
     params.run
     
     input: 
-        set val(samplename), file(crams) 
+    set val(samplename), val(batch), file(crams) 
     output: 
-        set val(samplename), file("*.fastq.gz")
-        file('*.lostcause.txt') optional true 
-        file('numreads.txt') optional true 
+    set val(samplename), val(batch), file("*.fastq.gz")
+    file('*.lostcause.txt') optional true 
+    file('numreads.txt') optional true 
     script:
 
         // 0.7 factor below: see https://github.com/samtools/samtools/issues/494
