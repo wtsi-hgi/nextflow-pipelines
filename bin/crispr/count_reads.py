@@ -3,7 +3,7 @@ from Bio import SeqIO
 import pandas as pd
 
 fastq_file = sys.argv[1]
-guide = pd.read_csv(sys.argv[2], sep='\t')
+guide = pd.read_csv(sys.argv[2])
 
 
 getSeq = lambda x: x[1:] if len(x) == 20 else x
