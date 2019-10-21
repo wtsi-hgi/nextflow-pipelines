@@ -1,4 +1,3 @@
-print('start python script')
 import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
@@ -15,13 +14,16 @@ flog.write("fastq file: " + str(fastq_file))
 #includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
 includeG = False 
 
+print('here')
 getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
 
+print('here2')
 if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
 else: f = open(fastq_file,'rt')
 
+print('here3')
 count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
