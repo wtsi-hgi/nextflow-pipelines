@@ -2,10 +2,15 @@ import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
 
+flog = io.open('record_log.txt','w')
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
 outfile2 = sys.argv[4]
+
+flog.write("fastq file: " + str(fastq_file))
+
+
 #includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
 includeG = False 
 
@@ -18,7 +23,6 @@ else: f = open(fastq_file,'rt')
 
 count = 0
 total, mapped = 0, 0
-flog = io.open('record_log.txt','w')
 for record in SeqIO.parse(f, 'fastq'):
     if includeG: seq = str(record.seq)[1:20]
     else: seq = str(record.seq)[:19]
