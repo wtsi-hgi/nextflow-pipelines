@@ -75,6 +75,7 @@ include crams_to_fastq_gz from '../modules/crams_to_fastq_anyflag.nf' params(run
 								    min_reads: params.min_reads)
 include count_crispr_reads from '../modules/count_crispr_reads.nf' params(run: true, outdir: params.outdir,
 							 read2: params.read2)
+include collate_crispr_counts from '../modules/collate_crispr_counts.nf' params(run: true, outdir: params.outdir)
 
 include fastqc from '../modules/fastqc.nf' params(run: true, outdir: params.outdir)
 include salmon from '../modules/salmon.nf' params(run: true, outdir: params.outdir)
@@ -119,15 +120,16 @@ workflow {
     
     count_crispr_reads(ch_samplename_fastq_library, ch_library_files.collect())
 
-    collate_crispr_counts(count_crispr_reads.out[0].collect())
+}
+
+//    collate_crispr_counts(count_crispr_reads.out[0].collect())
 
 
     // publish output files
-    crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
-    publish:
-    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
-	enabled: true, mode: 'copy', overwrite: true
-    collate_crispr_counts.out[0] to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
-	enabled: true, mode: 'copy', overwrite: true
+//    crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
+//    publish:
+//    fastq_to_publish to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
+//	enabled: true, mode: 'copy', overwrite: true
+//    collate_crispr_counts.out[0] to: '/lustre/scratch115/projects/interval_wgs/nextflow/walkup_101/',
+//	enabled: true, mode: 'copy', overwrite: true
     
-}
