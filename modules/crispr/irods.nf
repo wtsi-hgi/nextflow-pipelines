@@ -1,6 +1,6 @@
 params.run = true
 
-process 'iget' {
+process 'iget_crams' {
     tag "iget $samplename"
     memory = '3G'
     time '120m'
