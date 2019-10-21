@@ -4,6 +4,8 @@ import pandas as pd
 
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
+outfile = sys.argv[3]
+outfile2 = sys.argv[4]
 #includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
 includeG = False 
 
@@ -38,7 +40,7 @@ for guide in guide_counts:
     # fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_type[guide]))
     fout.close()
     
-fout2 = io.open(outfile + '.pcmapped','w') # mod gn5 
+fout2 = io.open(outfile2,'w') # mod gn5 
 fout2.write(str(outfile) + ' ' + str(mapped) + ' mapped of ' + str(total) + ' ' + str(mapped*100.0/total if total > 0 else 0.0))
 fout2.close()
     
