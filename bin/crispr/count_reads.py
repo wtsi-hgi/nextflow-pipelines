@@ -18,6 +18,7 @@ else: f = open(fastq_file,'rt')
 
 count = 0
 total, mapped = 0, 0
+flog = io.open('record_log.txt','w')
 for record in SeqIO.parse(f, 'fastq'):
     if includeG: seq = str(record.seq)[1:20]
     else: seq = str(record.seq)[:19]
@@ -29,8 +30,9 @@ for record in SeqIO.parse(f, 'fastq'):
         #if count > 1000 and count < 1100:
         #    print(record.seq)
     total += 1
-    if total % 100000 == 0:
-        print("%d" % (total))
+    if total % 10000 == 0:
+        flog.write("%d" % (total))
+flog.close()
 f.close()
 
 fout = io.open(outfile,'w')
