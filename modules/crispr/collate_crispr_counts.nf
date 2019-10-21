@@ -15,11 +15,11 @@ process collate_crispr_counts {
     params.run
 
     input:
-    file(samplename_counts_txt_files)
+    set val(guide_library), file(samplename_counts_txt_files)
 
     output:
-    file("count_matrix.txt")
-    file("fofn_countsfiles.txt")
+    file("*.count_matrix.txt")
+    file("*.fofn_countsfiles.txt")
 
     shell:
     """
@@ -29,8 +29,8 @@ process collate_crispr_counts {
     echo samplename > fofn_samplenames.txt
     ls . | grep .counts.txt\$ | sed > fofn_samplenames.txt
 
-    paste -d ',' fofn_samplenames.txt fofn_files.txt > fofn_countsfiles.txt
+    paste -d ',' fofn_samplenames.txt fofn_files.txt > ${guide_library}.fofn_countsfiles.txt
 
-    python3 ${workflow.projectDir}/../bin/crispr/collate_counts.py fofn_countsfiles.txt
+    python3 ${workflow.projectDir}/../bin/crispr/collate_counts.py ${guide_library}.fofn_countsfiles.txt \"${guide_library}\"
     """
 }
