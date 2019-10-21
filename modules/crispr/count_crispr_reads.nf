@@ -2,7 +2,7 @@ params.run = true
 params.runtag = 'runtag'
 params.read2 = 'discard'
 
-process counts_crispr_reads {
+process count_crispr_reads {
     tag "read_counts $samplename"
     // container "nfcore-rnaseq"
     publishDir "${params.outdir}/read_counts", mode: 'symlink'
