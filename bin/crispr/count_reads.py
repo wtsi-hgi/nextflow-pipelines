@@ -4,7 +4,8 @@ import pandas as pd
 
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
-
+#includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
+includeG = False 
 
 getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
