@@ -22,7 +22,7 @@ process count_crispr_reads {
     output:
     file("${samplename}.counts.txt")
     file("${samplename}.mapping.txt")
-    stdout
+    set val(samplename), stdout
 
     shell:
     """
