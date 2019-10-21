@@ -31,6 +31,6 @@ process collate_crispr_counts {
 
     paste -d ',' fofn_samplenames.txt fofn_files.txt > fofn_countsfiles.txt
 
-    python3 ${workflow.projectDir}/bin/crispr/collate_counts.py fofn_countsfiles.txt
+    python3 ${workflow.projectDir}/../bin/crispr/collate_counts.py fofn_countsfiles.txt
     """
 }
