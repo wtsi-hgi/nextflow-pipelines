@@ -10,7 +10,7 @@ Channel.fromPath(params_sample_manifest_irods)
     .set{ch_to_iget}
 
 // collect library tables:
-params.guide_libraries = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/*.guide_library.csv'
+params.guide_libraries = "${baseDir}/assets/crispr/*.guide_library.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
