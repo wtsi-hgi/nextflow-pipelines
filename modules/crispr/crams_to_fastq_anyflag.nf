@@ -2,7 +2,7 @@ params.run = true
 params.min_reads = 500
 
 process crams_to_fastq_gz {
-    tag "crams to fastq_gz ${samplename}"
+    tag "crams to fastq_gz ${samplename} ${batch}"
 
     //container 'nfcore-rnaseq' 
     // has samtools Version: 1.9 (using htslib 1.9)
@@ -35,7 +35,7 @@ process crams_to_fastq_gz {
         // 0.7 factor below: see https://github.com/samtools/samtools/issues/494
         // This is not confirmed entirely just yet.
         // def avail_mem = task.memory == null ? '' : "${ sprintf "%.0f", 0.7 * ( task.memory.toBytes() - 2000000000 ) / task.cpus}"
-    def cramfile = "${samplename}_merged.cram"
+    def cramfile = "${batch}.${samplename}_merged.cram"
     """
     export REF_PATH=/lustre/scratch117/core/sciops_repository/cram_cache/%2s/%2s/%s:/lustre/scratch118/core/sciops_repository/cram_cache/%2s/%2s/%s:URL=http:://sf2-farm-srv1.internal.sanger.ac.uk::8000/%s
 
@@ -43,9 +43,9 @@ process crams_to_fastq_gz {
     
     samtools merge -@ ${task.cpus} -f $cramfile ${crams}
 
-    f1=${samplename}_1.fastq.gz
-    f2=${samplename}_2.fastq.gz
-    f0=${samplename}.fastq.gz
+    f1=${batch}.${samplename}_1.fastq.gz
+    f2=${batch}.${samplename}_2.fastq.gz
+    f0=${batch}.${samplename}.fastq.gz
 
     numreads=\$(samtools view -c -F 0x900 $cramfile)
     if (( numreads >= ${params.min_reads} )); then
@@ -66,7 +66,7 @@ process crams_to_fastq_gz {
       sleep 2
       find . -name \"*.fastq.gz\" -type 'f' -size -160k -delete
     else
-      echo -e "${samplename}\\tcram\\tlowreads" > ${samplename}.lostcause.txt
+      echo -e "${samplename}\\tcram\\tlowreads" > ${batch}.${samplename}.lostcause.txt
     fi
     """
 }
