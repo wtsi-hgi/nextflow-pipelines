@@ -2,12 +2,14 @@ import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
 
+fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2], sep='\t')
+
+
 getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
 
-fastq_file = sys.argv[1]
 if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
 else: f = open(fastq_file,'rt')
 
@@ -29,7 +31,7 @@ f.close()
 fout = io.open(outfile,'w')
 # fout.write(u'Guide Sequence\tCount\tType\n')
 fout.write(u'Guide Sequence\tCount\n')
-fout.write(u'unmapped\t%d\t\n' % (total-mapped))
+# fout.write(u'unmapped\t%d\t\n' % (total-mapped))
 for guide in guide_counts:
     fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide]))
     # fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_type[guide]))
