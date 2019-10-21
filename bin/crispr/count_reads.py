@@ -8,22 +8,21 @@ guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
 outfile2 = sys.argv[4]
 
-flog.write("fastq file: " + str(fastq_file))
-
+flog.write("fastq file: " + str(fastq_file) + str("\n"))
+flog.write("guide: " + str(sys.argv[2]) + str("\n"))
+flog.write("outfile: " + str(outfile) + str("\n"))
+flog.write("outfile2: " + str(outfile2) + str("\n"))
 
 #includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
 includeG = False 
 
-print('here')
 getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
 
-print('here2')
 if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
 else: f = open(fastq_file,'rt')
 
-print('here3')
 count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
@@ -38,8 +37,8 @@ for record in SeqIO.parse(f, 'fastq'):
         #    print(record.seq)
     total += 1
     if total % 10000 == 0:
-        print('total')
-        flog.write("%d" % (total))
+        print('total\n')
+        flog.write(str(total) + "\n")
 flog.close()
 f.close()
 
