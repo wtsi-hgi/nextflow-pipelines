@@ -2,7 +2,6 @@ import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
 
-print('here')
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
