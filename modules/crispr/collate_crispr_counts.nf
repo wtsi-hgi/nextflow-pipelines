@@ -18,8 +18,8 @@ process collate_crispr_counts {
     set val(guide_library), file(samplename_counts_txt_files)
 
     output:
-    file("*.count_matrix.txt")
-    file("*.fofn_countsfiles.txt")
+    set val(guide_library), file("*.count_matrix.txt")
+    set val(guide_library), file("*.fofn_countsfiles.txt")
 
     shell:
     """
