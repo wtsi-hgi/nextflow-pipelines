@@ -1,3 +1,4 @@
+print('start python script')
 import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
