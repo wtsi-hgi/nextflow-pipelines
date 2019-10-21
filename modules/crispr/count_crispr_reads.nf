@@ -27,9 +27,9 @@ process count_crispr_reads {
     shell:
     """
     if [ \"${params.read2}\"  == \"discard\" ]; then
-    rm *_2.fastq.gz
+    rm -f *_2.fastq.gz
     fi
 
-    python3 ${workflow.projectDir}/bin/crispr/read_counts.py \$(ls *.fastq.gz) \"${guide_library}\"
+    python3 ${workflow.projectDir}/../bin/crispr/read_counts.py \$(ls *.fastq.gz) \"${guide_library}\"
     """
 }
