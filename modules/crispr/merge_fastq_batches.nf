@@ -1,7 +1,7 @@
 params.run = true
 
 process 'merge_fastq_batches' {
-    tag "merge batch $samplename $batch"
+    tag "merge batch $samplename"
     memory = '10G'
     time '120m'
     cpus 1
