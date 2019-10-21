@@ -37,7 +37,7 @@ for record in SeqIO.parse(f, 'fastq'):
         #    print(record.seq)
     total += 1
     if total % 100000 == 0:
-        # print("total parsed: " + str(total) + " \n")
+        print("total parsed: " + str(total) + " \n")
         flog.write(str(total) + "\n")
 flog.close()
 f.close()
