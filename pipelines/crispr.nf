@@ -2,14 +2,6 @@ nextflow.preview.dsl=2
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
-// list irods study id and sample names:
-//Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget4043.csv')
-params_sample_manifest_irods = '/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv'
-Channel.fromPath(params_sample_manifest_irods)
-    .splitCsv(header: true)
-    .map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sample}", "${row.study_id}") }
-    .set{ch_to_iget}
-
 // collect library tables:
 params.guide_libraries = "${baseDir}/../assets/crispr/*.guide_library.csv"
 Channel.fromPath(params.guide_libraries)
@@ -19,7 +11,7 @@ Channel.fromPath(params.guide_libraries)
 params.samplename_library = "${baseDir}/../inputs/crispr/walkup101_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
-    .map { row -> tuple("${row.samplename}", "${row.library}") }
+    .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
     .set{ch_samplename_library}
 
 
@@ -37,11 +29,15 @@ include collate_crispr_counts from '../modules/crispr/collate_crispr_counts.nf' 
 workflow {
 
     // 1.A: from irods:
+    //Channel.fromPath('/lustre/scratch115/projects/bioaid/mercury_gn5/bioaid/inputs/to_iget.csv')
+    //	.splitCsv(header: true)
+    //	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sample}", "${row.study_id}") }
+    //	.set{ch_to_iget}
     // iget_crams(ch_to_iget)
     // crams_to_fastq_gz(iget.out.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
     // crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
 
-    // 1.B: directly from fastq (if from basespace/lustre location rather than irods)
+    // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
     Channel.fromPath("${baseDir}/../inputs/crispr/walkup101_fastqs.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}",  file("${row.fastq}")) }
