@@ -65,7 +65,9 @@ workflow {
     //					  storeDir: "${params.outdir}/", sort: true)
 
     // collate all libs in the same counts matrix:
-    collate_crispr_counts(count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)})
+    collate_crispr_counts(
+	count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)}
+	    .mix(count_crispr_reads.out[0].groupTuple(by: 0, sort: true)))
 
     // collate libs in separate count matrix:
     // collate_crispr_counts(count_crispr_reads.out[0].groupTuple(by: 0, sort: true))
