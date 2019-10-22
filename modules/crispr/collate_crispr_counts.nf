@@ -27,7 +27,7 @@ process collate_crispr_counts {
     ls . | grep .counts.txt\$ > fofn_files.txt
 
     echo samplename > fofn_samplenames.txt
-    ls . | grep .counts.txt\$ | sed > fofn_samplenames.txt
+    ls . | grep .counts.txt\$ | sed s/.counts.txt// > fofn_samplenames.txt
 
     paste -d ',' fofn_samplenames.txt fofn_files.txt > ${guide_library}.fofn_countsfiles.txt
 
