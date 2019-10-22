@@ -43,7 +43,10 @@ workflow {
 	.map { row -> tuple("${row.samplename}", "${row.batch}",  file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
 
+
     // 2: merge fastqs across batches -> read counts -> collate counts
+    fastqc(ch_samplename_batch_fastqs.map{samplename,batch,fastq -> tuple(samplename,fastq)})
+
     ch_samplename_batch_fastqs
 	.groupTuple(by: 0, sort: true)
 	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
