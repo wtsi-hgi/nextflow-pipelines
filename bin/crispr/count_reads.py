@@ -50,12 +50,11 @@ for guide in guide_counts:
     # fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_type[guide]))
 fout.close()
 
-
-pd.concat([
-    guide[['Guide Sequence','Gene']],
-    pd.read_csv(outfile, sep='\t')],
-          axis=1, join='inner').to_csv(
-              outfile.replace('.counts.txt','.genes.counts.txt'), sep='\t')
+#pd.concat([
+#    pd.read_csv(outfile, sep='\t')],
+#    guide[['Guide Sequence','Gene']],
+#          on='Guide Sequence', how='left').to_csv(
+#              outfile.replace('.counts.txt','.genes.counts.txt'), sep='\t', index=False)
 
 
 fout2 = io.open(outfile2,'w') # mod gn5 
