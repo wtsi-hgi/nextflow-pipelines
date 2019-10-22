@@ -16,7 +16,7 @@ process count_crispr_reads {
     params.run
 
     input:
-    set val(samplename), file(fastq_files), val(guide_library) 
+    set val(samplename), file(fastq_files), val(guide_library), val(includeG) 
     file(library_files)
 
     output:
@@ -30,6 +30,6 @@ process count_crispr_reads {
     rm -f *_2.fastq.gz
     fi
 
-    python3 ${workflow.projectDir}/../bin/crispr/count_reads.py \$(ls *.fastq.gz) \"${guide_library}\" ${samplename}.counts.txt ${samplename}.mapping.txt
+    python3 ${workflow.projectDir}/../bin/crispr/count_reads.py \$(ls *.fastq.gz) \"${guide_library}\" ${samplename}.counts.txt ${samplename}.mapping.txt includeG
     """
 }
