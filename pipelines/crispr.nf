@@ -61,17 +61,13 @@ workflow {
     
     count_crispr_reads(ch_samplename_fastq_library, ch_library_files.collect())
     
-    //count_crispr_reads.out[1].collectFile(name: 'mapping_percent.txt', newLine: true,
-    //					  storeDir: "${params.outdir}/", sort: true)
-
-    // collate all libs in the same counts matrix:
     collate_crispr_counts(
 	count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)}
 	    .mix(count_crispr_reads.out[0].groupTuple(by: 0, sort: true)))
-
-    // collate libs in separate count matrix:
-    // collate_crispr_counts(count_crispr_reads.out[0].groupTuple(by: 0, sort: true))
     
+    count_crispr_reads.out[1].collectFile(name: 'mapping_percent.txt', newLine: true,
+    					  storeDir: "${params.outdir}/", sort: true)
+
     // publish output files
 //    crams_to_fastq_gz.out[0].map{a,b -> b}.set{fastq_to_publish}
 //    publish:
