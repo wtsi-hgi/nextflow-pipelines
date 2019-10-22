@@ -17,6 +17,7 @@ flog.write("includeG: " + str(includeG) + str("\n"))
 
 getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
+guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Gene'])}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
 
 if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
@@ -42,13 +43,17 @@ flog.close()
 f.close()
 
 fout = io.open(outfile,'w')
-# fout.write(u'Guide Sequence\tCount\tType\n')
+fout_gene = io.open(outfile.replace('.counts.txt','.genes.counts.txt'),'w')
+
 fout.write(u'Guide Sequence\tCount\n')
-# fout.write(u'unmapped\t%d\t\n' % (total-mapped))
+fout_gene.write(u'Guide Sequence\tCount\tGene\n')
+#fout_gene.write(u'unmapped\t%d\t\n' % (total-mapped))
+
 for guide in guide_counts:
     fout.write('%s\t%s\n' % (guide, guide_counts[guide]))
-    # fout.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_type[guide]))
+    fout_gene.write('%s\t%s\t%s\n' % (guide, guide_counts[guide], guide_gene[guide]))
 fout.close()
+fout_gene.close()
 
 #pd.concat([
 #    pd.read_csv(outfile, sep='\t')],
