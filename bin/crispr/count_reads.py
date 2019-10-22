@@ -26,9 +26,10 @@ else: f = open(fastq_file,'rt')
 count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
-    if includeG: seq = str(record.seq)[1:20]
-    else: seq = str(record.seq)[:19]
-    if seq in guide_counts:
+#    if includeG: seq = str(record.seq)[1:20]
+#    else: seq = str(record.seq)[:19]
+#    if seq in guide_counts:
+    if str(record.seq)[:19] in guide_counts | str(record.seq)[1:20] in guide_counts:
         guide_counts[seq] += 1
         mapped += 1
     else: 
