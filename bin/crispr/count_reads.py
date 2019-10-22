@@ -52,10 +52,10 @@ fout.close()
 
 
 pd.concat([
-    guide[['Guide Sequence','Gene']]
-    pd.read_csv(outfile, sep='\t'),
-], axis=1, join='inner').to_csv(
-    outfile.replace('.counts.txt','.genes.counts.txt'), sep='\t')
+    guide[['Guide Sequence','Gene']],
+    pd.read_csv(outfile, sep='\t')],
+          axis=1, join='inner').to_csv(
+              outfile.replace('.counts.txt','.genes.counts.txt'), sep='\t')
 
 
 fout2 = io.open(outfile2,'w') # mod gn5 
