@@ -1,4 +1,5 @@
 nextflow.preview.dsl=2
+params.runtag = 'walkup101'
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
@@ -24,7 +25,8 @@ include count_crispr_reads from '../modules/crispr/count_crispr_reads.nf' params
 							 read2: params.read2)
 include collate_crispr_counts from '../modules/crispr/collate_crispr_counts.nf' params(run: true, outdir: params.outdir)
 include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdir)
-
+include multiqc from './modules/multiqc.nf' params(run: true, outdir: params.outdir,
+						   runtag : params.runtag)
 
 workflow {
 
@@ -46,6 +48,7 @@ workflow {
 
     // 2: merge fastqs across batches -> read counts -> collate counts
     fastqc(ch_samplename_batch_fastqs.map{samplename,batch,fastq -> tuple(samplename,fastq)})
+    multiqc(fastqc.out.collect())
 
     ch_samplename_batch_fastqs
 	.groupTuple(by: 0, sort: true)
