@@ -25,7 +25,7 @@ include count_crispr_reads from '../modules/crispr/count_crispr_reads.nf' params
 							 read2: params.read2)
 include collate_crispr_counts from '../modules/crispr/collate_crispr_counts.nf' params(run: true, outdir: params.outdir)
 include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdir)
-include multiqc from './modules/multiqc.nf' params(run: true, outdir: params.outdir,
+include multiqc from './modules/crispr/multiqc.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
 
 workflow {
