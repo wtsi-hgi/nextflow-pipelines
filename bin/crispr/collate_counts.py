@@ -32,4 +32,4 @@ for index, row in fofn_countsfiles.iterrows():
     print(concatenated.head())
         
 count_matrix = concatenated.pivot_table(index=['Guide Sequence','Gene'], columns='samplename', values='Count').reset_index()       
-count_matrix.to_csv(lib_counts + '.genes.count_matrix.txt', sep='\t')
+count_matrix.to_csv(lib_counts + '.genes.count_matrix.txt', sep='\t', index = False)
