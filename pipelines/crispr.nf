@@ -73,7 +73,7 @@ workflow {
 
     collate_crispr_counts(
 	count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)}
-	    //.mix(
+	    .mix(ch_to_collate_per_lib)
 //	    count_crispr_reads.out[0]
 //		 .map{ lib_csv,counts -> [ lib_csv.replaceAll(~/.csv/, ""), counts ] }
 //	    .groupTuple(by: 0, sort: true)
