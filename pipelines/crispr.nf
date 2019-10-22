@@ -47,8 +47,6 @@ workflow {
 
 
     // 2: merge fastqs across batches -> read counts -> collate counts
-    fastqc(ch_samplename_batch_fastqs.map{samplename,batch,fastq -> tuple(samplename,fastq)})
-    multiqc(fastqc.out.collect())
 
     ch_samplename_batch_fastqs
 	.groupTuple(by: 0, sort: true)
@@ -56,6 +54,10 @@ workflow {
 	.set{ch_samplename_fastqs_to_merge}
     
     merge_fastq_batches(ch_samplename_fastqs_to_merge)
+    
+    fastqc(ch_samplename_batch_fastqs.map{samplename,batch,fastq -> tuple(samplename,fastq)}
+	   .mix(merge_fastq_batches.out[0]))
+    multiqc(fastqc.out.collect())
     
     merge_fastq_batches.out[0]
 	.combine(ch_samplename_library, by: 0)
