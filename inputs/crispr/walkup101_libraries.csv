@@ -1,17 +1,17 @@
 samplename,human_readable,Line,library,includeG,Replicate,Library Size,Coverage,Expected Reads
-24-1-1D18,Dol-I.1.1-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-1-2D18,Dol-I.1.2-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-1-3D18,Dol-I.2.1-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-1-4D18,Dol-I.2.2-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-2-1D18,Dol-II.1.1-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-2-2D18,Dol-II.1.2-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-2-3D18,Dol-II.2.1-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-2-4D18,Dol-II.2.2-DPI18,IPSC,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-3-1D17,XIN-I.1-DPI17,IPSC,Xin.guide_library.csv,false,1,31500,500,15750000
-24-3-2D17,Xin-I.2-DPI17,IPSC,Xin.guide_library.csv,false,1,31500,500,15750000
-24-4-1D17,Xin-II.1.1-DPI17,IPSC,Xin.guide_library.csv,false,1,31500,500,15750000
-24-4-2D17,Xin-II.1.2-DPI17,IPSC,Xin.guide_library.csv,false,1,31500,500,15750000
-24-5-1D21,Dol-I-DPI21,K562,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-24-6-1D21,Dol-II-DPI21,k562,Dolcetto.guide_library.csv,true,1,57050,500,28525000
-XIN,XIN,Plasmid Libray,Xin.guide_library.csv,false,1,31500,500,15750000
-DOLCETTO,DOLCETTO,Plasmid Library,Dolcetto.guide_library.csv,true,1,57050,500,28525000
+24-1-1D18,Dol-I.1.1-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-1-2D18,Dol-I.1.2-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-1-3D18,Dol-I.2.1-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-1-4D18,Dol-I.2.2-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-2-1D18,Dol-II.1.1-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-2-2D18,Dol-II.1.2-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-2-3D18,Dol-II.2.1-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-2-4D18,Dol-II.2.2-DPI18,IPSC,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-3-1D17,XIN-I.1-DPI17,IPSC,Xin.guide_library.csv,False,1,31500,500,15750000
+24-3-2D17,Xin-I.2-DPI17,IPSC,Xin.guide_library.csv,False,1,31500,500,15750000
+24-4-1D17,Xin-II.1.1-DPI17,IPSC,Xin.guide_library.csv,False,1,31500,500,15750000
+24-4-2D17,Xin-II.1.2-DPI17,IPSC,Xin.guide_library.csv,False,1,31500,500,15750000
+24-5-1D21,Dol-I-DPI21,K562,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+24-6-1D21,Dol-II-DPI21,k562,Dolcetto.guide_library.csv,True,1,57050,500,28525000
+XIN,XIN,Plasmid Libray,Xin.guide_library.csv,False,1,31500,500,15750000
+DOLCETTO,DOLCETTO,Plasmid Library,Dolcetto.guide_library.csv,True,1,57050,500,28525000
