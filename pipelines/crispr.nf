@@ -66,7 +66,7 @@ workflow {
     count_crispr_reads(ch_samplename_fastq_library_includeG, ch_library_files.collect())
 
     count_crispr_reads.out[0]
-	.map{ lib_csv,counts -> [ lib_csv.replaceAll(~/.csv/, ""), counts ] }
+	.map{ lib_csv,counts -> tuple(lib_csv.replaceAll(~/.csv/, ""), counts) }
 	.groupTuple(by: 0, sort: true)
 	.set{ch_to_collate_per_lib}
     ch_to_collate_per_lib.view()
