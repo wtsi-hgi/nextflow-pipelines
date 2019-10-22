@@ -20,7 +20,7 @@ process count_crispr_reads {
     file(library_files)
 
     output:
-    set val(guide_library), file("${samplename}.counts.txt")
+    set val(guide_library), file("*.counts.txt")
     file("${samplename}.mapping.txt")
     set val(samplename), val(guide_library), stdout
 
