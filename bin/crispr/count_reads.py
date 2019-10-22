@@ -7,13 +7,14 @@ fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
 outfile2 = sys.argv[4]
+includeG = eval(sys.argv[5])
 
 flog.write("fastq file: " + str(fastq_file) + str("\n"))
 flog.write("guide: " + str(sys.argv[2]) + str("\n"))
 flog.write("outfile: " + str(outfile) + str("\n"))
 flog.write("outfile2: " + str(outfile2) + str("\n"))
+flog.write("includeG: " + str(includeG) + str("\n"))
 
-#includeG = eval(sys.argv[5]) if len(sys.argv) == 6 else False 
 includeG = False 
 
 getSeq = lambda x: x[1:] if len(x) == 20 else x
@@ -27,8 +28,7 @@ count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
     if includeG: seq = str(record.seq)[1:20]
-    # else: seq = str(record.seq)[:19]
-    else: seq = str(record.seq)[1:20]
+    else: seq = str(record.seq)[:19]
     if seq in guide_counts:
         guide_counts[seq] += 1
         mapped += 1
