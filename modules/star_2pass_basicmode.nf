@@ -12,7 +12,8 @@ process 'star_2pass_basic' {
     
     publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.bam"
     publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.bam.bai"
-    publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*Log.final.out"
+    publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.tab"
 
   input:
     set val(samplename), file(reads) //from ch_star // _reads_only
