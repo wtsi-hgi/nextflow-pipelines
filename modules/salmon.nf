@@ -22,7 +22,7 @@ process salmon {
     output:
     file "${samplename}.quant.sf" // into ch_salmon_trans
     file "${samplename}.quant.genes.sf" //into ch_salmon_genes
-    file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
+    file "my_outs/${samplename}" // into ch_alignment_logs_salmon
 
     script:
     """

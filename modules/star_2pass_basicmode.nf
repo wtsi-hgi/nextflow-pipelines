@@ -14,6 +14,13 @@ process 'star_2pass_basic' {
     publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.bam.bai"
     publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.out"
     publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.tab"
+    
+    publishDir "${params.outdir}/star_pass2_basic_multiqc/", mode: 'copy',
+        saveAs: { filename ->
+            if (filename ==~ /.*\.ReadsPerGene\.out\.tab/) "STARcounts/$filename"
+            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
+            else null
+        }
 
   input:
     set val(samplename), file(reads) //from ch_star // _reads_only
