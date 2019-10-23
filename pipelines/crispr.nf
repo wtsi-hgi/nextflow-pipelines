@@ -69,13 +69,11 @@ workflow {
 	.transpose()
 	//.map{ lib_csv,counts -> tuple(lib_csv.replaceAll(~/.csv/, ""), counts[0], counts[1]) }
 	.groupTuple(by: 0, sort: true)
+	.mix(count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)})
 	.set{ch_to_collate_per_lib}
 
     ch_to_collate_per_lib.view()
-
    // collate_crispr_counts(
-//	count_crispr_reads.out[0].map{lib,counts -> counts}.collect().map{a -> tuple("all_libs", a)}
-//	    .mix(ch_to_collate_per_lib)
 //	    count_crispr_reads.out[0]
 //		 .map{ lib_csv,counts -> [ lib_csv.replaceAll(~/.csv/, ""), counts ] }
 //	    .groupTuple(by: 0, sort: true)
