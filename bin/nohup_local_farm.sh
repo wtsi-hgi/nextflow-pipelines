@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export PATH=/software/hgi/installs/conda/condabin/:$PATH
+export PATH=/software/hgi/installs/conda/condabin:$PATH
 export LSB_DEFAULTGROUP=hgi
 export GOPATH=/lustre/scratch115/projects/interval_wgs/nextflow/wr_latest/wr/gopath
 export PATH=/lustre/scratch115/projects/interval_wgs/nextflow/wr0.19.9:$PATH
