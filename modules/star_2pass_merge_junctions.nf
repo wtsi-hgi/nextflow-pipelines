@@ -8,7 +8,7 @@ process 'star_2pass_merge_junctions' {
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     
-    publishDir "${params.outdir}/star2pass_merge_junc/", mode: 'copy', pattern: "SJ.filtered.tab"
+    publishDir "${params.outdir}/star2pass_merge_junc/$filename", mode: 'copy', pattern: "SJ.filtered.tab"
 
   input:
     file(tabs) // from ch_tab_tabs_only.collect()
