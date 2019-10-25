@@ -89,13 +89,22 @@ include lostcause from './modules/lostcause.nf' params(run: true, outdir: params
 
 workflow {
 
-    Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
-    map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
-    groupTuple(sort: true). //take(4).
-    set{ch_cram_files}
+    //// from irods studyid and list of samplenames
+    iget_cram(
+	Channel.fromPath("${baseDir}/inputs/gains_samples.txt")
+	    .flatMap{ it.readLines()}
+	    .map{it -> tuple("5890", it)} ) // HG_The Genomic Advances in Sepsis (GAinS) RNA-seq
+    crams_to_fastq_gz(iget_cram.out[0])
+    ////
 
-    crams_to_fastq_gz(ch_cram_files)
-    
+    //// from cram files:
+    ////Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
+    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
+    ////groupTuple(sort: true). //take(4).
+    ////set{ch_cram_files}
+    ////crams_to_fastq_gz(ch_cram_files)
+    ////
+
     fastqc(crams_to_fastq_gz.out[0])
 
     salmon(crams_to_fastq_gz.out[0], ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
