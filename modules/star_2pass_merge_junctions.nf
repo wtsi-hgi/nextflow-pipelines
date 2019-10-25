@@ -1,6 +1,6 @@
 params.run = true 
 
-process 'STAR2_merge_junc' {
+process 'star_2pass_merge_junctions' {
     tag "STAR2_merge_junc"
     memory = '20 G'
     cpus 1
