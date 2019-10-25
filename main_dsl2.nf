@@ -49,6 +49,8 @@ Channel.fromPath(params.salmon_trans_gene)
     .set {ch_salmon_trans_gene}
 
 
+include iget_cram from './modules/irods.nf' params(run:true, outdir: params.outdir,
+								    dropqc: params.dropqc)
 include crams_to_fastq_gz from './modules/crams_to_fastq.nf' params(run:true, outdir: params.outdir,
 								    min_reads: params.min_reads)
 include fastqc from './modules/fastqc.nf' params(run: true, outdir: params.outdir)
@@ -60,6 +62,11 @@ include tximport from './modules/tximport.nf' params(run: true, outdir: params.o
 						 ensembl_lib: params.ensembl_lib)
 
 include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
+
+include star_2pass_1stpass from './modules/star_2pass_firstpass.nf' params(run: true, outdir: params.outdir)
+include star_2pass_merge_junctions from './modules/star_2pass_merge_junctions.nf' params(run: true, outdir: params.outdir)
+include star_2pass_2ndpass from './modules/star_2pass_secondpass.nf' params(run: true, outdir: params.outdir)
+
 include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
 include leafcutter_bam2junc from './modules/leafcutter_bam2junc.nf' params(run: true, outdir: params.outdir)
