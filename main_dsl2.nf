@@ -10,7 +10,7 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'interval_basic' // used by mapsummary and multiqc
+params.runtag = 'gains5890' // "5890" HG_The Genomic Advances in Sepsis (GAinS) RNA-seq
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 
 params.run_star = true
@@ -114,26 +114,34 @@ workflow {
     tximport(salmon.out[0].collect())
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
+    
+    star_2pass_1stpass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
+    star_2pass_merge_junctions(star_2pass_1stpass.out[0].collect())
+    star_2pass_2ndpass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
-    leafcutter_bam2junc(star_2pass_basic.out[0])
+    ch_star_out = star_2pass_2ndpass // choose star_2pass_basic.out or star_2pass_2ndpass.out 
 
+
+    
+    //// 
+    leafcutter_bam2junc(ch_star_out[0])
     leafcutter_clustering(leafcutter_bam2junc.out.collect())
 
-    filter_star_aln_rate(star_2pass_basic.out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
+    filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
     
     filter_star_aln_rate.out.branch {
         filtered: it[1] == 'above_threshold'
-        discarded: it[1] == 'below_threshold'}.set { star_2pass_basic_filter }
+        discarded: it[1] == 'below_threshold'}.set { star_filter }
     
-    star_2pass_basic_filter.filtered.combine(star_2pass_basic.out[1], by:0) //reattach bam file
+    star_filter.filtered.combine(star_out[1], by:0) //reattach bam file
 	.map{samplename,filter,logfile,bamfile -> ["star", samplename, bamfile]} // discard log file and attach aligner name
-	.set{star_2pass_basic_filtered} 
+	.set{star_filtered} 
     
-    samtools_index_idxstats(star_2pass_basic_filtered)
+    samtools_index_idxstats(star_filtered)
     
     mapsummary(samtools_index_idxstats.out)
     
-    featureCounts(star_2pass_basic_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
+    featureCounts(star_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
 
     merge_featureCounts(featureCounts.out[0].collect())
 
@@ -157,14 +165,7 @@ workflow {
 	    mapsummary.out.collect().ifEmpty([]),
 	    ch_multiqc_fc_aligner.collect().ifEmpty([]),
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-	    star_2pass_basic.out[2].collect().ifEmpty([]),
+	    star_out[2].collect().ifEmpty([]),
 	    salmon.out[2].collect().ifEmpty([]))
     
 }
-    // tximport(salmon_out_0_1.map{it -> it.getName()}.collectFile(name: 'quant_sf_files.txt', sort: true, newLine: true), salmon_out_0_2)
-
-			//.collectFile(sort:true) { aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] })
-		       // .transpose()
-		//	.groupTuple(sort: true)
-		//	.map{ aligner, files -> [ aligner, files.collect{ it.toString() }.join('\n') + '\n' ] }
-		//	.collectFile(sort:true) ) 
