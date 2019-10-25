@@ -1,7 +1,7 @@
 params.run = true
 
-process 'star_2pass_firstpass' {
-    tag "firstpass ${samplename}"
+process 'star_2pass_1st_pass' {
+    tag "1st pass ${samplename}"
     container "nfcore-rnaseq"
     time '600m'
 
@@ -10,10 +10,10 @@ process 'star_2pass_firstpass' {
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
     
-    publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_basic/", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_pass2_1stpass/$filename", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_pass2_1stpass/$filename", mode: 'symlink', pattern: "*.tab"
     
-    publishDir "${params.outdir}/star_pass2_basic_multiqc/", mode: 'copy',
+    publishDir "${params.outdir}/star_pass2_1stpass_multiqc/", mode: 'copy',
         saveAs: { filename ->
             if (filename ==~ /.*\.ReadsPerGene\.out\.tab/) "STARcounts/$filename"
             else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
@@ -23,7 +23,6 @@ process 'star_2pass_firstpass' {
   input:
     set val(samplename), file(reads) //from ch_star // _reads_only
     file genomeDir //from ch_star_index.collect()
-    // file genome_fasta3 from ch_dna_star.collect()
     file gtf //from ch_gtf_star.collect()
 
     when:
@@ -31,8 +30,8 @@ process 'star_2pass_firstpass' {
     
   output:
     set val(samplename), file("*Log.final.out")
-    file "*.out" //into ch_alignment_logs_star
     file "*.SJ.out.tab"
+    file "*.out" //into ch_alignment_logs_star
     file "*.ReadsPerGene.out.tab" //into ch_merge_starcounts
 
   script:
@@ -40,6 +39,7 @@ process 'star_2pass_firstpass' {
   """
   export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
 
+    # first pass 
     STAR --genomeDir ${genomeDir} \\
         --sjdbGTFfile $gtf \\
         --readFilesIn $reads --readFilesCommand zcat \\
