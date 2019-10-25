@@ -146,7 +146,7 @@ workflow {
     merge_featureCounts(featureCounts.out[0].collect())
 
     crams_to_fastq_gz.out[1]
-	.mix(star_2pass_basic_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
+	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
 	.set{ch_lostcause }
     lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
 
