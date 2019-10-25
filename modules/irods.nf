@@ -1,7 +1,7 @@
 params.run = true
 params.dropqc = ""
 
-process irods {
+process iget_cram {
     tag "iget cram ${samplename}"
     memory = '10G'
     time '240m'
