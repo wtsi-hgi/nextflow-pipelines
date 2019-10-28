@@ -93,7 +93,7 @@ workflow {
     iget_cram(
 	Channel.fromPath("${baseDir}/inputs/gains_samples.txt")
 	    .flatMap{ it.readLines()}
-	    .map{it -> tuple("5890", it)} ) // HG_The Genomic Advances in Sepsis (GAinS) RNA-seq
+	    .take(2), "5890")
     crams_to_fastq_gz(iget_cram.out[0])
     ////
 
@@ -115,16 +115,16 @@ workflow {
 
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
     
-    star_2pass_1stpass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
-    star_2pass_merge_junctions(star_2pass_1stpass.out[0].collect())
-    star_2pass_2ndpass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
+    star_2pass_1st_pass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
+    star_2pass_merge_junctions(star_2pass_1st_pass.out[0].collect())
+    star_2pass_2nd_pass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
-    ch_star_out = star_2pass_2ndpass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
+    star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
 
 
     
     //// 
-    leafcutter_bam2junc(ch_star_out[0])
+    leafcutter_bam2junc(star_out[0])
     leafcutter_clustering(leafcutter_bam2junc.out.collect())
 
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
@@ -167,5 +167,6 @@ workflow {
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
 	    star_out[2].collect().ifEmpty([]),
 	    salmon.out[2].collect().ifEmpty([]))
+    
     
 }
