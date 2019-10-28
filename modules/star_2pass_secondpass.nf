@@ -17,7 +17,7 @@ process 'star_2pass_2nd_pass' {
     
     publishDir "${params.outdir}/star_pass2_2ndpass_multiqc/", mode: 'copy',
         saveAs: { filename ->
-            if (filename ==~ /.*\.ReadsPerGene\.out\.tab/) "STARcounts/$filename"
+            if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
             else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
             else null
         }
