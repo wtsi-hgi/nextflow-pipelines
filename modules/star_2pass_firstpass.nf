@@ -32,7 +32,6 @@ process 'star_2pass_1st_pass' {
     set val(samplename), file("*Log.final.out")
     file "*.SJ.out.tab"
     file "*.out" //into ch_alignment_logs_star
-    file "*.ReadsPerGene.out.tab" //into ch_merge_starcounts
 
   script:
 

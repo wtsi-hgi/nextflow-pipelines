@@ -37,7 +37,6 @@ process 'star_2pass_basic' {
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     file "*.out" //into ch_alignment_logs_star
     file "*.SJ.out.tab"
-    file "*.ReadsPerGene.out.tab" //into ch_merge_starcounts
 
   script:
 
