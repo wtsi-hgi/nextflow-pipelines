@@ -8,12 +8,11 @@ process samtools_index_idxstats {
     time '300m'
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
+    publishDir "${params.outdir}/idxstats/", mode: 'symlink', pattern: "*.idxstats"
 
     when:
     params.run
     
-    publishDir "${params.outdir}/idxstats/", mode: 'symlink', pattern: "*.idxstats"
-
     input:
     set val(aligner), val(samplename), file(thebam) //from ch_indexbam
 
