@@ -116,7 +116,7 @@ workflow {
     star_2pass_basic(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
     
     star_2pass_1st_pass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect())
-    star_2pass_merge_junctions(star_2pass_1st_pass.out[0].collect())
+    star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     star_2pass_2nd_pass(crams_to_fastq_gz.out[0], ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 

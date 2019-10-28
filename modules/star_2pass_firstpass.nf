@@ -10,13 +10,13 @@ process 'star_2pass_1st_pass' {
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
     
-    publishDir "${params.outdir}/star_pass2_1stpass/$filename", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_1stpass/$filename", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_pass2_1stpass/$samplename", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_pass2_1stpass/$samplename", mode: 'symlink', pattern: "*.tab"
     
     publishDir "${params.outdir}/star_pass2_1stpass_multiqc/", mode: 'copy',
         saveAs: { filename ->
-            if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
-            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
+            if (filename ==~ /.*\.out\.tab/) "STARcounts/$samplename"
+            else if (filename.indexOf(".bam") == -1) "STARlogs/$samplename"
             else null
         }
 

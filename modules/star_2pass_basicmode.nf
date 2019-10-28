@@ -10,15 +10,15 @@ process 'star_2pass_basic' {
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
     
-    publishDir "${params.outdir}/star_pass2_basic/$filename", mode: 'symlink', pattern: "*.bam"
-    publishDir "${params.outdir}/star_pass2_basic/$filename", mode: 'symlink', pattern: "*.bam.bai"
-    publishDir "${params.outdir}/star_pass2_basic/$filename", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_basic/$filename", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam"
+    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam.bai"
+    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.tab"
     
     publishDir "${params.outdir}/star_pass2_basic_multiqc/", mode: 'copy',
         saveAs: { filename ->
-            if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
-            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
+            if (filename ==~ /.*\.out\.tab/) "STARcounts/$samplename"
+            else if (filename.indexOf(".bam") == -1) "STARlogs/$samplename"
             else null
         }
 
