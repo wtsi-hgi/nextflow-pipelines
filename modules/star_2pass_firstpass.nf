@@ -15,8 +15,8 @@ process 'star_2pass_1st_pass' {
     
     publishDir "${params.outdir}/star_pass2_1stpass_multiqc/", mode: 'copy',
         saveAs: { filename ->
-            if (filename ==~ /.*\.out\.tab/) "STARcounts/$samplename"
-            else if (filename.indexOf(".bam") == -1) "STARlogs/$samplename"
+            if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
+            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
             else null
         }
 
