@@ -15,10 +15,10 @@ process 'fastx_trimmer' {
     params.run 
 
     input:
-    set val(samplename), val(star_trim), file(fastq_gz_input)
+    set val(samplename), val(batch), val(star_trim), file(fastq_gz_input)
     
   output:
-    set val(samplename), file("${samplename}.fastq.gz")
+    set val(samplename), val(batch), file("${samplename}.fastq.gz")
 
   script:
    """
