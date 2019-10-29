@@ -1,5 +1,5 @@
-samplename,batch,n_to_trim,fastq
-24-1-1D18,first101,2,/lustre/scratch115/projects/interval_wgs/nextflow/dolcetto_xin/first101/combined/first101_24-1-1D18_S1.fastq.gz
+samplename,batch,fastq,
+24-1-1D18,first101,/lustre/scratch115/projects/interval_wgs/nextflow/dolcetto_xin/first101/combined/first101_24-1-1D18_S1.fastq.gz
 24-1-2D18,first101,/lustre/scratch115/projects/interval_wgs/nextflow/dolcetto_xin/first101/combined/first101_24-1-2D18_S2.fastq.gz
 24-1-3D18,first101,/lustre/scratch115/projects/interval_wgs/nextflow/dolcetto_xin/first101/combined/first101_24-1-3D18_S3.fastq.gz
 24-1-4D18,first101,/lustre/scratch115/projects/interval_wgs/nextflow/dolcetto_xin/first101/combined/first101_24-1-4D18_S4.fastq.gz
