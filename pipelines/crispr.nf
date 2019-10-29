@@ -43,14 +43,13 @@ workflow {
     // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
     Channel.fromPath("${baseDir}/../inputs/crispr/walkup101_fastqs.csv")
 	.splitCsv(header: true)
-	.map { row -> tuple("${row.samplename}", "${row.batch}",  file("${row.fastq}")) }
+	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
 
     fastx_trimmer(ch_samplename_batch_fastqs)
 
     // 2: merge fastqs across batches -> read counts -> collate counts
-
-    ch_samplename_batch_fastqs
+    fastx_trimmer.out 
 	.groupTuple(by: 0, sort: true)
 	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
 	.set{ch_samplename_fastqs_to_merge}
