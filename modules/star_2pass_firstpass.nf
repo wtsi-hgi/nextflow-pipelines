@@ -31,7 +31,7 @@ process 'star_2pass_1st_pass' {
   output:
     set val(samplename), file("*Log.final.out")
     file "*.SJ.out.tab"
-    file "*.Log.final.out", file "*.Log.out", file "*.progress.out" //into ch_alignment_logs_star
+    set file "*.Log.final.out", file "*.Log.out", file "*.progress.out" //into ch_alignment_logs_star
 
   script:
 
