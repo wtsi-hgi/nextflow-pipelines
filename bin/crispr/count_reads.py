@@ -28,8 +28,8 @@ count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
     if includeG: seq = str(record.seq)[1:20]
-    #else: seq = str(record.seq)[:19]
-    else: seq = str(record.seq)[1:20]
+    else: seq = str(record.seq)[:19]
+    # else: seq = str(record.seq)[1:20] very low mapping ~ 1%
     if seq in guide_counts:
         guide_counts[seq] += 1
         mapped += 1
