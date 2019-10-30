@@ -26,6 +26,6 @@ process 'fastx_trimmer' {
    gunzip -c ${fastq_gz_input} | /usr/local/fastxToolkit-0.0.13/bin/fastx_trimmer -v -f ${start_trim} -z -Q33 -o tmp.fastq.gz
 
    rm -f ${samplename}.${batch}.fastq.gz
-   mv tmp.fastq.gz ${samplename}.${batch}..fastq.gz
+   mv tmp.fastq.gz ${samplename}.${batch}.fastq.gz
    """
 }
