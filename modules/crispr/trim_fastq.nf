@@ -5,6 +5,7 @@ process 'fastx_trimmer' {
     memory = '10G'
     time '120m'
     container "fastxtoolkit"  //.img// FASTX Toolkit 0.0.13
+    containerOptions = "--bind /lustre"
     cpus 1
     maxForks 100
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
