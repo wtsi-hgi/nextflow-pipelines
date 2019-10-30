@@ -48,6 +48,11 @@ workflow {
 
     fastx_trimmer(ch_samplename_batch_fastqs)
 
+    fastx_trimmer.out 
+	.groupTuple(by: 0, sort: true)
+	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
+	.set{ch_samplename_fastqs_to_merge}
+
 }
 
     
