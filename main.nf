@@ -104,12 +104,10 @@ workflow {
     ////set{ch_cram_files}
     ////crams_to_fastq_gz(ch_cram_files)
     ////
-
-    crams_to_fastq_gz.out[0].
-    groupTuple(sort: true).
-    map{ samplename, fastqs -> tuple( groupKey(samplename, fastqs.size()), fastqs ) }.
-    set{ch_samplename_crams}
-
+    crams_to_fastq_gz.out[0]
+	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
+	.set{ch_samplename_crams}
+    
     fastqc(ch_samplename_crams)
 
     salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
