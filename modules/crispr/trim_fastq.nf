@@ -23,7 +23,7 @@ process 'fastx_trimmer' {
 
   script:
    """
-   /usr/local/fastxToolkit-0.0.13/bin/fastx_trimmer -v -f ${start_trim} -z -i ${fastq_gz_input} -o tmp.fastq.gz
+   gunzip -c ${fastq_to_publish} | /usr/local/fastxToolkit-0.0.13/bin/fastx_trimmer -v -f ${start_trim} -z -Q33 -o tmp.fastq.gz
 
    rm -f ${samplename}.fastq.gz
    mv tmp.fastq.gz ${samplename}.fastq.gz
