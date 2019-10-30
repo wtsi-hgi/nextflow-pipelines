@@ -107,6 +107,7 @@ workflow {
 
     crams_to_fastq_gz.out[0].
     groupTuple(sort: true).
+    map{ samplename, fastqs -> tuple( groupKey(samplename, fastqs.size()), fastqs ) }.
     set{ch_samplename_crams}
 
     fastqc(ch_samplename_crams)
