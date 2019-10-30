@@ -23,8 +23,8 @@ process 'fastqc' {
     input:
     set val(samplename), file(reads)
     
-  output:
-    file "*_fastqc.zip", file "*_fastqc.html"
+    output:
+    set file("*_fastqc.zip"), file("*_fastqc.html")
 
   script:
   """
