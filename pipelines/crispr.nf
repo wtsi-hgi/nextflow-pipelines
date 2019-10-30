@@ -55,7 +55,7 @@ workflow {
 
     merge_fastq_batches(ch_samplename_fastqs_to_merge)
 
-    fastqc(ch_samplename_fastqs_to_merge}
+    fastqc(ch_samplename_fastqs_to_merge
 	   .mix(merge_fastq_batches.out[0]))
     multiqc(fastqc.out.collect())
 
