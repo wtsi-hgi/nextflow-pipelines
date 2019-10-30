@@ -55,8 +55,10 @@ workflow {
 
     merge_fastq_batches(ch_samplename_fastqs_to_merge)
 
-    fastqc(ch_samplename_fastqs_to_merge
-	   .mix(merge_fastq_batches.out[0]))
+    fastqc(fastx_trimmer.out 
+	    .map{ samplename, batch, fastq -> tuple( samplename, fastq ) }
+	    .mix(merge_fastq_batches.out[0]))
+
     multiqc(fastqc.out.collect())
 
 }
