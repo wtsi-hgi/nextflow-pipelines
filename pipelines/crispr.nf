@@ -53,8 +53,6 @@ workflow {
 	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
 	.set{ch_samplename_fastqs_to_merge}
 
-    ch_samplename_fastqs_to_merge.view()
-
     merge_fastq_batches(ch_samplename_fastqs_to_merge)
 
 }
