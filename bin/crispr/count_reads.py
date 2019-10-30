@@ -15,8 +15,7 @@ flog.write("outfile: " + str(outfile) + str("\n"))
 flog.write("outfile2: " + str(outfile2) + str("\n"))
 flog.write("includeG: " + str(includeG) + str("\n"))
 
-getSeq = lambda x: x[:19] if len(x) == 20 else x
-#getSeq = lambda x: x[1:] if len(x) == 20 else x
+getSeq = lambda x: x[1:] if len(x) == 20 else x
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Gene'])}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
