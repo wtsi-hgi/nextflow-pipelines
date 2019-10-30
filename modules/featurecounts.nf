@@ -35,7 +35,7 @@ process featureCounts {
     output:
     set val(aligner), file("*.gene.fc.txt") //into ch_merge_fc
     set val(aligner), file("*.gene.fc.txt.summary") //into ch_multiqc_fc
-    set val(aligner), file("*.biotype_counts*mqc.txt") //into ch_multiqc_fcbiotype
+    set val(aligner), file("*.biotype_counts_mqc.txt") //into ch_multiqc_fcbiotype
 
     script:
     def extraparams = params.fcextra.toString() - ~/^dummy/

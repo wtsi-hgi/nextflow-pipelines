@@ -12,7 +12,7 @@ process samtools_index_idxstats {
 
     when:
     params.run
-    
+
     input:
     set val(aligner), val(samplename), file(thebam) //from ch_indexbam
 

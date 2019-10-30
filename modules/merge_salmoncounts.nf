@@ -19,7 +19,7 @@ process merge_salmoncounts {
     params.run
 
     output:
-    set file('*counts.txt'), file('*tpm.txt')
+    set file('*transcounts.txt'), file('*transtpm.txt'), file('*genecounts.txt'), file('*genetpm.txt')
     file("fofn_quant_sf_salmon.txt")
     file("fofn_quant_genes_sf_salmon.txt")
     

@@ -35,7 +35,7 @@ process 'star_2pass_2nd_pass' {
     set val(samplename), file ('*.bam'), file ('*.bai') //into star_aligned_with_bai
     set val(samplename), file("*Log.final.out"), file ('*.bam') //into star_aligned
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
-    file "*.out" //into ch_alignment_logs_star
+    file "*.Log.final.out", file "*.Log.out", file "*.progress.out" //into ch_alignment_logs_star
     file "*.SJ.out.tab"
 
   script:
