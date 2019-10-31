@@ -36,7 +36,7 @@ process multiqc {
     def filename = "${params.runtag}_multiqc.html"
     def reporttitle = "${params.runtag}"
     """
-    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
     multiqc . -f --title "$reporttitle" --filename "$filename" -m fastqc
     """
