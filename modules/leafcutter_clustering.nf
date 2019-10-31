@@ -1,7 +1,7 @@
 params.run = true
 
 process 'leafcutter_clustering' {
-    cache 'deep'
+    // cache 'deep'
     container "leafcutter"
     memory ='100G'
     cpus 4

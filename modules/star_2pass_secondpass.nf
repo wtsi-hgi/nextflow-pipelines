@@ -41,7 +41,7 @@ process 'star_2pass_2nd_pass' {
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
   # 2nd pass
   STAR --genomeDir ${genomeDir} \

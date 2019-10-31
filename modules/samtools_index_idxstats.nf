@@ -21,7 +21,7 @@ process samtools_index_idxstats {
 
     script:
     """
-    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
     samtools index $thebam
     samtools idxstats $thebam > ${samplename}.idxstats

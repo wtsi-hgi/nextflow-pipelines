@@ -24,7 +24,7 @@ process 'leafcutter_bam2junc' {
   script:
 
   """
-  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:$PATH
+  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:\$PATH
 
   echo Converting ${bamfile} to ${samplename}.junc
   sh /home/leafcutter/scripts/bam2junc.sh ${bamfile} ${samplename}.junc

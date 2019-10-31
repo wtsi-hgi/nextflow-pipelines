@@ -2,7 +2,7 @@ params.run = true
 params.runtag = 'runtag'
 
 process merge_salmoncounts {
-    tag "${input_trans}/${input_genes}"
+    tag ""
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }

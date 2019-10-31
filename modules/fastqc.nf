@@ -24,11 +24,11 @@ process 'fastqc' {
     set val(samplename), file(reads)
     
     output:
-    set file("*_fastqc.zip"), file("*_fastqc.html")
+    set file("*_1_fastqc.zip"), file("*_2_fastqc.zip"), file("*_1_fastqc.html"), file("*_2_fastqc.html")
 
   script:
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:$PATH
+  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
   fastqc -t ${task.cpus} -q $reads
   """
