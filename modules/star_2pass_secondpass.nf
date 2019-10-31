@@ -5,7 +5,8 @@ process 'star_2pass_2nd_pass' {
     container "nfcore-rnaseq"
     time '600m'
 
-    errorStrategy = { task.exitStatus == 130 && task.attempt <= 2 ? 'retry' : 'ignore' }
+    // errorStrategy = { task.exitStatus == 130 && task.attempt <= 2 ? 'retry' : 'ignore' }
+    errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
