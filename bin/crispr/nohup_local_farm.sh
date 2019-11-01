@@ -23,4 +23,4 @@ export CONDA_PKGS_DIRS=/software/hgi/installs/anaconda3/pkgs
 export CAPSULE_CACHE_DIR=/software/hgi/installs/anaconda3/capsule_cache
 ##### conda activate $CONDA_ENVS_DIRS/nextflow
 
-rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./bin/crispr/nextflow.sh > nohup.log 2>&1 &
+rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./nextflow-pipelines/bin/crispr/nextflow.sh > nohup.log 2>&1 &
