@@ -1,4 +1,4 @@
-contains several pipelines used buy sanger hgi team, the main one is 
+contains several pipelines used by Sanger hgi team, the main one is 
 
 # Nextflow-RNAseq
 
