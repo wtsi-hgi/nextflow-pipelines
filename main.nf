@@ -1,5 +1,6 @@
 nextflow.preview.dsl=2
 
+
 params.min_reads = 500   // used by crams_to_fastq_gz
 params.genome = 'GRCh38' // used by star aligner
 params.fcextra = ""      // used by featurecounts
@@ -12,6 +13,7 @@ params.biotypes_header= "$baseDir/assets/biotypes_header.txt" // used by feature
 params.mito_name = 'MT' // used by mapsummary
 params.runtag = 'gains5890' // "5890" HG_The Genomic Advances in Sepsis (GAinS) RNA-seq
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
+params.dropqc = ""
 
 params.run_star = true
 def pick_aligner(String aligner) {
@@ -63,9 +65,9 @@ include tximport from './modules/tximport.nf' params(run: true, outdir: params.o
 
 include star_2pass_basic from './modules/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
 
-include star_2pass_1stpass from './modules/star_2pass_firstpass.nf' params(run: true, outdir: params.outdir)
+include star_2pass_1st_pass from './modules/star_2pass_firstpass.nf' params(run: true, outdir: params.outdir)
 include star_2pass_merge_junctions from './modules/star_2pass_merge_junctions.nf' params(run: true, outdir: params.outdir)
-include star_2pass_2ndpass from './modules/star_2pass_secondpass.nf' params(run: true, outdir: params.outdir)
+include star_2pass_2nd_pass from './modules/star_2pass_secondpass.nf' params(run: true, outdir: params.outdir)
 
 include filter_star_aln_rate from './modules/filter_star_aln_rate.nf' params(run: true,
 									     min_pct_aln: params.min_pct_aln)
@@ -93,8 +95,9 @@ workflow {
     iget_cram(
 	Channel.fromPath("${baseDir}/inputs/gains_samples.txt")
 	    .flatMap{ it.readLines()}
-	    .take(4), "5890")
+	    .take(20), "5890")
     crams_to_fastq_gz(iget_cram.out[0])
+    
     ////
 
     //// from cram files:
