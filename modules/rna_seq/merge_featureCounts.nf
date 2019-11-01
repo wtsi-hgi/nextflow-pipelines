@@ -32,7 +32,7 @@ process merge_featureCounts {
 
     ls . | grep gene.fc.txt\$ > fofn_gene_featurecount.txt
 
-    python3 !{workflow.projectDir}/bin/merge_featurecounts.py        \\
+    python3 !{workflow.projectDir}/../bin/rna_seq/merge_featurecounts.py        \\
       --rm-suffix !{thesuffix}                                       \\
       -c 1 --skip-comments --header                                  \\
       -o !{outputname} -I fofn_gene_featurecount.txt
