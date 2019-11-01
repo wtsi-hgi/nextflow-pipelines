@@ -1,3 +1,5 @@
+contains several pipelines used buy sanger hgi team, the main one is 
+
 # Nextflow-RNAseq
 
 A bioinformatics analysis pipeline used for RNA sequencing data, written in the new nextflow DSL2 language syntax, leveraging nextflow modules.  
