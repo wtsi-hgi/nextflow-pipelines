@@ -25,7 +25,7 @@ process iget_cram {
 
     script:
     """
-    if bash -euo pipefail $workflow.projectDir/bin/rna_seq/irods.sh -N ${task.cpus} -t ${studyid} -s ${samplename} ${params.dropqc}; then
+    if bash -euo pipefail $workflow.projectDir/../bin/rna_seq/irods.sh -N ${task.cpus} -t ${studyid} -s ${samplename} ${params.dropqc}; then
       true
     else
       stat=\$?
