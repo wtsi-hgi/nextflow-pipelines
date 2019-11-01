@@ -4,12 +4,12 @@ params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
 // collect library tables:
-params.guide_libraries = "${baseDir}/../assets/crispr/*.guide_library.csv"
+params.guide_libraries = "${baseDir}/../../guide_libraries/*.guide_library.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
 // add guide library of each sample:
-params.samplename_library = "${baseDir}/../inputs/crispr/walkup101_libraries.csv"
+params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
