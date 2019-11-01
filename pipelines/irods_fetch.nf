@@ -16,7 +16,7 @@ workflow {
     Channel.fromPath(params.samplefile)
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.sample}", "${row.study_id}") }
-/*	.take(2) */
+	.take(2)
 	.set{ch_to_iget}
 
     iget(ch_to_iget)
