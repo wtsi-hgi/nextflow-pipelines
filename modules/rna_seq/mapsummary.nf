@@ -20,6 +20,6 @@ process mapsummary {
     """
     export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
 
-    python $baseDir/bin/mito.py -m ${params.mito_name} -t $thestats > ${samplename}_mqc.txt
+    python $baseDir/../bin/rna_seq/mito.py -m ${params.mito_name} -t $thestats > ${samplename}_mqc.txt
     """
 }
