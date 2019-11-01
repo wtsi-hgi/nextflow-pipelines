@@ -41,7 +41,7 @@ workflow {
     // crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
 
     // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
-    Channel.fromPath("${baseDir}/../inputs/crispr/walkup101_fastqs.csv")
+    Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
