@@ -1,4 +1,4 @@
-contains several pipelines used by Sanger hgi team, the largest one is 
+Hosts several Nextflow pipelines used by Sanger hgi team, the largest one is 
 
 # Nextflow-RNAseq
 
