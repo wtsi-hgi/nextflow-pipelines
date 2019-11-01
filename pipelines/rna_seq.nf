@@ -95,7 +95,7 @@ workflow {
     iget_cram(
 	Channel.fromPath("${baseDir}/../inputs/gains_samples.txt")
 	    .flatMap{ it.readLines()}
-	    .take(20), "5890")
+	    .take(10), "5890")
     crams_to_fastq_gz(iget_cram.out[0])
     
     ////
