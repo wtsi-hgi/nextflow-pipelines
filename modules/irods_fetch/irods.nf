@@ -14,10 +14,10 @@ process 'iget_crams' {
     params.run 
 
     input:
-    set val(samplename), val(batch), val(sample), val(study_id)
+    set val(samplename), val(sample), val(study_id)
     
   output:
-    set val(samplename), val(batch), file("*.cram"), file ("*.crai")
+    set val(samplename), file("*.cram"), file ("*.crai") optional true
 
   script:
     """
@@ -31,11 +31,11 @@ cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
 do
     if [ \$num -gt 1 ]
     then
-        iget -K -f -v \${line} ${batch}.${samplename}.\${num}.cram
-        iget -K -f -v \${line}.crai ${batch}.${samplename}.\${num}.cram.crai
+        iget -K -f -v \${line} ${samplename}.\${num}.cram
+        iget -K -f -v \${line}.crai ${samplename}.\${num}.cram.crai
     else
-        iget -K -f -v \${line} ${batch}.${samplename}.cram
-        iget -K -f -v \${line}.crai ${batch}.${samplename}.cram.crai
+        iget -K -f -v \${line} ${samplename}.cram
+        iget -K -f -v \${line}.crai ${samplename}.cram.crai
     fi
     ((num++))
 done
