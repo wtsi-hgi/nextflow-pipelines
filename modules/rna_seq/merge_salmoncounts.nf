@@ -34,22 +34,22 @@ process merge_salmoncounts {
     ls . | grep .quant.sf\$ > fofn_quant_sf_salmon.txt
     ls . | grep .quant.genes.sf\$ > fofn_quant_genes_sf_salmon.txt
 
-    python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
+    python3 $workflow.projectDir/../bin/rna_seq/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
       -c -1 --skip-comments --header                                  \\
       -o $outgenescount -I fofn_quant_genes_sf_salmon.txt
 
-    python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
+    python3 $workflow.projectDir/../bin/rna_seq/merge_featurecounts.py           \\
       --rm-suffix .quant.sf                                           \\
       -c -1 --skip-comments --header                                  \\
       -o $outtranscount -I fofn_quant_sf_salmon.txt
 
-    python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
+    python3 $workflow.projectDir/../bin/rna_seq/merge_featurecounts.py           \\
       --rm-suffix .quant.genes.sf                                     \\
       -c -2 --skip-comments --header                                  \\
       -o $outgenestpm -I fofn_quant_genes_sf_salmon.txt
 
-    python3 $workflow.projectDir/bin/merge_featurecounts.py           \\
+    python3 $workflow.projectDir/../bin/rna_seq/merge_featurecounts.py           \\
       --rm-suffix .quant.sf                                           \\
       -c -2 --skip-comments --header                                  \\
       -o $outtranstpm -I fofn_quant_sf_salmon.txt
