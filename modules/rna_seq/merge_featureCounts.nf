@@ -5,6 +5,7 @@ process merge_featureCounts {
     tag "$aligner"
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
+    containerOptions = "--bind /lustre"
     label 'merge_feature'
     memory = '100G'
     cpus 2
