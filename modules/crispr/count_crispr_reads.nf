@@ -6,6 +6,7 @@ process count_crispr_reads {
     tag "read_counts $samplename"
     // container "nfcore-rnaseq"
     publishDir "${params.outdir}/read_counts", mode: 'symlink'
+    containerOptions = "--bind /lustre"
     memory = '10G'
     cpus 1
     time '300m'
