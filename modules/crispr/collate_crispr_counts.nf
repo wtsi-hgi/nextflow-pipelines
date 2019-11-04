@@ -4,6 +4,7 @@ params.runtag = 'runtag'
 process collate_crispr_counts {
     tag "collate counts"
     // container "nfcore-rnaseq"
+    // containerOptions = "--bind /lustre"
     publishDir "${params.outdir}/collate_counts", mode: 'symlink'
     memory = '20G'
     cpus 2
