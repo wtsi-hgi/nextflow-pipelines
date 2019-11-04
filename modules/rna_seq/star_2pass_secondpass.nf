@@ -8,7 +8,7 @@ process 'star_2pass_2nd_pass' {
     // errorStrategy = { task.exitStatus == 130 && task.attempt <= 2 ? 'retry' : 'ignore' }
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
-    memory = {  80.GB + 30.GB * (task.attempt-1) }
+    memory = {  80.GB + 20.GB * (task.attempt-1) }
     maxRetries 4
     
     publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.bam"
