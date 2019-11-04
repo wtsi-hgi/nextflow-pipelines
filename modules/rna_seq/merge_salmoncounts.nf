@@ -6,6 +6,7 @@ process merge_salmoncounts {
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
+    containerOptions = "--bind /lustre"
     maxRetries 6
     // memory = '10G'
     memory = {  80.GB + 20.GB * (task.attempt-1) }
