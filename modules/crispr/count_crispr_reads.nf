@@ -8,7 +8,7 @@ process count_crispr_reads {
     // containerOptions = "--bind /lustre"
     publishDir "${params.outdir}/read_counts", mode: 'symlink',
         saveAs: { filename ->
-            if (filename ==~ /.*\.unmapped_sequences\.txt/) "unmapped_sequences/"
+            if (filename ==~ /.*\.unmapped_sequences\.txt/) "unmapped_sequences/$filename"
             else filename
         }
     memory = '10G'
