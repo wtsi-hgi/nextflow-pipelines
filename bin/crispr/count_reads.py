@@ -36,7 +36,7 @@ for record in SeqIO.parse(f, 'fastq'):
         mapped += 1
     else: 
         count += 1
-        f_unmapped.write(str(record.seq) + '/n')
+        f_unmapped.write(str(record.seq) + str("\n"))
         #if count > 1000 and count < 1100:
         #    print(record.seq)
     total += 1
