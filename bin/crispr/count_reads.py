@@ -2,13 +2,13 @@ import gzip, io, os, sys
 from Bio import SeqIO
 import pandas as pd
 
-flog = io.open('record_log.txt','w')
-f_unmapped = io.open('unmapped_sequences.txt','w')
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
 outfile2 = sys.argv[4]
 includeG = eval(sys.argv[5])
+flog = io.open('record_log.txt','w')
+f_unmapped = io.open(outfile.replace('.counts.txt','.unmapped_sequences.txt'),'w')
 
 flog.write("fastq file: " + str(fastq_file) + str("\n"))
 flog.write("guide: " + str(sys.argv[2]) + str("\n"))
