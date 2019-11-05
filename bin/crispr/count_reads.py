@@ -3,6 +3,7 @@ from Bio import SeqIO
 import pandas as pd
 
 flog = io.open('record_log.txt','w')
+f_unmapped = io.open('unmapped_sequences.txt','w')
 fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
@@ -35,6 +36,7 @@ for record in SeqIO.parse(f, 'fastq'):
         mapped += 1
     else: 
         count += 1
+        f_unmapped.write(str(record.seq) + '/n')
         #if count > 1000 and count < 1100:
         #    print(record.seq)
     total += 1
@@ -43,6 +45,8 @@ for record in SeqIO.parse(f, 'fastq'):
         flog.write(str(total) + "\n")
 flog.close()
 f.close()
+f_unmapped.close()
+
 
 fout = io.open(outfile,'w')
 fout_gene = io.open(outfile.replace('.counts.txt','.genes.counts.txt'),'w')
