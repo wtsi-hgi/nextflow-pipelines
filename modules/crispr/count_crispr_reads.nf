@@ -6,7 +6,11 @@ process count_crispr_reads {
     tag "read_counts $samplename"
     // container "nfcore-rnaseq"
     // containerOptions = "--bind /lustre"
-    publishDir "${params.outdir}/read_counts", mode: 'symlink'
+    publishDir "${params.outdir}/read_counts", mode: 'symlink',
+        saveAs: { filename ->
+            if (filename ==~ /.*\.unmapped_sequences\.txt/) "unmapped_sequences/"
+            else filename
+        }
     memory = '10G'
     cpus 1
     time '300m'
