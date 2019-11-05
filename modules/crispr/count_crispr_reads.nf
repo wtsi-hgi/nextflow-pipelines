@@ -24,6 +24,7 @@ process count_crispr_reads {
     set val(guide_library), file("*.counts.txt")
     file("${samplename}.mapping.txt")
     set val(samplename), val(guide_library), stdout
+    set val(samplename), file("*.unmapped_sequences.txt")
 
     shell:
     """
