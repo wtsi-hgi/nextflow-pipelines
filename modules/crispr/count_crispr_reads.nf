@@ -32,7 +32,6 @@ process count_crispr_reads {
 
     shell:
     """
-
     if [ \"${params.read2}\"  == \"discard\" ]; then
     rm -f *_2.fastq.gz
     fi
