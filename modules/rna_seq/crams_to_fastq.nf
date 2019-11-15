@@ -11,7 +11,7 @@ process crams_to_fastq_gz {
     containerOptions = "--bind /lustre/scratch117/core/sciops_repository/cram_cache --bind /lustre/scratch118/core/sciops_repository/cram_cache"
     // errorStrategy 'terminate'
     errorStrategy 'retry'
-    maxRetries 3
+    maxRetries 6
     time '300m'
     cpus 1
     memory '2G'
