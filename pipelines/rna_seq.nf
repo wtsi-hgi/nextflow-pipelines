@@ -94,8 +94,7 @@ workflow {
     //// from irods studyid and list of samplenames
     iget_cram(
 	Channel.fromPath("${baseDir}/../../inputs/gains_samples.txt")
-	    .flatMap{ it.readLines()}
-	    .take(4), "5890")
+	    .flatMap{ it.readLines()}, "5890")
     crams_to_fastq_gz(iget_cram.out[0])
     
     ////
