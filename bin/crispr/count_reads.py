@@ -17,7 +17,7 @@ flog.write("outfile2: " + str(outfile2) + str("\n"))
 flog.write("includeG: " + str(includeG) + str("\n"))
 
 ## getSeq = lambda x: x[:19] if len(x) == 20 else x
-getSeq = lambda x: x[1:19] 
+getSeq = lambda x: x[:19] 
 
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Gene'])}
@@ -30,7 +30,7 @@ count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
     if includeG: seq = str(record.seq)[1:20]
-    else: seq = str(record.seq)[:18]
+    else: seq = str(record.seq)[:19]
     # else: seq = str(record.seq)[1:20] very low mapping ~ 1%
     if seq in guide_counts:
         guide_counts[seq] += 1
