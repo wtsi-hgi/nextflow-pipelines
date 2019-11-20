@@ -5,7 +5,7 @@ process 'leafcutter_bam2junc' {
     container "leafcutter"
     memory = '8G'
     cpus 1
-    time '180m'
+    time '320m'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     
