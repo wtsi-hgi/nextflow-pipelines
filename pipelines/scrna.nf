@@ -12,9 +12,9 @@ workflow {
 	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.sample_id}", "${row.sanger_sample_id}",
 			    "${row.supplier_sample_name}", "${row.pooled}", "${row.cellranger}") }
 	.map { row -> tuple("${row.samplename}", "${row.run_id}", "${row.sanger_sample_id}") }
-	.set{ch_samplename_runid}
+	.set{ch_samplename_runid_sangersampleid}
 
-    iget_cellranger(ch_samplename_batch_fastqs)
+    iget_cellranger(ch_samplename_runid_sangersampleid)
 
 }
 
