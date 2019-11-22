@@ -7,7 +7,7 @@ include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: 
 workflow {
 
     // 1.A: from irods cellranger:
-    Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv.csv")
+    Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.sample_id}", "${row.sanger_sample_id}",
 			    "${row.supplier_sample_name}", "${row.pooled}", "${row.cellranger}") }
