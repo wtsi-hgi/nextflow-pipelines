@@ -14,7 +14,7 @@ process 'iget_cellranger' {
     params.run 
 
     input:
-    set val(samplename), val(run_id), val(sanger_sample_id)
+    set val(samplename), val(run_id), val(sangersampleid)
     
     output:
     set val(samplename), file("cellranger_${samplename}") optional true
@@ -22,7 +22,7 @@ process 'iget_cellranger' {
 
   script:
     """
-ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} > found_in_irods.txt
+ils /seq/${run_id}/cellranger/ | grep ${sangersampleid} > found_in_irods.txt
 cat found_in_irods.txt  | awk '{print \$2}' | sed 's/^/iget -Kr /'g | sed 's/$/ cellranger_${samplename}/'g > iget.sh
 if [ -s "found_in_irods.txt" ] 
 then
