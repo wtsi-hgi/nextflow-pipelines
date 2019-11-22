@@ -22,10 +22,12 @@ process 'iget_cellranger' {
 
   script:
     """
-ils /seq/${run_id}/cellranger/ 
+ils /seq/${run_id}/cellranger/ > ${sanger_sample_id}.all_founds_in_irods.txt
 ils /seq/${run_id}/cellranger/ 
    """
 }
+
+// | grep ${sanger_sample_id} > found_in_irods.txt
 
 // iget -Kr /seq/31488/cellranger/cellranger302_count_31488_Pilot_study_of_dissociation_methods_for_human_gut_tissues8024873_GRCh38-3_0_0 .
 
