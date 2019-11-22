@@ -14,14 +14,14 @@ process 'iget_cellranger' {
     params.run 
 
     input:
-    set val(samplename), val(run_id)
+    set val(samplename), val(run_id), val(sanger_sample_id)
     
     output:
     set val(samplename), val(batch), file("*.cram"), file ("*.crai")
 
   script:
     """
-ils /seq/31488/cellranger/
+ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} | awk '{print \$2}' | sed 's/^/iget -Kr /'g
    """
 }
 
