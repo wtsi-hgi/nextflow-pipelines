@@ -9,7 +9,7 @@ workflow {
     // 1.A: from irods cellranger:
     Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv")
 	.splitCsv(header: true)
-	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${well}", "${row.sanger_sample_id}",
+	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.well}", "${row.sanger_sample_id}",
 			    "${row.supplier_sample_name}", "${row.pooled}", "${row.cellranger}") }
 	.map { a,b,c,d,e,f,g,h -> [c,b,f] }
 	.set{ch_samplename_runid_sangersampleid}
