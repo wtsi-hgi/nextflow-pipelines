@@ -2,10 +2,11 @@ params.run = true
 
 process 'leafcutter_bam2junc' {
     tag "${samplename}"
+    queue "long"
+    time '2800m'
     container "leafcutter"
     memory = '8G'
-    cpus 1
-    time '320m'
+    cpus 2
     errorStrategy { task.attempt <= 8 ? 'retry' : 'ignore' }
     maxRetries 8
     
