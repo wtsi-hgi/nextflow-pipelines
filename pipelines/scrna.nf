@@ -11,7 +11,7 @@ workflow {
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.sanger_sample_id}",
 			    "${row.supplier_sample_name}", "${row.pooled}", "${row.cellranger}") }
-	.map { a,b,c,d,e,f,g -> [c,b,d] }
+	.map { a,b,c,d,e,f,g -> [c,b,e] }
 	.set{ch_samplename_runid_sangersampleid}
 
     ch_samplename_runid_sangersampleid.view()
