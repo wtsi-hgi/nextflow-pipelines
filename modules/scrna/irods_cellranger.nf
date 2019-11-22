@@ -17,11 +17,19 @@ process 'iget_cellranger' {
     set val(samplename), val(run_id), val(sanger_sample_id)
     
     output:
-    set val(samplename), val(batch), file("*.cram"), file ("*.crai")
+    set val(samplename), file("cellranger_${samplename}") optional true
+    set val(samplename), file("${samplename}.not_found.txt") optional true
 
   script:
     """
-ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} | awk '{print \$2}' | sed 's/^/iget -Kr /'g
+ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} > found_in_irods.txt
+cat found_in_irods.txt  | awk '{print \$2}' | sed 's/^/iget -Kr /'g | sed 's/$/ cellranger_${samplename}/'g > iget.sh
+if [ -s "found_in_irods.txt" ] 
+then
+        bash iget.sh
+else
+        echo not found /seq/${run_id}/cellranger/ grep ${sanger_sample_id} > ${samplename}.not_found.txt
+fi
    """
 }
 
