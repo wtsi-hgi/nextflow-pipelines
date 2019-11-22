@@ -16,7 +16,7 @@ process 'iget_cellranger' {
     input:
     set val(samplename), val(run_id)
     
-  output:
+    output:
     set val(samplename), val(batch), file("*.cram"), file ("*.crai")
 
   script:
