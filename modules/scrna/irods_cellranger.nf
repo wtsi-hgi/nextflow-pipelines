@@ -8,7 +8,13 @@ process 'iget_cellranger' {
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
-    publishDir "${params.outdir}/iget_cellranger/", mode: 'symlink'
+    publishDir "${params.outdir}/iget_cellranger/", mode: 'symlink',
+        saveAs: { filename ->
+            if (filename ==~ /.*\.all_founds_in_irods\.txt/) "ils_all_founds/$filename"
+            else if (filename ==~ /.*\.not_found\.txt/) "ils_not_founds/$filename"
+            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
+            else "ils_found/$filename"
+        }
 
     when:
     params.run 
