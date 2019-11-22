@@ -32,7 +32,7 @@ ils /seq/${run_id}/cellranger/ > ${sanger_sample_id}.all_founds_in_irods.txt
 ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} > found_in_irods.txt
 
 cat found_in_irods.txt  | awk '{print \$2}' | sed 's/^/iget -Kr /'g | sed 's/\$/ cellranger_${samplename}/'g > iget.sh
-if [ -s "found_in_irods.txt" ] 
+if [ -s found_in_irods.txt ] 
 then
         bash iget.sh
 else
