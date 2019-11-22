@@ -14,8 +14,6 @@ workflow {
 	.map { a,b,c,d,e,f,g,h -> [c,b,f] }
 	.set{ch_samplename_runid_sangersampleid}
 
-    ch_samplename_runid_sangersampleid.view()
-    
     iget_cellranger(ch_samplename_runid_sangersampleid)
 
 }
