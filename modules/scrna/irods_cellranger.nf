@@ -22,8 +22,8 @@ process 'iget_cellranger' {
 
   script:
     """
-ils /seq/${run_id}/cellranger/ > ${sanger_sample_id}.all_founds_in_irods.txt
-ils /seq/${run_id}/cellranger/ | grep ${sanger_sample_id} > found_in_irods.txt
+ils /seq/${run_id}/cellranger/ 
+ils /seq/${run_id}/cellranger/ 
    """
 }
 
