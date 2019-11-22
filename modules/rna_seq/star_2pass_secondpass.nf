@@ -3,7 +3,8 @@ params.run = true
 process 'star_2pass_2nd_pass' {
     tag "2nd pass ${samplename}"
     container "nfcore-rnaseq"
-    time '600m'
+    queue "long"
+    time '2800m'
 
     // errorStrategy = { task.exitStatus == 130 && task.attempt <= 2 ? 'retry' : 'ignore' }
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
