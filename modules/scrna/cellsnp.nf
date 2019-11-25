@@ -1,7 +1,7 @@
 params.run = true
 
 process 'cellsnp' {
-    tag "cellSNP $samplename $run_id"
+    tag "cellSNP $samplename"
     container "single_cell"
     memory = '3G'
     time '120m'
