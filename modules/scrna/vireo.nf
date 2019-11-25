@@ -4,7 +4,7 @@ process 'vireo' {
     tag "vireo $samplename"
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    cpus =   {  2 * 2 * Math.min(2, task.attempt) }
+    cpus =   {  2 * Math.min(1, task.attempt) }
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     maxRetries 4
     
