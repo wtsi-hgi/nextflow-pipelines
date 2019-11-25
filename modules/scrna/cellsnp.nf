@@ -3,11 +3,12 @@ params.run = true
 process 'cellsnp' {
     tag "cellSNP $samplename"
     container "single_cell"
-    memory = '3G'
-    time '120m'
-    cpus 1
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+
+    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
+    cpus =   {  2 * 2 * Math.min(2, task.attempt) }
+    memory = {  10.GB + 20.GB * (task.attempt-1) }
+    maxRetries 4
+
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
 
     when:
