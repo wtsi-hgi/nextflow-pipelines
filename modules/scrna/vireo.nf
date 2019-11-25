@@ -21,6 +21,7 @@ process 'vireo' {
 
   script:
    """
+export PATH=/opt/conda/envs/conda_env/bin:/opt/conda/bin:\$PATH
 vireo -c $cell_data -N $n_donor -o vireo_${samplename}
    """
 }
