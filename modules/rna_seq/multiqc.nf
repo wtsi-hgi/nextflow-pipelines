@@ -3,9 +3,10 @@ params.runtag = 'runtag'
 
 process multiqc {
     container "nfcore-rnaseq"
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
+    cpus =   {  2 * 2 * Math.min(2, task.attempt) }
+    memory = {  40.GB + 20.GB * (task.attempt-1) }
     maxRetries 3
-    memory = '40G'
     cpus 2
     time '300m'
 
