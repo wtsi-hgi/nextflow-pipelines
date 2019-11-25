@@ -13,10 +13,10 @@ process 'iget_cellranger' {
         if (filename ==~ /.*\.all_founds_in_irods\.txt/) "ils_logs/$filename"
         else if (filename ==~ /.*\.not_found\.txt/) "ils_missing/$filename"
     }
-    publishDir "${params.outdir}/iget_cellranger/full_data/", mode: 'symlink', pattern "cellranger_${samplename}"
-    publishDir "${params.outdir}/iget_cellranger/raw_feature_bc_matrix/", mode: 'symlink', pattern "cellranger_${samplename}/raw_feature_bc_matrix"
-    publishDir "${params.outdir}/iget_cellranger/filtered_feature_bc_matrix/", mode: 'symlink', pattern "cellranger_${samplename}/filtered_feature_bc_matrix"
-    publishDir "${params.outdir}/iget_cellranger/metrics_summary/", mode: 'symlink', pattern "cellranger_${samplename}/metrics_summary"
+    publishDir "${params.outdir}/iget_cellranger/full_data/", mode: 'symlink', pattern: "cellranger_${samplename}"
+    publishDir "${params.outdir}/iget_cellranger/raw_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/raw_feature_bc_matrix"
+    publishDir "${params.outdir}/iget_cellranger/filtered_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/filtered_feature_bc_matrix"
+    publishDir "${params.outdir}/iget_cellranger/metrics_summary/", mode: 'symlink', pattern: "cellranger_${samplename}/metrics_summary"
 
     when:
     params.run 
