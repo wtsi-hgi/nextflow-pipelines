@@ -14,9 +14,11 @@ process 'iget_cellranger' {
         else if (filename ==~ /.*\.not_found\.txt/) "ils_missing/${samplename}/$filename"
     }
     publishDir "${params.outdir}/iget_cellranger/full_data/", mode: 'symlink', pattern: "cellranger_${samplename}"
-    publishDir "${params.outdir}/iget_cellranger/raw_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/raw_feature_bc_matrix"
-    publishDir "${params.outdir}/iget_cellranger/filtered_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/filtered_feature_bc_matrix"
-    publishDir "${params.outdir}/iget_cellranger/metrics_summary/", mode: 'symlink', pattern: "cellranger_${samplename}/metrics_summary.csv"
+    publishDir "${params.outdir}/iget_cellranger/raw_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/raw_feature_bc_matrix", saveAs: "${samplename}_raw"
+    publishDir "${params.outdir}/iget_cellranger/filtered_feature_bc_matrix/", mode: 'symlink', pattern: "cellranger_${samplename}/filtered_feature_bc_matrix", saveAs: "${samplename}_filtered"
+    publishDir "${params.outdir}/iget_cellranger/metrics_summary/", mode: 'symlink', pattern: "cellranger_${samplename}/metrics_summary.csv", saveAs: "${samplename}.metrics_summary.csv"
+    publishDir "${params.outdir}/iget_cellranger/bams/", mode: 'symlink', pattern: "cellranger_${samplename}/*.bam", saveAs: "${samplename}.bam"
+    publishDir "${params.outdir}/iget_cellranger/bams/", mode: 'symlink', pattern: "cellranger_${samplename}/*.bai", saveAs: "${samplename}.bam.bai"
 
     when:
     params.run 
@@ -26,6 +28,7 @@ process 'iget_cellranger' {
     
     output:
     set val(samplename), file("cellranger_${samplename}") optional true
+    set val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai") optional true
     set val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix") optional true
     set val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix") optional true
     set val(samplename), file("cellranger_${samplename}/metrics_summary.csv") optional true
