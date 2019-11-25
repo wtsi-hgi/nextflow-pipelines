@@ -6,7 +6,7 @@ process multiqc {
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
     memory = {  40.GB + 20.GB * (task.attempt-1) }
-    maxRetries 3
+    maxRetries 4
     cpus 2
     time '900m'
 
