@@ -8,7 +8,7 @@ process multiqc {
     memory = {  40.GB + 20.GB * (task.attempt-1) }
     maxRetries 3
     cpus 2
-    time '300m'
+    time '900m'
 
     publishDir "${params.outdir}", mode: 'copy',
       saveAs: {filename ->
