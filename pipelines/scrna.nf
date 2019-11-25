@@ -24,7 +24,7 @@ workflow {
 
     iget_cellranger(ch_samplename_runid_sangersampleid)
     
-    cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
+    // cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
     
     //vireo(cellsnp.out[0])
 
