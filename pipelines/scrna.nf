@@ -2,7 +2,15 @@ nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
 // params.read2 = 'discard' 
 
+params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
+Channel.fromPath(params.cellsnp_vcf_candidate_snps)
+    .ifEmpty { exit 1, "cellsnp_vcf_candidate_snps missing: ${params.cellsnp_vcf_candidate_snps}" }
+    .set {ch_cellsnp_vcf_candidate_snps}
+
+
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
+include cellsnp from '../modules/scrna/cellsno.nf' params(run: true, outdir: params.outdir)
+// include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
@@ -15,6 +23,9 @@ workflow {
 	.set{ch_samplename_runid_sangersampleid}
 
     iget_cellranger(ch_samplename_runid_sangersampleid)
+    
+    cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
+    
+    vireo(cellsnp.out[0])
 
 }
-
