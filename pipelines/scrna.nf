@@ -26,6 +26,6 @@ workflow {
     
     cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
     
-    vireo(cellsnp.out[0])
+    //vireo(cellsnp.out[0])
 
 }
