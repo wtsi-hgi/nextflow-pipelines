@@ -23,7 +23,7 @@ process 'cellsnp' {
   script:
    """
 zcat ${barcodes_tsv_gz} > barcodes.txt
-cellSNP -s ${bam_file} -b barcodes.txt -O cellsnp_${samplename} -R region_vcf -p 20 --minMAF 0.1 --minCOUNT 20
+cellSNP -s ${bam_file} -b barcodes.txt -O cellsnp_${samplename} -R ${region_vcf} -p 20 --minMAF 0.1 --minCOUNT 20
    """
 }
 // hg19: genome1K.phase3.SNP_AF5e2.chr1toX.hg19.vcf.gz (http://ufpr.dl.sourceforge.net/project/cellsnp/SNPlist/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz)
