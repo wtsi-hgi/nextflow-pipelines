@@ -1,7 +1,7 @@
 params.run = true
 
 process 'vireo' {
-    tag "vireo $samplename $run_id"
+    tag "vireo $samplename"
     container "single_cell"
     memory = '3G'
     time '120m'
