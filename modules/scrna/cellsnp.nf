@@ -2,7 +2,7 @@ params.run = true
 
 process 'cellsnp' {
     tag "cellSNP $samplename $run_id"
-    conda "/software/hgi/installs/anaconda3/envs/hgi_singlecell"
+    container "single_cell"
     memory = '3G'
     time '120m'
     cpus 1
