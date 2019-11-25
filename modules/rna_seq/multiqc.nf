@@ -5,7 +5,7 @@ process multiqc {
     container "nfcore-rnaseq"
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
-    memory = '10G'
+    memory = '40G'
     cpus 2
     time '300m'
 
