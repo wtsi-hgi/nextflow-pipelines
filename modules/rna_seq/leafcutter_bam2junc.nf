@@ -5,10 +5,12 @@ process 'leafcutter_bam2junc' {
     queue "long"
     time '2800m'
     container "leafcutter"
-    memory = '8G'
-    cpus 2
-    errorStrategy { task.attempt <= 8 ? 'retry' : 'ignore' }
-    maxRetries 8
+
+
+    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
+    cpus =   {  2 * 2 * Math.min(2, task.attempt) }
+    memory = {  10.GB + 20.GB * (task.attempt-1) }
+    maxRetries 4
     
     publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'symlink', pattern: "*.junc"
     // publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'copy', pattern: "*.bam.bed"
