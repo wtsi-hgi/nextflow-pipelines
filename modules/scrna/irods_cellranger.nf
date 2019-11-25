@@ -10,11 +10,13 @@ process 'iget_cellranger' {
     maxRetries 1
     publishDir "${params.outdir}/iget_cellranger/", mode: 'symlink',
         saveAs: { filename ->
-            if (filename ==~ /.*\.all_founds_in_irods\.txt/) "ils_all_founds/$filename"
-            else if (filename ==~ /.*\.not_found\.txt/) "ils_not_founds/$filename"
-            else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
-            else "ils_found/$filename"
-        }
+        if (filename ==~ /.*\.all_founds_in_irods\.txt/) "ils_logs/$filename"
+        else if (filename ==~ /.*\.not_found\.txt/) "ils_missing/$filename"
+    }
+    publishDir "${params.outdir}/iget_cellranger/full_data/", mode: 'symlink', pattern "cellranger_${samplename}"
+    publishDir "${params.outdir}/iget_cellranger/raw_feature_bc_matrix/", mode: 'symlink', pattern "cellranger_${samplename}/raw_feature_bc_matrix"
+    publishDir "${params.outdir}/iget_cellranger/filtered_feature_bc_matrix/", mode: 'symlink', pattern "cellranger_${samplename}/filtered_feature_bc_matrix"
+    publishDir "${params.outdir}/iget_cellranger/metrics_summary/", mode: 'symlink', pattern "cellranger_${samplename}/metrics_summary"
 
     when:
     params.run 
@@ -24,6 +26,9 @@ process 'iget_cellranger' {
     
     output:
     set val(samplename), file("cellranger_${samplename}") optional true
+    set val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix") optional true
+    set val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix") optional true
+    set val(samplename), file("cellranger_${samplename}/metrics_summary") optional true
     set val(samplename), file("${sanger_sample_id}.all_founds_in_irods.txt"), file("${samplename}.not_found.txt") optional true
 
   script:
