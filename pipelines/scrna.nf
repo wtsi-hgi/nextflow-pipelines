@@ -10,7 +10,7 @@ Channel.fromPath(params.cellsnp_vcf_candidate_snps)
 
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
 include cellsnp from '../modules/scrna/cellsnp.nf' params(run: true, outdir: params.outdir)
-// include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
+include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
