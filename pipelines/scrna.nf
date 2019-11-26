@@ -18,14 +18,20 @@ workflow {
     Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.well}", "${row.sanger_sample_id}",
-			    "${row.supplier_sample_name}", "${row.pooled}", "${row.cellranger}") }
-	.map { a,b,c,d,e,f,g,h -> [c,b,f] }
-	.set{ch_samplename_runid_sangersampleid}
+			    "${row.supplier_sample_name}", "${row.pooled}","${row.n_pooled}", "${row.cellranger}") }
+	.map { a,b,c,d,e,f,g,h -> [c,b,f,h] }
+	.set{ch_samplename_runid_sangersampleid_npooled}
+    
+    ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled.
+	.map { a,b,c,d -> [a,b,c] }
 
-    iget_cellranger(ch_samplename_runid_sangersampleid)
+    ch_samplename_npooled = ch_samplename_runid_sangersampleid_npooled.
+	.map { a,b,c,d -> [a,d] }
+
+   iget_cellranger(ch_samplename_runid_sangersampleid)
     
     cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
     
-    //vireo(cellsnp.out[0])
+    vireo(cellsnp.out[0].combine(ch_samplename_npooled, by: 0))
 
 }
