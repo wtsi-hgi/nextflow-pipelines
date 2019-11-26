@@ -7,6 +7,7 @@ process 'vireo' {
     cpus =   {  2 * Math.min(1, task.attempt) }
     memory = {  30.GB + 20.GB * (task.attempt-1) }
     maxRetries 4
+    time '300m'
     
     container "single_cell"
     publishDir "${params.outdir}/vireo/", mode: 'symlink'
