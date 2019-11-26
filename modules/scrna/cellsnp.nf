@@ -8,6 +8,7 @@ process 'cellsnp' {
     cpus =   {  2 * Math.min(1, task.attempt) }
     memory = {  60.GB + 30.GB * (task.attempt-1) }
     maxRetries 4
+    time '300m'
 
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
 
