@@ -3,6 +3,9 @@ params.run = true
 process 'leafcutter_clustering' {
     // cache 'deep'
     container "leafcutter"
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'rsync'
     memory ='100G'
     cpus 4
     time '600m'
