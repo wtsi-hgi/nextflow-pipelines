@@ -22,10 +22,10 @@ workflow {
 	.map { a,b,c,d,e,f,g,h -> [c,b,f,h] }
 	.set{ch_samplename_runid_sangersampleid_npooled}
     
-    ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled.
+    ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled
 	.map { a,b,c,d -> [a,b,c] }
 
-    ch_samplename_npooled = ch_samplename_runid_sangersampleid_npooled.
+    ch_samplename_npooled = ch_samplename_runid_sangersampleid_npooled
 	.map { a,b,c,d -> [a,d] }
 
    iget_cellranger(ch_samplename_runid_sangersampleid)
