@@ -93,7 +93,7 @@ workflow {
 
     //// from irods studyid and list of samplenames
     iget_cram(
-	Channel.fromPath("${baseDir}/../../inputs/gains_samples.txt")
+	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
 	    .flatMap{ it.readLines()}, "5933")
     crams_to_fastq_gz(iget_cram.out[0])
     
@@ -119,12 +119,13 @@ workflow {
     tximport(salmon.out[0].collect())
 
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-    
-    star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-    star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
-    star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
-    star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
+    //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+    //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
+    //star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
+
+    // star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
+    star_out = star_2pass_basic.out
 
 
     
