@@ -6,7 +6,7 @@ process 'cellsnp' {
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     cpus =   {  2 * Math.min(1, task.attempt) }
-    memory = {  40.GB + 20.GB * (task.attempt-1) }
+    memory = {  60.GB + 30.GB * (task.attempt-1) }
     maxRetries 4
 
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
