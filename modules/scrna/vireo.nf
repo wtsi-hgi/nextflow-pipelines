@@ -16,7 +16,7 @@ process 'vireo' {
     params.run 
 
     input:
-    set val(samplename), file(cell_data), val(n_donor)
+    set val(samplename), file(cell_data), val(n_pooled)
     
     output:
     set val(samplename), file("cellsnp_${samplename}") 
@@ -24,6 +24,6 @@ process 'vireo' {
   script:
    """
 export PATH=/opt/conda/envs/conda_env/bin:/opt/conda/bin:\$PATH
-vireo -c $cell_data -N $n_donor -o vireo_${samplename}
+vireo -c $cell_data -N $n_pooled -o vireo_${samplename}
    """
 }
