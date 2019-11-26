@@ -11,6 +11,7 @@ process multiqc {
     memory = {  40.GB + 20.GB * (task.attempt-1) }
     maxRetries 5
     cpus 2
+    queue 'long'
     time '900m'
 
     publishDir "${params.outdir}", mode: 'copy',
