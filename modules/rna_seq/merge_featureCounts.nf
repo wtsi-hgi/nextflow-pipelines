@@ -3,6 +3,9 @@ params.runtag = 'runtag'
 
 process merge_featureCounts {
     tag "$aligner"
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'rsync'
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     containerOptions = "--bind /lustre"
