@@ -2,6 +2,9 @@ params.run = true
 params.runtag = 'runtag'
 
 process multiqc {
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'rsync'
     container "nfcore-rnaseq"
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
