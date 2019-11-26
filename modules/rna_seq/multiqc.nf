@@ -6,10 +6,10 @@ process multiqc {
     stageInMode 'copy'
     stageOutMode 'rsync'
     container "nfcore-rnaseq"
-    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
+    errorStrategy = { task.attempt <= 5 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
     memory = {  40.GB + 20.GB * (task.attempt-1) }
-    maxRetries 4
+    maxRetries 5
     cpus 2
     time '900m'
 
