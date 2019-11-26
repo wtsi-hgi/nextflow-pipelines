@@ -3,6 +3,9 @@ params.runtag = 'runtag'
 
 process merge_salmoncounts {
     tag ""
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'rsync'
     container "nfcore-rnaseq"
     publishDir "${params.outdir}/combined", mode: 'symlink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
