@@ -11,7 +11,9 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'study5933' // HG_UKBB_scRNA_Pilot I&II 
+params.runtag = 'gains5890' // "5890" HG_The Genomic Advances in Sepsis (GAinS) RNA-seq
+
+// params.runtag = 'study5933' // HG_UKBB_scRNA_Pilot I&II 
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 
