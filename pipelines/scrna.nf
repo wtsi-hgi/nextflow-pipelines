@@ -19,9 +19,9 @@ workflow {
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.well}", "${row.sanger_sample_id}",
 			    "${row.supplier_sample_name}", "${row.pooled}","${row.n_pooled}", "${row.cellranger}") }
-	.map { a,b,c,d,e,f,g,h -> [c,b,f,h] }
+	.map { a,b,c,d,e,f,g,h, i -> [c,b,f,h] }
 	.set{ch_samplename_runid_sangersampleid_npooled}
-    
+
     ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled
 	.map { a,b,c,d -> [a,b,c] }
 
