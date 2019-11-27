@@ -7,7 +7,10 @@ if (length(args)==0) {
 #### sample to process
 sample_id = args[1] 
 to_process = args[2] ## matrix dir
-metrics_summary_csv = args[3] 
+raw_filterd = args[3] ## whether the cellranger data is raw of filtered bc matrix 
+metrics_summary_csv = args[4] 
+
+sample_id = paste0(sample_id,'_',raw_filtered)
 
 library(gplots)
 library(biomaRt)
@@ -108,10 +111,10 @@ n_clusters
 
 pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
 # note that you can set do.label=T to help label individual clusters
-pdf(paste0(sample_id,"/TSNEPlot.pdf"), width = 6, height = 6)
+pdf(paste0(sample_id,"_TSNEPlot.pdf"), width = 6, height = 6)
 print(TSNEPlot(object = pbmc))
 dev.off()
-print(paste0(sample_id,"/TSNEPlot.pdf"))
+print(paste0(sample_id,"_TSNEPlot.pdf"))
 
 out_table = tibble(
   sample_id = sample_id,
@@ -130,11 +133,11 @@ out_table = tibble(
 metrics_summary = as_tibble(read_csv(metrics_summary_csv))
 out_table = bind_cols(out_table, metrics_summary )
 
-write_tsv(out_table, paste0(sample_id,"/stats.tsv"))
-write.xlsx(out_table, paste0(sample_id,"/stats.xlsx"))
+write_tsv(out_table, paste0(sample_id,"_stats.tsv"))
+write.xlsx(out_table, paste0(sample_id,"_stats.xlsx"))
 
 ## add diff genes each cluster
 pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25) %>% arrange(cluster, p_val)
-write.xlsx(pbmc.markers,  paste0(sample_id,"/clusters_markers_FindAllMarkers.xlsx"))
+write.xlsx(pbmc.markers,  paste0(sample_id,"_clusters_markers_FindAllMarkers.xlsx"))
 
 save.image(paste0(sample_id,"_seuratimage.rdata"))
