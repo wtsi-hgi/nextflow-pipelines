@@ -1,3 +1,14 @@
+#!/usr/bin/env Rscript
+args = commandArgs(trailingOnly=TRUE)
+
+if (length(args)==0) {
+  stop("At least one argument must be supplied", call.=FALSE)}
+
+#### sample to process
+sample_id = args[1] 
+to_process = args[2] ## matrix dir
+metrics_summary_csv = args[3] 
+
 library(gplots)
 library(biomaRt)
 library(reshape2)
@@ -30,23 +41,11 @@ dir.create('./Seurat_outputs', showWarnings = FALSE)
 paths = read_csv('paths.csv', col_names = TRUE) %>%
 	filter(raw=='filtered') # raw of filtered
 
-#### samples to process
-to_process = paths$matrixdir
-sample_ids = paths$sampleid
-
-to_process 
-sample_ids
-
-#### loop through samples
-for (i in 1:length(to_process)) {
-#### read 10X data
-
-#sample_id = strsplit(found_path$filepath[i], '/')[[1]][length(strsplit(found_path$filepath[i], '/')[[1]])-1]
-sample_id = sample_ids[i]
 print(sample_id)
-dir.create(paste0('Seurat_outputs/' ,sample_id), showWarnings = FALSE)
+print(to_process)
+print(metrics_summary_csv)
 
-pbmc.data <-  Read10X(to_process[i])
+pbmc.data <-  Read10X(to_process)
 
 #### raw stats
 n_genes_raw = dim(pbmc.data)[1]
@@ -109,10 +108,10 @@ n_clusters
 
 pbmc <- RunTSNE(object = pbmc, dims.use = 1:10, do.fast = TRUE)
 # note that you can set do.label=T to help label individual clusters
-pdf(paste0('Seurat_outputs/' ,sample_id,"/TSNEPlot.pdf"), width = 6, height = 6)
+pdf(paste0(sample_id,"/TSNEPlot.pdf"), width = 6, height = 6)
 print(TSNEPlot(object = pbmc))
 dev.off()
-print(paste0('Seurat_outputs/' ,sample_id,"/TSNEPlot.pdf"))
+print(paste0(sample_id,"/TSNEPlot.pdf"))
 
 out_table = tibble(
   sample_id = sample_id,
@@ -128,12 +127,14 @@ out_table = tibble(
   n_cells_per_cluster = paste0(paste(names(n_cells_per_cluster), n_cells_per_cluster, sep=": "), collapse=', ')
 )
 
-metrics_summary = as_tibble(read_csv(paste0(to_process[i],'/../metrics_summary.csv')))
+metrics_summary = as_tibble(read_csv(metrics_summary_csv))
 out_table = bind_cols(out_table, metrics_summary )
 
-write_tsv(out_table, paste0('Seurat_outputs/' ,sample_id,"/stats.tsv"))
-write.xlsx(out_table, paste0('Seurat_outputs/' ,sample_id,"/stats.xlsx"))
+write_tsv(out_table, paste0(sample_id,"/stats.tsv"))
+write.xlsx(out_table, paste0(sample_id,"/stats.xlsx"))
 
 ## add diff genes each cluster
 pbmc.markers <- FindAllMarkers(object = pbmc, only.pos = TRUE, min.pct = 0.25, thresh.use = 0.25) %>% arrange(cluster, p_val)
-write.xlsx(pbmc.markers,  paste0('Seurat_outputs/' ,sample_id,"/clusters_markers_FindAllMarkers.xlsx"))
+write.xlsx(pbmc.markers,  paste0(sample_id,"/clusters_markers_FindAllMarkers.xlsx"))
+
+save.image(paste0(sample_id,"_seuratimage.rdata"))
