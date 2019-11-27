@@ -2,7 +2,7 @@ params.run = true
 params.dropqc = ""
 
 process iget_cram {
-    tag "iget cram ${samplename}"
+    tag "iget cram ${samplename} ${studyid}"
     memory = '10G'
     time '240m'
     cpus 1
