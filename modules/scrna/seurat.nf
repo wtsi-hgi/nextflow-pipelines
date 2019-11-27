@@ -19,7 +19,10 @@ process seurat {
     val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
 
     output:
-    file("${samplename}_seurat_image.rdata")
+    val(samplename), val(raw_filtered), file("${samplename}_TSNEPlot.pdf")
+    val(samplename), val(raw_filtered), file("${samplename}_stats.tsv"), file("${samplename}_stats.xlsx")
+    val(samplename), val(raw_filtered), file("${samplename}_clusters_markers_FindAllMarkers.xlsx")
+    val(samplename), val(raw_filtered), file("${samplename}_seurat_image.rdata")
 
     script:
     """
