@@ -1,7 +1,7 @@
 params.run = true 
 
 process seurat {
-    tag "seurat $params.ensembl_lib"
+    tag "seurat $samplename $raw_filtered"
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
     time '900m'
