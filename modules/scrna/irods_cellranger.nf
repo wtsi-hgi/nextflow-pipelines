@@ -28,7 +28,7 @@ process 'iget_cellranger' {
     set val(samplename), val(run_id), val(sanger_sample_id)
     
     output:
-    tuple val(samplename), file("cellranger_${samplename}"), emit: cellranger_full_dir, optional true
+    tuple val(samplename), file("cellranger_${samplename}"), emit: cellranger_full_dir optional true
     tuple val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai"), file("cellranger_${samplename}/raw_feature_bc_matrix/barcodes.tsv.gz")  optional true, emit: cellranger_barcodes
     tuple val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix") optional true, emit: cellranger_raw
     tuple val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix") optional true, emit: cellranger_filtered
