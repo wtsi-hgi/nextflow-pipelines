@@ -22,7 +22,7 @@ process 'cellsnp' {
     file(region_vcf)
     
     output:
-    set val(samplename), file("cellsnp_${samplename}") 
+    tuple val(samplename), file("cellsnp_${samplename}"), emit: cellsnp_output_dir
 
   script:
    """
