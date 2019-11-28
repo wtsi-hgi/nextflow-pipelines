@@ -29,11 +29,11 @@ process 'iget_cellranger' {
     
     output:
     tuple val(samplename), file("cellranger_${samplename}"), emit: cellranger_full_dir optional true
-    tuple val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai"), file("cellranger_${samplename}/raw_feature_bc_matrix/barcodes.tsv.gz")  optional true, emit: cellranger_barcodes
-    tuple val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix") optional true, emit: cellranger_raw
-    tuple val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix") optional true, emit: cellranger_filtered
-    tuple val(samplename), file("cellranger_${samplename}/metrics_summary.csv") optional true, emit: cellranger_metrics_summary
-    tuple val(samplename), file("${sanger_sample_id}.all_founds_in_irods.txt"), file("${samplename}.not_found.txt") optional true, emit: cellranger_missing
+    tuple val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai"), file("cellranger_${samplename}/raw_feature_bc_matrix/barcodes.tsv.gz"), emit: cellranger_barcodes optional true
+    tuple val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix"), emit: cellranger_raw optional true
+    tuple val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix"), emit: cellranger_filtered optional true
+    tuple val(samplename), file("cellranger_${samplename}/metrics_summary.csv"), emit: cellranger_metrics_summary optional true
+    tuple val(samplename), file("${sanger_sample_id}.all_founds_in_irods.txt"), file("${samplename}.not_found.txt"), emit: cellranger_missing optional true
 
   script:
     """
