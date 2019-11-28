@@ -9,12 +9,9 @@ process seurat {
     cpus 2
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
-    
     publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
-
     when:
     params.run
-
     input:
     val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
 
