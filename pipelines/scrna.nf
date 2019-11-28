@@ -33,10 +33,10 @@ workflow run_seurat {
 
     seurat(input_seurat)
     
-    emit: seurat.out[0]
-    emit: seurat.out[1]
-    emit: seurat.out[2]
-    emit: seurat.out[3]
+    emit: seurat.out.tsneplot_pdf
+    emit: seurat.out.stats_xslx
+    emit: seurat.out.diffexp_xlsx
+    emit: seurat.out.seurat_rdata
 }
 
 
