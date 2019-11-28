@@ -7,7 +7,7 @@ if (length(args)==0) {
 #### sample to process
 sample_id = args[1] 
 to_process = args[2] ## matrix dir
-raw_filterd = args[3] ## whether the cellranger data is raw of filtered bc matrix 
+raw_filtered = args[3] ## whether the cellranger data is raw of filtered bc matrix 
 metrics_summary_csv = args[4] 
 
 sample_id = paste0(sample_id,'_',raw_filtered)
