@@ -61,7 +61,7 @@ workflow {
     iget_cellranger(ch_samplename_runid_sangersampleid)
     
     if (params.run_cellsnp)
-	cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
+	cellsnp(iget_cellranger.out.cellranger_sample_bam_barcodes, ch_cellsnp_vcf_candidate_snps.collect())
     
     if (params.run_vireo)
 	vireo(cellsnp.out[0].combine(ch_samplename_npooled, by: 0))
