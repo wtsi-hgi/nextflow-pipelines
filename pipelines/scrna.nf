@@ -58,6 +58,6 @@ workflow {
     vireo(cellsnp.out[0].combine(ch_samplename_npooled, by: 0))
 
     if (params.run_seurat)
-	run_seurat(iget_cellranger.out)
+	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
 
 }
