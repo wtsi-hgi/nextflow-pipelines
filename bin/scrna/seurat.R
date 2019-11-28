@@ -33,7 +33,6 @@ library(ggbiplot)
 library(hdf5r)
 library(cowplot)
 library(Seurat)
-library(monocle3)
 
 
 select = dplyr :: select
