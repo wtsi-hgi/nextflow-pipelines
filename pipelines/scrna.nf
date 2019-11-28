@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
-params.run_seurat = true
+params.run_seurat = false
 params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
