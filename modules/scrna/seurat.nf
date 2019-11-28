@@ -10,7 +10,7 @@ process seurat {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
-    publishDir "${params.outdir}/seurat", mode: 'symlink'
+    publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
 
     when:
     params.run
