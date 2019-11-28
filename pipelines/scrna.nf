@@ -1,5 +1,7 @@
 nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
+params.run_cellsnp = true
+params.run_vireo = true
 params.run_seurat = true
 params.run_seurat_on_raw = true // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
@@ -58,8 +60,11 @@ workflow {
 
     iget_cellranger(ch_samplename_runid_sangersampleid)
     
-    cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
-    vireo(cellsnp.out[0].combine(ch_samplename_npooled, by: 0))
+    if (params.run_cellsnp)
+	cellsnp(iget_cellranger.out[1], ch_cellsnp_vcf_candidate_snps.collect())
+    
+    if (params.run_vireo)
+	vireo(cellsnp.out[0].combine(ch_samplename_npooled, by: 0))
 
     if (params.run_seurat)
 	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
