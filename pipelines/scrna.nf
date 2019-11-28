@@ -18,16 +18,16 @@ include seurat from '../modules/scrna/seurat.nf' params(run: true, outdir: param
 
 
 workflow run_seurat {
-    get: cellranger_data
+    get: cellranger_data_raw, cellranger_data_filtered, cellranger_data_metrics_summary
     
     main:
     if (params.run_seurat_on_raw)
-	input_seurat = cellranger_data[3].map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
-	    .mix(cellranger_data[2]).map{samplename,dir -> [samplename,dir,"raw"]} // raw_feature_bc_matrix
-	    .combine(cellranger_data[4], by: 0) // add metrics_summary.csv file of each sample
+	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
+	    .mix(cellranger_data_raw).map{samplename,dir -> [samplename,dir,"raw"]} // raw_feature_bc_matrix
+	    .combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
     else
-	input_seurat = cellranger_data[3].map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
-	    .combine(cellranger_data[4], by: 0) // add metrics_summary.csv file of each sample
+	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
+	    .combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
 
     seurat(input_seurat)
     
