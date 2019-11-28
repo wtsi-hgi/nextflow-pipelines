@@ -18,7 +18,9 @@ include seurat from '../modules/scrna/seurat.nf' params(run: true, outdir: param
 
 
 workflow run_seurat {
-    get: cellranger_data_raw, cellranger_data_filtered, cellranger_data_metrics_summary
+    get: cellranger_data_raw
+    get: cellranger_data_filtered
+    get: cellranger_data_metrics_summary
     
     main:
     if (params.run_seurat_on_raw)
