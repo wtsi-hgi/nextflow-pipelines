@@ -33,12 +33,10 @@ workflow run_seurat {
 
     seurat(input_seurat)
     
-    emit:
-    seurat.out[0]
-    seurat.out[1]
-    seurat.out[2]
-    seurat.out[3]
-    
+    emit: seurat.out[0]
+    emit: seurat.out[1]
+    emit: seurat.out[2]
+    emit: seurat.out[3]
 }
 
 
