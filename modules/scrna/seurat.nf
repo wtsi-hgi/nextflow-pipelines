@@ -21,9 +21,9 @@ process seurat {
 
     output:
     tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_TSNEPlot.pdf"), emit: tsneplot_pdf
-    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx"), emit: stats_xslx
-    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_clusters_markers_FindAllMarkers.xlsx"), emit: diffexp_xlsx
-    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_seurat_image.rdata"), emit: seurat_rdata
+    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx"), emit: stats_xslx
+    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_clusters_markers_FindAllMarkers.xlsx"), emit: diffexp_xlsx
+    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_seurat_image.rdata"), emit: seurat_rdata
 
     script:
     """
