@@ -1,17 +1,5 @@
 #!/usr/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
-
-if (length(args)==0) {
-  stop("At least one argument must be supplied", call.=FALSE)}
-
-#### sample to process
-sample_id = args[1] 
-to_process = args[2] ## matrix dir
-raw_filtered = args[3] ## whether the cellranger data is raw of filtered bc matrix 
-metrics_summary_csv = args[4] 
-
-sample_id = paste0(sample_id,'_',raw_filtered)
-
 library(gplots)
 library(biomaRt)
 library(reshape2)
@@ -33,15 +21,17 @@ library(ggbiplot)
 library(hdf5r)
 library(cowplot)
 library(Seurat)
-
-
 select = dplyr :: select
 rename = dplyr :: rename
-setwd("/home/ubuntu/rsynced_nov21") 
-dir.create('./Seurat_outputs', showWarnings = FALSE)
 
-paths = read_csv('paths.csv', col_names = TRUE) %>%
-	filter(raw=='filtered') # raw of filtered
+if (length(args)==0) {stop("At least one argument must be supplied", call.=FALSE)}
+
+#### sample to process
+sample_id = args[1] 
+to_process = args[2] ## matrix dir
+raw_filtered = args[3] ## whether the cellranger data is raw of filtered bc matrix 
+sample_id = paste0(sample_id,'_',raw_filtered)
+metrics_summary_csv = args[4] 
 
 print(sample_id)
 print(to_process)
