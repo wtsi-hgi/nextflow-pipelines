@@ -10,17 +10,19 @@ process seurat {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
+    scratch false 
 
-    input:
-    val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
     when:
     params.run
 
+    input:
+    set val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
+
     output:
-    val(samplename), val(raw_filtered), file("${samplename}_TSNEPlot.pdf")
-    val(samplename), val(raw_filtered), file("${samplename}_stats.tsv"), file("${samplename}_stats.xlsx")
-    val(samplename), val(raw_filtered), file("${samplename}_clusters_markers_FindAllMarkers.xlsx")
-    val(samplename), val(raw_filtered), file("${samplename}_seurat_image.rdata")
+    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_TSNEPlot.pdf")
+    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx")
+    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_clusters_markers_FindAllMarkers.xlsx")
+    set val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_seurat_image.rdata")
 
     script:
     """
