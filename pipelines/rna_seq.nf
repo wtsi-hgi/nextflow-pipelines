@@ -1,6 +1,5 @@
 nextflow.preview.dsl=2
 
-
 params.min_reads = 500   // used by crams_to_fastq_gz
 params.genome = 'GRCh38' // used by star aligner
 params.fcextra = ""      // used by featurecounts
@@ -11,7 +10,8 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'study5933' // HG_UKBB_scRNA_Pilot I&II 
+params.runtag = 'interval_basic' // used by mapsummary and multiqc
+
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 
@@ -37,6 +37,8 @@ Channel.fromPath(params.gtf)
 Channel.fromPath(params.biotypes_header)
     .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
     .set { ch_biotypes_header }
+
+
 
 // params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
 params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/salmon"
@@ -89,22 +91,21 @@ include multiqc from '../modules/rna_seq/multiqc.nf' params(run: true, outdir: p
 include lostcause from '../modules/rna_seq/lostcause.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
 
+
 workflow {
 
     //// from irods studyid and list of samplenames
     iget_cram(
 	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
-	    .flatMap{ it.readLines()}, "5933")
+	    .flatMap{ it.readLines()}, "5591")
     crams_to_fastq_gz(iget_cram.out[0])
     
-    ////
 
-    //// from cram files:
-    ////Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
-    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
-    ////groupTuple(sort: true). //take(4).
-    ////set{ch_cram_files}
-    ////crams_to_fastq_gz(ch_cram_files)
+    //Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
+    //map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
+    //groupTuple(). //take(4).
+    //set{ch_cram_files}
+   
     ////
     crams_to_fastq_gz.out[0]
 	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
@@ -119,13 +120,12 @@ workflow {
     tximport(salmon.out[0].collect())
 
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-
+    
     //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     //star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
-    // star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
-    star_out = star_2pass_basic.out
+    star_out = star_2pass_basic.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
 
 
     
