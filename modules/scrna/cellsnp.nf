@@ -9,8 +9,8 @@ process 'cellsnp' {
     memory = {  220.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
     scratch false
-    queue 'long'
-    time '2800m'
+    queue 'basement'
+    time '8000m'
 
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
 
