@@ -12,7 +12,8 @@ Channel.fromPath(params.guide_libraries)
 
 // add guide library of each sample:
 // params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
-params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123_libraries.csv"
+// params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123_libraries.csv"
+params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123contamination_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
