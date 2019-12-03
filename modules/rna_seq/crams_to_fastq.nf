@@ -12,9 +12,9 @@ process crams_to_fastq_gz {
     // errorStrategy 'terminate'
     errorStrategy 'retry'
     maxRetries 6
-    time '300m'
+    time '400m'
     cpus 1
-    memory '2G'
+    memory '4G'
 
 //  if (params.scratch) {    // This is tricky; need to get job requirements correct to ensure space exists.
 //     scratch true          // At the moment we don't use this. Perhaps with a retry regime ... but a lot of fuss to solve.
