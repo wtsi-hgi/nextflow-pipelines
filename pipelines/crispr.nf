@@ -40,7 +40,7 @@ workflow {
   //   1.A: from irods:
     Channel.fromPath("${baseDir}/../../inputs/june_6007.csv")
     	.splitCsv(header: true)
-    	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sample_sanger_id}", "${row.study_id}") }
+    	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sanger_sample_id}", "${row.study_id}") }
     	.set{ch_to_iget}
      iget_crams(ch_to_iget)
     
