@@ -14,7 +14,7 @@ process 'iget_crams' {
     params.run 
 
     input:
-    set val(samplename), val(batch), val(sample), val(study_id)
+    set val(samplename), val(batch), val(sample_sanger_id), val(study_id)
     
   output:
     set val(samplename), val(batch), file("*.cram"), file ("*.crai")
