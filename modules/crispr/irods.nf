@@ -1,7 +1,7 @@
 params.run = true
 
 process 'iget_crams' {
-    tag "iget $samplename"
+    tag "iget $samplename $study_id"
     memory = '3G'
     time '120m'
     cpus 1
