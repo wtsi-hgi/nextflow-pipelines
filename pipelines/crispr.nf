@@ -43,9 +43,7 @@ workflow {
     	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sanger_sample_id}", "${row.study_id}") }
     	.set{ch_to_iget}
 
-    ch_to_iget.view()
-    
-    //  iget_crams(ch_to_iget)
+    iget_crams(ch_to_iget)
     
   //   crams_to_fastq_gz(iget.out.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
   //   crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
