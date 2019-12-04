@@ -37,7 +37,7 @@ include multiqc from '../modules/crispr/multiqc.nf' params(run: true, outdir: pa
 
 workflow {
 
-     1.A: from irods:
+  //   1.A: from irods:
     Channel.fromPath("${baseDir}/../../inputs/june_6007.csv")
     	.splitCsv(header: true)
     	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sample_sanger_id}", "${row.study_id}") }
