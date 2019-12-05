@@ -112,6 +112,9 @@ workflow {
 	.map{ samplename, fastq1, fastq2 -> samplename + ",$params.outdir/fastq12/" + fastq1.getName() + ",$params.outdir/fastq12/" + fastq2.getName() }
 	.collectFile(name: 'crams_to_fastq_gz_out_0.txt', newLine: true, storeDir: "$params.outdir" )
     
+    // find work/ -name '*.cram' -exec rm {} \;
+    // cd results/fastq12
+    // find ./ -type l -print0|xargs -0 -n1 -i sh -c 'cp --remove-destination $(readlink "{}") "{}" '
 
     crams_to_fastq_gz.out[0]
 	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
