@@ -106,7 +106,7 @@ workflow {
     ////
     crams_to_fastq_gz.out[0]
 	.map{ samplename, fastq1, fastq2 -> samplename}
-	.collectFile(name: 'samplename_fastq_done.txt', sort: true, newLine: true, storeDir: "$params.outdir" )
+	.collectFile(name: 'samplename_fastq_done.txt', newLine: true, storeDir: "$params.outdir" )
     
     crams_to_fastq_gz.out[0]
 	.map{ samplename, fastq1, fastq2 -> samplename + ",$params.outdir/fastq12/" + fastq1.getName() + ",$params.outdir/fastq12/" + fastq2.getName() }
