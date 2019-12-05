@@ -4,7 +4,7 @@ params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
 // collect library tables:
-// params.guide_libraries = "${baseDir}/../../guide_libraries/*.guide_library.csv"
+params.guide_libraries = "${baseDir}/../../guide_libraries/June35.guide_library.csv"
 //params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
 
 //params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
