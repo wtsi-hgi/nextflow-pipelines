@@ -25,9 +25,11 @@ process 'iget_crams' {
   script:
     """
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt
+echo imeta collection done
 
 if [ -s collection.txt ] 
 then
+    echo collection found
     imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
     paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to_iget.txt
 
@@ -35,6 +37,7 @@ then
     num=1
     cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
     do
+        echo num \$num
         if [ \$num -gt 1 ]
         then
             iget -K -f -v \${line} ${batch}.${samplename}.\${num}.cram
@@ -46,7 +49,9 @@ then
         ((num++))
     done
 else
+    echo no collection found
     echo ${samplename},${batch},${sample},${study_id} > ${samplename}.${batch}.${sample}.${study_id}.not_found.txt
 fi
+echo done
    """
 }
