@@ -24,7 +24,8 @@ process 'iget_crams' {
 
   script:
     """
-imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt
+echo imeta collection
+imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt || true
 echo imeta collection done
 
 if [ -s collection.txt ] 
