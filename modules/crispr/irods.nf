@@ -20,7 +20,7 @@ process 'iget_crams' {
     
   output:
     tuple val(samplename), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
-    file("${samplename}.${batch}.${sample}.${study_id}.not_found.txt"), emit: iget_not_found optional true
+    tuple val(samplename), file("${samplename}.${batch}.${sample}.${study_id}.not_found.txt"), emit: iget_not_found optional true
 
   script:
     """
