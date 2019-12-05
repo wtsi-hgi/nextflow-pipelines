@@ -6,8 +6,8 @@ process iget_cram {
     memory = '10G'
     time '240m'
     cpus 1
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    errorStrategy { task.attempt <= 4 ? 'retry' : 'ignore' }
+    maxRetries 4
     maxForks 12
     publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'symlink', pattern: "*.lostcause.txt", overwrite: true
     publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'symlink', pattern: "*.cram", overwrite: true
