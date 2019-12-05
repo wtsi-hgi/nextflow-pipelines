@@ -60,20 +60,20 @@ workflow {
 //	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 //	.set{ch_samplename_batch_fastqs}
 //
-//    fastx_trimmer(ch_samplename_batch_fastqs)
+    fastx_trimmer(ch_samplename_batch_fastqs)
 //
-//    fastx_trimmer.out 
-//	.groupTuple(by: 0, sort: true)
-//	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
-//	.set{ch_samplename_fastqs_to_merge}
+    fastx_trimmer.out 
+	.groupTuple(by: 0, sort: true)
+	.map{ samplename, batchs, fastqs -> tuple( groupKey(samplename, batchs.size()), batchs, fastqs ) }
+	.set{ch_samplename_fastqs_to_merge}
 //
-//    merge_fastq_batches(ch_samplename_fastqs_to_merge)
+    merge_fastq_batches(ch_samplename_fastqs_to_merge)
 //
-//    fastqc(fastx_trimmer.out 
-//	    .map{ samplename, batch, fastq -> tuple( samplename, fastq ) }
-//	    .mix(merge_fastq_batches.out[0]))
+    fastqc(fastx_trimmer.out 
+	    .map{ samplename, batch, fastq -> tuple( samplename, fastq ) }
+	    .mix(merge_fastq_batches.out[0]))
 //
-//    multiqc(fastqc.out.collect())
+    multiqc(fastqc.out.collect())
 //
 //    merge_fastq_batches.out[0]
 //	.combine(ch_samplename_library, by: 0)
