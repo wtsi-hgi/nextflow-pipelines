@@ -18,10 +18,9 @@ flog.write("fastq file: " + str(fastq_file) + str("\n"))
 flog.write("guide: " + str(sys.argv[2]) + str("\n"))
 flog.write("outfile: " + str(outfile) + str("\n"))
 flog.write("outfile2: " + str(outfile2) + str("\n"))
-flog.write("includeG: " + str(includeG) + str("\n"))
 
 ## getSeq = lambda x: x[:19] if len(x) == 20 else x
-getSeq = lambda x: x[:19] 
+getSeq = lambda x: x[start_match_lib:end_match_lib] 
 
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
 guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Gene'])}
@@ -33,9 +32,7 @@ else: f = open(fastq_file,'rt')
 count = 0
 total, mapped = 0, 0
 for record in SeqIO.parse(f, 'fastq'):
-    if includeG: seq = str(record.seq)[1:20]
-    else: seq = str(record.seq)[:19]
-    # else: seq = str(record.seq)[1:20] very low mapping ~ 1%
+    seq = str(record.seq)[start_match_sample:end_match_sample]
     if seq in guide_counts:
         guide_counts[seq] += 1
         mapped += 1
