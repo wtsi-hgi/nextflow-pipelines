@@ -46,7 +46,7 @@ then
         ((num++))
     done
 else
-    echo not found ${samplename},${batch},${sample},${study_id} > ${samplename}.${batch}.${sample}.${study_id}.not_found.txt
+    echo ${samplename},${batch},${sample},${study_id} > ${samplename}.${batch}.${sample}.${study_id}.not_found.txt
 fi
    """
 }
