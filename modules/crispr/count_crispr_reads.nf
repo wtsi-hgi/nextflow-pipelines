@@ -21,7 +21,7 @@ process count_crispr_reads {
     params.run
 
     input:
-    set val(samplename), file(fastq_files), val(guide_library), val(includeG), val(start_match_sample), val(end_match_sample), val(start_match_lib), val(end_match_lib) 
+    set val(samplename), file(fastq_files), val(guide_library), val(start_match_sample), val(end_match_sample), val(start_match_lib), val(end_match_lib) 
     file(library_files)
 
     output:
