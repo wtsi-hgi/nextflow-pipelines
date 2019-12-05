@@ -51,7 +51,9 @@ workflow {
     
     
     crams_to_fastq_gz(iget_crams.out.spname_batch_cram_crai.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
-    crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
+    crams_to_fastq_gz.out[0]
+	.map{samplename,batch, fastqs -> [samplename, batch, "1", fastqs]})
+	.set{ch_samplename_batch_starttrim_fastqs}
 //
 //    // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
 //    // Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
@@ -60,7 +62,7 @@ workflow {
 //	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 //	.set{ch_samplename_batch_fastqs}
 //
-    fastx_trimmer(ch_samplename_batch_fastqs)
+    fastx_trimmer(ch_samplename_batch_starttrim_fastqs)
 
     fastx_trimmer.out 
 	.groupTuple(by: 0, sort: true)
