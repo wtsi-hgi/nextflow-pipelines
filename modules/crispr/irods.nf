@@ -19,8 +19,9 @@ process 'iget_crams' {
     set val(samplename), val(batch), val(sample), val(study_id)
     
   output:
-    tuple val(samplename), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
+    tuple val(samplename), val(batch), file("*.cram"), emit: spname_batch_cram optional true
     tuple val(samplename), file("${samplename}.${batch}.${sample}.${study_id}.not_found.txt"), emit: iget_not_found optional true
+    tuple val(samplename), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
 
   script:
     """
@@ -42,10 +43,10 @@ then
         if [ \$num -gt 1 ]
         then
             iget -K -f -v \${line} ${batch}.${samplename}.\${num}.cram
-            iget -K -f -v \${line}.crai ${batch}.${samplename}.\${num}.cram.crai
+            iget -K -f -v \${line}.crai ${batch}.${samplename}.\${num}.cram.crai || true
         else
             iget -K -f -v \${line} ${batch}.${samplename}.cram
-            iget -K -f -v \${line}.crai ${batch}.${samplename}.cram.crai
+            iget -K -f -v \${line}.crai ${batch}.${samplename}.cram.crai || true
         fi
         ((num++))
     done
