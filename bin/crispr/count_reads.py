@@ -6,7 +6,11 @@ fastq_file = sys.argv[1]
 guide = pd.read_csv(sys.argv[2])
 outfile = sys.argv[3]
 outfile2 = sys.argv[4]
-includeG = eval(sys.argv[5])
+start_match_sample = int(sys.argv[5])
+end_match_sample = int(sys.argv[6])
+start_match_lib = int(sys.argv[7])
+end_match_lib = int(sys.argv[8])
+
 flog = io.open('record_log.txt','w')
 f_unmapped = io.open(outfile.replace('.counts.txt','.unmapped_sequences.txt'),'w')
 
