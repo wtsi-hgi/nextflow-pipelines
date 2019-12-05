@@ -45,7 +45,7 @@ workflow {
 
     iget_crams(ch_to_iget)
     
-    crams_to_fastq_gz(iget.out.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
+    crams_to_fastq_gz(iget_crams.out.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
     crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
 //
 //    // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
