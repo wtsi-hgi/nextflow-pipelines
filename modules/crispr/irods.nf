@@ -17,27 +17,34 @@ process 'iget_crams' {
     set val(samplename), val(batch), val(sample), val(study_id)
     
   output:
-    set val(samplename), val(batch), file("*.cram"), file ("*.crai")
+    set val(samplename), val(batch), file("*.cram"), file ("*.crai") optional true
+    set "${samplename}.${batch}.${sample}.${study_id}.not_found.txt" optional true
 
   script:
     """
 imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt
-imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
-paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to_iget.txt
 
-sort -o ${samplename}.${sample}.${study_id}.to_iget.txt ${samplename}.${sample}.${study_id}.to_iget.txt
-num=1
-cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
-do
-    if [ \$num -gt 1 ]
-    then
-        iget -K -f -v \${line} ${batch}.${samplename}.\${num}.cram
-        iget -K -f -v \${line}.crai ${batch}.${samplename}.\${num}.cram.crai
-    else
-        iget -K -f -v \${line} ${batch}.${samplename}.cram
-        iget -K -f -v \${line}.crai ${batch}.${samplename}.cram.crai
-    fi
-    ((num++))
-done
+if [ -s collection.txt ] 
+then
+    imeta qu -z seq -d study_id = ${study_id} and sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
+    paste -d '/' collection.txt dataObj.txt > ${samplename}.${sample}.${study_id}.to_iget.txt
+
+    sort -o ${samplename}.${sample}.${study_id}.to_iget.txt ${samplename}.${sample}.${study_id}.to_iget.txt
+    num=1
+    cat ${samplename}.${sample}.${study_id}.to_iget.txt | while read line
+    do
+        if [ \$num -gt 1 ]
+        then
+            iget -K -f -v \${line} ${batch}.${samplename}.\${num}.cram
+            iget -K -f -v \${line}.crai ${batch}.${samplename}.\${num}.cram.crai
+        else
+            iget -K -f -v \${line} ${batch}.${samplename}.cram
+            iget -K -f -v \${line}.crai ${batch}.${samplename}.cram.crai
+        fi
+        ((num++))
+    done
+else
+    echo not found ${samplename},${batch},${sample},${study_id} > ${samplename}.${batch}.${sample}.${study_id}.not_found.txt
+fi
    """
 }
