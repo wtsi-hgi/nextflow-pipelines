@@ -5,11 +5,11 @@ params.min_reads = 500   // used by crams_to_fastq_gz
 
 // collect library tables:
 params.guide_libraries = "${baseDir}/../../guide_libraries/June35.guide_library.csv"
+Channel.fromPath(params.guide_libraries)
+    .set{ch_library_files}
 //params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
 
 //params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
-//Channel.fromPath(params.guide_libraries)
-//    .set{ch_library_files}
 
 // add guide library of each sample:
 // params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
