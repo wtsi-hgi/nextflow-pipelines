@@ -50,7 +50,7 @@ workflow {
 	.collectFile(name: 'all_iget_not_found.txt', newLine: true, storeDir: "$params.outdir" )
     
     
-    crams_to_fastq_gz(iget_crams.out.spname_batch_cram //.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
+    crams_to_fastq_gz(iget_crams.out.spname_batch_cram) //.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
     crams_to_fastq_gz.out[0]
 	.map{samplename,batch, fastqs -> [samplename, batch, "1", fastqs]}
 	.set{ch_samplename_batch_starttrim_fastqs}
