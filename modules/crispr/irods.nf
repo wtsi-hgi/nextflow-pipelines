@@ -19,8 +19,8 @@ process 'iget_crams' {
     set val(samplename), val(batch), val(sample), val(study_id)
     
   output:
-    set val(samplename), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
-    set "${samplename}.${batch}.${sample}.${study_id}.not_found.txt", emit: iget_not_found optional true
+    tuple val(samplename), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
+    file("${samplename}.${batch}.${sample}.${study_id}.not_found.txt"), emit: iget_not_found optional true
 
   script:
     """
