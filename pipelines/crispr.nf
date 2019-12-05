@@ -44,6 +44,7 @@ workflow {
     	.set{ch_to_iget}
 
     iget_crams(ch_to_iget)
+    iget_crams.out.iget_not_found.collectFile()
     
     crams_to_fastq_gz(iget_crams.out.spname_batch_cram_crai.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
     crams_to_fastq_gz.out[0].set{ch_samplename_batch_fastqs}
