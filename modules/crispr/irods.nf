@@ -8,7 +8,9 @@ process 'iget_crams' {
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
-    publishDir "${params.outdir}/iget/", mode: 'symlink'
+    publishDir "${params.outdir}/iget_found/", mode: 'symlink', pattern: "*.cram"
+    publishDir "${params.outdir}/iget_found/", mode: 'symlink', pattern: "*.crai"
+    publishDir "${params.outdir}/iget_not_found/", mode: 'copy', pattern: "*.not_found.txt"
 
     when:
     params.run 
