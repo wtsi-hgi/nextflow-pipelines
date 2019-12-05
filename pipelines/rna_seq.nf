@@ -104,9 +104,9 @@ workflow {
     //set{ch_cram_files}
    
     ////
-
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> samplename + "," + fastq1.toString() + "," + fastq2.toString() }
+    Channel.from('samplename,fastq1,fastq2').concat(
+	crams_to_fastq_gz.out[0]
+	    .map{ samplename, fastq1, fastq2 -> samplename + "," + fastq1.toString() + "," + fastq2.toString() })
 	.collectFile(name: 'crams_to_fastq_gz_out_0.txt', sort:true, newLine: true, storeDir: "$params.outdir" )
     
 
