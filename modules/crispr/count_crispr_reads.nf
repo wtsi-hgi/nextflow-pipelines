@@ -36,6 +36,6 @@ process count_crispr_reads {
     rm -f *_2.fastq.gz
     fi
 
-    python3 ${workflow.projectDir}/../bin/crispr/count_reads.py \$(ls *.fastq.gz) \"${guide_library}\" ${samplename}.counts.txt ${samplename}.mapping.txt ${includeG} ${start_match_sample} ${end_match_sample} ${start_match_lib} ${end_match_lib}
+    python3 ${workflow.projectDir}/../bin/crispr/count_reads.py \$(ls *.fastq.gz) \"${guide_library}\" ${samplename}.counts.txt ${samplename}.mapping.txt ${start_match_sample} ${end_match_sample} ${start_match_lib} ${end_match_lib}
     """
 }
