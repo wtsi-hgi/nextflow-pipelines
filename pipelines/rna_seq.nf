@@ -104,6 +104,12 @@ workflow {
     //set{ch_cram_files}
    
     ////
+
+    crams_to_fastq_gz.out[0]
+	.map{ samplename, fastq1, fastq2 -> samplename + "," fastq1.toString() + "," + fastq2.toString() }
+	.view()
+//    collectFile({ ['crams_to_fastq_gz_out_0.txt', it.text]}, sort:true))
+    
     crams_to_fastq_gz.out[0]
 	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
 	.set{ch_samplename_crams}
