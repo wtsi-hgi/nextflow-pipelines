@@ -6,7 +6,7 @@ process 'fastqc' {
     tag "fastqc ${samplename}"
     container "nfcore-rnaseq"
     errorStrategy 'retry'
-    maxRetries 3
+    maxRetries 4
     time '120m'
     // Singularity nfcore-rnaseq.img:~> fastqc --version
     // FastQC v0.11.8
