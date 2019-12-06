@@ -91,72 +91,73 @@ include lostcause from '../modules/rna_seq/lostcause.nf' params(run: true, outdi
 
 workflow {
 
-    //// from irods studyid and list of samplenames
-    iget_cram(
-	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
-	    .flatMap{ it.readLines()}, "5591")
-    crams_to_fastq_gz(iget_cram.out[0])
-    
+//// run to get fastqs : 
+//    //// from irods studyid and list of samplenames
+//    iget_cram(
+//	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
+//	    .flatMap{ it.readLines()}, "5591")
+//    crams_to_fastq_gz(iget_cram.out[0])
+//    
+//    crams_to_fastq_gz.out[0]
+//	.map{ samplename, fastq1, fastq2 -> samplename}
+//	.collectFile(name: 'samplename_fastq_done.txt', newLine: true, storeDir: "$params.outdir" )
+//    
+//    crams_to_fastq_gz.out[0]
+//	.map{ samplename, fastq1, fastq2 -> samplename + ",$params.outdir/fastq12/" + fastq1.getName() + ",$params.outdir/fastq12/" + fastq2.getName() }
+//	.collectFile(name: 'crams_to_fastq_gz_out_0.txt', newLine: true, storeDir: "$params.outdir" )
+//    
+//    // find work/ -name '*.cram' -exec rm {} \;
+//    // cd results/fastq12
+//    // find ./ -type l -print0|xargs -0 -n1 -i sh -c 'cp --remove-destination $(readlink "{}") "{}" '
+// end run to get fastqs
 
-    //Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
-    //map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
-    //groupTuple(). //take(4).
-    //set{ch_cram_files}
-   
-    ////
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> samplename}
-	.collectFile(name: 'samplename_fastq_done.txt', newLine: true, storeDir: "$params.outdir" )
-    
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> samplename + ",$params.outdir/fastq12/" + fastq1.getName() + ",$params.outdir/fastq12/" + fastq2.getName() }
-	.collectFile(name: 'crams_to_fastq_gz_out_0.txt', newLine: true, storeDir: "$params.outdir" )
-    
-    // find work/ -name '*.cram' -exec rm {} \;
-    // cd results/fastq12
-    // find ./ -type l -print0|xargs -0 -n1 -i sh -c 'cp --remove-destination $(readlink "{}") "{}" '
 
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
-	.set{ch_samplename_crams}
+// from fastqs:
+    Channel
+	.fromPath("${params.outdir}/crams_to_fastq_gz_out_0.txt")
+	.splitCsv(header:false)
+	.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
+	.set { ch_samplename_crams }
+    
+    //crams_to_fastq_gz.out[0]
+    //	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
+    //	.set{ch_samplename_crams}
     
     fastqc(ch_samplename_crams)
 
 
 
-//    salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
+    salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
 //    merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 //    tximport(salmon.out[0].collect())
-//    star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-
+    star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 
     // if star 2 pass:
     //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     //star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
-
-//    star_out = star_2pass_basic.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
+    star_out = star_2pass_basic.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
 
 
     
-    //// 
+//    //// 
 //    leafcutter_bam2junc(star_out[0])
 //    leafcutter_clustering(leafcutter_bam2junc.out.collect())
-//
-//    filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
+
+    filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
+    
+    filter_star_aln_rate.out.branch {
+        filtered: it[1] == 'above_threshold'
+        discarded: it[1] == 'below_threshold'}.set { star_filter }
 //    
-//    filter_star_aln_rate.out.branch {
-//        filtered: it[1] == 'above_threshold'
-//        discarded: it[1] == 'below_threshold'}.set { star_filter }
+    star_filter.filtered.combine(star_out[1], by:0) //reattach bam file
+	.map{samplename,filter,logfile,bamfile -> ["star", samplename, bamfile]} // discard log file and attach aligner name
+	.set{star_filtered} 
 //    
-//    star_filter.filtered.combine(star_out[1], by:0) //reattach bam file
-//	.map{samplename,filter,logfile,bamfile -> ["star", samplename, bamfile]} // discard log file and attach aligner name
-//	.set{star_filtered} 
+    samtools_index_idxstats(star_filtered)
 //    
-//    samtools_index_idxstats(star_filtered)
-//    
-//    mapsummary(samtools_index_idxstats.out)
+    mapsummary(samtools_index_idxstats.out)
 //    
 //    featureCounts(star_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
 //
