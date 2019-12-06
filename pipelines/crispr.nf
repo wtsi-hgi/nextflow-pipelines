@@ -46,7 +46,7 @@ workflow {
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
-//
+
     fastx_trimmer(ch_samplename_batch_starttrim_fastqs)
 
     fastx_trimmer.out 
