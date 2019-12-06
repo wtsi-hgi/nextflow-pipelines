@@ -51,10 +51,10 @@ f_unmapped.close()
 
 
 fout = io.open(outfile,'w')
-fout_gene = io.open(outfile.replace('.counts.txt','.genes.counts.txt'),'w')
+fout_gene = io.open(outfile.replace('.counts.txt','.subpools.counts.txt'),'w')
 
 fout.write(u'Guide Sequence\tCount\n')
-fout_gene.write(u'Guide Sequence\tCount\tGene\n')
+fout_gene.write(u'Guide Sequence\tCount\tSubpool\n')
 #fout_gene.write(u'unmapped\t%d\t\n' % (total-mapped))
 
 for guide in guide_counts:
