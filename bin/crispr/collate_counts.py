@@ -31,5 +31,5 @@ for index, row in fofn_countsfiles.iterrows():
         concatenated = pd.concat([concatenated, to_concatenate], ignore_index=True)
     print(concatenated.head())
         
-count_matrix = concatenated.pivot_table(index=['Guide Sequence','Gene'], columns='samplename', values='Count').reset_index()       
+count_matrix = concatenated.pivot_table(index=['Guide Sequence','Subpool'], columns='samplename', values='Count').reset_index()       
 count_matrix.to_csv(lib_counts + '.subpools.count_matrix.txt', sep='\t', index = False)
