@@ -63,7 +63,7 @@ workflow {
     multiqc(fastqc.out.collect())
 
     merge_fastq_batches.out[0]
-	.map{ samplename, fastqs -> tuple(samplename, fastqs, "walkup66_check_subpool_library_cut.csv", 1, 20, 0, 19) }
+	.map{ samplename, fastqs -> tuple(samplename, fastqs, "walkup66_check_subpool_library_cut.csv", 0, 19, 0, 19) }
 	.set{ch_samplename_fastq_library_match}
     
     count_crispr_reads(ch_samplename_fastq_library_match, ch_library_files.collect())
