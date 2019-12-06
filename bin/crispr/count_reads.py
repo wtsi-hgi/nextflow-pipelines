@@ -23,7 +23,7 @@ flog.write("outfile2: " + str(outfile2) + str("\n"))
 getSeq = lambda x: x[start_match_lib:end_match_lib] 
 
 guide_counts = {getSeq(x):0 for x in guide['Guide Sequence']}
-guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Gene'])}
+guide_gene = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guide['Subpool'])}
 # guide_type = {getSeq(x):y for (x,y) in zip(guide['Guide Sequence'], guides['Type'])}
 
 if '.gz' in fastq_file: f = gzip.open(fastq_file, 'rt') 
