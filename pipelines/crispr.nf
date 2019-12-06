@@ -1,27 +1,11 @@
 nextflow.preview.dsl=2
-params.runtag = 'june_6007'
+params.runtag = 'walk66_subppol'
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
-// collect library tables:
-params.guide_libraries = "${baseDir}/../../guide_libraries/June35.guide_library.csv"
+params.guide_libraries = "${baseDir}/../../guide_libraries/walkup66_check_subpool_library_cut.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
-//params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
-
-//params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
-
-// add guide library of each sample:
-// params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
-// params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123_libraries.csv"
-
-//params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123contamination_libraries.csv"
-//Channel.fromPath(params.samplename_library)
-//    .splitCsv(header: true)
-//    .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
-//    .set{ch_samplename_library}
-
-
 
 include iget_crams from '../modules/crispr/irods.nf' params(run: true, outdir: params.outdir)
 include crams_to_fastq_gz from '../modules/crispr/crams_to_fastq_anyflag.nf' params(run:true, outdir: params.outdir,
@@ -37,30 +21,31 @@ include multiqc from '../modules/crispr/multiqc.nf' params(run: true, outdir: pa
 
 workflow {
 
-  //   1.A: from irods:
-    Channel.fromPath("${baseDir}/../../inputs/june_6007.csv")
-    	.splitCsv(header: true)
-    	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sanger_sample_id}", "${row.study_id}") }
-    	.set{ch_to_iget}
-
-    iget_crams(ch_to_iget)
-    
-    iget_crams.out.iget_not_found
-	.map{ samplename, not_found_txt -> not_found_txt}
-	.collectFile(name: 'all_iget_not_found.txt', newLine: true, storeDir: "$params.outdir" )
-    
-    
-    crams_to_fastq_gz(iget_crams.out.spname_batch_cram) //.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
-    crams_to_fastq_gz.out[0]
-	.map{samplename,batch, fastqs -> [samplename, batch, "1", fastqs]}
-	.set{ch_samplename_batch_starttrim_fastqs}
+//  //   1.A: from irods:
+//    Channel.fromPath("${baseDir}/../../inputs/june_6007.csv")
+//    	.splitCsv(header: true)
+//    	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.sanger_sample_id}", "${row.study_id}") }
+//    	.set{ch_to_iget}
 //
-//    // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
-//    // Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
-//    Channel.fromPath("${baseDir}/../../inputs/walkup92_TIM123_fastqs.csv")
-//	.splitCsv(header: true)
-//	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
-//	.set{ch_samplename_batch_fastqs}
+//    iget_crams(ch_to_iget)
+//    
+//    iget_crams.out.iget_not_found
+//	.map{ samplename, not_found_txt -> not_found_txt}
+//	.collectFile(name: 'all_iget_not_found.txt', newLine: true, storeDir: "$params.outdir" )
+//    
+//    
+//    crams_to_fastq_gz(iget_crams.out.spname_batch_cram) //.map{samplename,batch, crams,crais -> [samplename, batch, crams]})
+//    crams_to_fastq_gz.out[0]
+//	.map{samplename,batch, fastqs -> [samplename, batch, "1", fastqs]}
+//	.set{ch_samplename_batch_starttrim_fastqs}
+
+
+//
+    // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
+    Channel.fromPath("${baseDir}/../../inputs/walkup66_subpool.csv")
+	.splitCsv(header: true)
+	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
+	.set{ch_samplename_batch_fastqs}
 //
     fastx_trimmer(ch_samplename_batch_starttrim_fastqs)
 
