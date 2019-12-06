@@ -45,7 +45,7 @@ workflow {
     Channel.fromPath("${baseDir}/../../inputs/walkup66_subpool.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
-	.set{ch_samplename_batch_fastqs}
+	.set{ch_samplename_batch_starttrim_fastqs}
 
     fastx_trimmer(ch_samplename_batch_starttrim_fastqs)
 
