@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
-params.run_seurat = true
+params.run_seurat = false
 params.run_seurat_on_raw = true // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
@@ -8,7 +8,6 @@ params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SN
 Channel.fromPath(params.cellsnp_vcf_candidate_snps)
     .ifEmpty { exit 1, "cellsnp_vcf_candidate_snps missing: ${params.cellsnp_vcf_candidate_snps}" }
     .set {ch_cellsnp_vcf_candidate_snps}
-
 
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
 include cellsnp from '../modules/scrna/cellsnp.nf' params(run: true, outdir: params.outdir)
