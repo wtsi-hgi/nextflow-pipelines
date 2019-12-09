@@ -159,7 +159,7 @@ workflow {
 //    
     mapsummary(samtools_index_idxstats.out)
 //    
-//    featureCounts(star_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
+    featureCounts(star_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
 //
 //    merge_featureCounts(featureCounts.out[0].map{samplename, gene_fc_txt -> gene_fc_txt}.collect())
 //
