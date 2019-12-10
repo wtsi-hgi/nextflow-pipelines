@@ -21,10 +21,10 @@ process copy_number_v2 {
     params.run
      
     input: 
-    set val(samplename), val(egan_id), file(hist_root_file), file(samplename_gt_vcf)
+    tuple val(samplename), val(egan_id), file(hist_root_file), file(samplename_gt_vcf)
     
     output: 
-    set val(samplename), file("${samplename}.cn.vcf")
+    tuple val(samplename), file("${samplename}.cn.vcf"), emit: samplename_cn_vcf
 
     script:
     """ 
