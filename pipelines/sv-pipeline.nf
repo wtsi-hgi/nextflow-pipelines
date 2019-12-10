@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'copy_number_v2'
-// params.run_cellsnp = true
+params.run_copy_number = true
 
 include copy_number_v2 from '../modules/sv-pipeline/copy_number.nf' params(run: true, outdir: params.outdir)
 
