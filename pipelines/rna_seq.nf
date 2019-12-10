@@ -114,7 +114,7 @@ workflow {
 
 // from fastqs:
     Channel
-	.fromPath("${params.outdir}/crams_to_fastq_gz_out_0.txt")
+	.fromPath("${params.outdir}/crams_to_fastq_gz_out_0_sortuniq4179.txt")
 	.splitCsv(header:false)
 	.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
 	.set { ch_samplename_crams }
