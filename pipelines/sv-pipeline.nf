@@ -7,9 +7,10 @@ include copy_number_v2 from '../modules/sv-pipeline/copy_number.nf' params(run: 
 
 workflow {
 
-    Channel.fromPath("${baseDir}/../../inputs/samples_copy_number_v2.csv")
+    Channel.fromPath("${baseDir}/../../inputs/copy_number_input_v2.csv")
 	.splitCsv(header: true)
-	.map { row -> tuple(row.samplename, row.egan_id, row.hist_root_file, row.samplename_gt_vcf)}
+	.map { row -> tuple(row.samplename, row.EGAN_id, row.root_file, row.gt_vcf)}
+        .take(1)
 	.set{ch_copy_number_v2}
 
     
