@@ -9,7 +9,7 @@ process copy_number_v2 {
     stageInMode 'copy'
     stageOutMode 'rsync'
     time '1000m'
-    container "copY_number_v2"
+    container "copy_number_v2"
     maxForks 50
     // containerOptions = "--bind /home/ubuntu"
     // errorStrategy 'terminate'
