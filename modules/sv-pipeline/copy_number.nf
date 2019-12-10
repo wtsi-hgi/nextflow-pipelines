@@ -24,7 +24,7 @@ process copy_number_v2 {
     set val(samplename), val(egan_id), file(hist_root_file), file(samplename_gt_vcf)
     
     output: 
-    set val(samplename), file("${samplename}.cn.vcf"), emit: samplename_cn_vcf
+    set val(samplename), file("${samplename}.cn.vcf")
 
     script:
     """ 
