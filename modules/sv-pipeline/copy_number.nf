@@ -25,7 +25,6 @@ process copy_number_v2 {
     
     output: 
     tuple val(samplename), file("${samplename}.cn.vcf"), emit: samplename_cn_vcf
-    file("${samplename}.cn.vcf"), emit: cn_vcf
 
     script:
     """ 
