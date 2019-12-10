@@ -14,7 +14,9 @@ workflow {
 	.set{ch_copy_number_v2}
 
     
-    if (params.run_copy_number)
-	copy_number_v2(ch_copy_number_v2)
+    ch_copy_number_v2.view()
+
+   // if (params.run_copy_number)
+//	copy_number_v2(ch_copy_number_v2)
 
 }
