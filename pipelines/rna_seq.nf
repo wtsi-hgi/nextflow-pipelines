@@ -163,10 +163,10 @@ workflow {
 //
     merge_featureCounts(featureCounts.out[0].map{samplename, gene_fc_txt -> gene_fc_txt}.collect())
 //
-    crams_to_fastq_gz.out[1]
-	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
-	.set{ch_lostcause }
-    lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
+//    crams_to_fastq_gz.out[1]
+//	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
+//	.set{ch_lostcause }
+//  lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
 //
     featureCounts.out[1]
 	.filter{ pick_aligner(it[0]) }
