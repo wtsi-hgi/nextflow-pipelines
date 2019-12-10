@@ -2,7 +2,7 @@ params.run = true
 
 process copy_number_v2 {
     memory '4G'
-    tag "copy number $samplename"
+    tag "$samplename $egan_id"
     cpus 2
     disk '29 GB'
     scratch '/tmp'
