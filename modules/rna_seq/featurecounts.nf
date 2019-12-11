@@ -9,7 +9,7 @@ params.unstranded = false
 process featureCounts {
     tag "${samplename}"
     container "nfcore-rnaseq"
-    memory = '15G'
+    memory = {  20.GB + 20.GB * (task.attempt-1) }
     time '300m'
     cpus 1
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
