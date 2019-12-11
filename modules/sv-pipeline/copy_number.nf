@@ -50,10 +50,10 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
       -o coordinates.txt
 
    cat coordinates.txt | grep -v chrX | grep -v chrY > coordinates_nochrXY.txt
-   vcftools --vcf ${samplename_gt_vcf} --not-chr chrX --not-chr chrY --recode --recode-INFO-all --out ${samplename}.noXY.vcf
+   vcftools --vcf ${samplename_gt_vcf} --not-chr chrX --not-chr chrY --recode --recode-INFO-all --out ${samplename}.noXY
 
    svtools copynumber \\
-      -i ${samplename}.noXY.vcf \\
+      -i ${samplename}.noXY.recode.vcf \\
       -s ${egan_id} \\
       --cnvnator cnvnator \\
       -w 100 \\
