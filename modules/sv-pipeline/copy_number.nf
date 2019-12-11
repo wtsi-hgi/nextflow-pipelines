@@ -53,7 +53,7 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
    svtools copynumber \\
       -i ${samplename_gt_vcf} \\
-      -s ${samplename} \\
+      -s ${egan_id} \\
       --cnvnator cnvnator \\
       -w 100 \\
       -r ${hist_root_file} \\
