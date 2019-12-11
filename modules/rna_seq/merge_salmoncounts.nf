@@ -13,6 +13,7 @@ process merge_salmoncounts {
     maxRetries 6
     // memory = '10G'
     memory = {  120.GB + 20.GB * (task.attempt-1) }
+    queue 'long'
     time '900m'
 
     input:
