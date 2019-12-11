@@ -10,7 +10,7 @@ process copy_number_v2 {
     stageOutMode 'rsync'
     time '1000m'
     container "copy_number_v2"
-    maxForks 400
+    maxForks 40
     // containerOptions = "--bind /home/ubuntu"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
