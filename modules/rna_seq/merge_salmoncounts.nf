@@ -14,6 +14,7 @@ process merge_salmoncounts {
     // memory = '10G'
     memory = {  120.GB + 20.GB * (task.attempt-1) }
     time '900m'
+    queue 'long'
 
     input:
     file (all_quant_sf)
