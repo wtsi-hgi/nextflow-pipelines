@@ -49,13 +49,15 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
       -i ${samplename_gt_vcf} \\
       -o coordinates.txt
 
-    svtools copynumber \\
+   cat coordinates.txt | grep -v chrX | grep -v chrY > coordinates_nochrXY.txt
+
+   svtools copynumber \\
       -i ${samplename_gt_vcf} \\
       -s ${samplename} \\
       --cnvnator cnvnator \\
       -w 100 \\
       -r ${hist_root_file} \\
-      -c coordinates.txt \\
+      -c coordinates_nochrXY.txt \\
       > ${samplename}.cn.vcf
     """
 }
