@@ -4,7 +4,7 @@ process copy_number_v2 {
     memory '4G'
     tag "$samplename $egan_id"
     cpus 2
-    disk '29 GB'
+    disk '60 GB'
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
@@ -51,7 +51,7 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
    cat coordinates.txt | grep -v chrX | grep -v chrY > coordinates_nochrXY.txt
    vcftools --vcf ${samplename_gt_vcf} --not-chr chrX --not-chr chrY --recode --recode-INFO-all --out ${samplename}.noXY
-
+   
    svtools copynumber \\
       -i ${samplename}.noXY.recode.vcf \\
       -s ${egan_id} \\
