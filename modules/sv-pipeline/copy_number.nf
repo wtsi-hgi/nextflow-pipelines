@@ -24,7 +24,7 @@ process copy_number_v2 {
     tuple val(samplename), val(egan_id), file(hist_root_file), file(samplename_gt_vcf)
     
     output: 
-    tuple val(samplename), file("${samplename}.cn.vcf"), emit: samplename_cn_vcf
+    tuple val(samplename), file("${samplename}.noXY.cn.vcf"), emit: samplename_cn_vcf
 
     script:
     """ 
