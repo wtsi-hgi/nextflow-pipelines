@@ -12,8 +12,8 @@ process merge_salmoncounts {
     containerOptions = "--bind /lustre"
     maxRetries 6
     // memory = '10G'
-    memory = {  80.GB + 20.GB * (task.attempt-1) }
-    time '400m'
+    memory = {  120.GB + 20.GB * (task.attempt-1) }
+    time '900m'
 
     input:
     file (all_quant_sf)
