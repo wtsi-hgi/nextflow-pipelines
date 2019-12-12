@@ -33,7 +33,8 @@ process 'iget_cram_cellranger' {
     
     output:
     tuple val(sanger_sample_id), val(batch), file("*.cram"), emit: spname_batch_cram optional true
-    tuple val(sanger_sample_id), file("${sanger_sample_id}.${sanger_sample_id}.${study_id}.not_found.txt"), emit: iget_not_found optional true
+    tuple val(sanger_sample_id), file("${sanger_sample_id}.not_found.txt"), emit: iget_not_found optional true
+    tuple val(sanger_sample_id), file("cellranger.${sanger_sample_id}.not_found.txt"), emit: cellranger_not_found optional true
     tuple val(sanger_sample_id), val(batch), file("*.cram"), file ("*.crai"), emit: spname_batch_cram_crai optional true
     
     tuple val(sanger_sample_id), file("cellranger_${sanger_sample_id}"), emit: cellranger_full_dir optional true
