@@ -17,7 +17,7 @@ process 'iget' {
     set val(sample)
     
   output:
-    set val(sample), file("*.cram"), file ("*.crai"), emit: sample_cram_crai optional true
+    tuple sample, file("*.cram"), file ("*.crai"), emit: sample_cram_crai optional true
 
   script:
     """
