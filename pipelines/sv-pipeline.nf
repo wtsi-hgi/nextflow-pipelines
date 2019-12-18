@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'remove_XY'
-params.run_vcf_remove_chrXY = false
+params.run_vcf_remove_chrXY = true
 params.run_copy_number = false
 
 include copy_number_v2 from '../modules/sv-pipeline/copy_number.nf' params(run: true, outdir: params.outdir)
