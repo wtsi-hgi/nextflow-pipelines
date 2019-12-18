@@ -98,8 +98,10 @@ workflow {
     iget_cram(baton_study_id.out.samples_tsv
 	      .map{a,b -> b}
 	      .splitCsv(header: true, sep: '\t')
+              .filter { it.sample_supplier_name ~/^r.*/}
 	      .view()
-	      .map{row->row.sample}, "5643")
+	      .map{row->row.sample}
+	      , "5643")
     
     //// from irods studyid and list of samplenames
     //iget_cram(
