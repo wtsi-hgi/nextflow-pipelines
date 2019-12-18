@@ -6,7 +6,7 @@ workflow {
 
     Channel.fromPath("${baseDir}/../../inputs/samples.tsv")
 	.splitCsv(header: true)
-	.map { row -> row.sample }
+	.map { row -> tuple(row.sample) }
 	.set{ch_to_iget}
         .view()
 
