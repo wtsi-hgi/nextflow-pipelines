@@ -99,9 +99,9 @@ workflow {
 	      .map{a,b -> b}
 	      .splitCsv(header: true, sep: '\t')
 	      .map{row->tuple(row.sample, row.sample_supplier_name)}
-              .filter { it[1] ==~ /^r.*/}
+              .filter { it[1] ==~ /^[cC].*/}
 	      .view()
-	      .map{row->row.sample}
+	      .map{a,b->a}
 	      , "5643")
     
     //// from irods studyid and list of samplenames
