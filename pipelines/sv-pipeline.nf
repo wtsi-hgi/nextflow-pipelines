@@ -20,9 +20,9 @@ workflow {
 
 
 
-    Channel.fromPath("/home/ubuntu/data2/results/copynumber/*.gt.vcf")
+    Channel.fromPath("/home/ubuntu/data2/results/copy_number/*.cn.vcf")
 	.take(4)
-	.map{gt_vcf -> tuple(gt_vcf.getName.replaceAll(~/.gt.vcf/, ""), gt_vcf)}
+	.map{gt_vcf -> tuple(gt_vcf.getName.replaceAll(~/.cn.vcf/, ""), gt_vcf)}
 	.set{ch_vcf_remove_chrXY}
     
     if (params.vcf_remove_chrXY)
