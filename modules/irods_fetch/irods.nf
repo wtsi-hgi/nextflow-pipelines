@@ -14,7 +14,7 @@ process 'iget' {
     params.run 
 
     input:
-    set val(sample)
+    sample
     
   output:
     tuple sample, file("*.cram"), file ("*.crai"), emit: sample_cram_crai optional true
