@@ -23,7 +23,8 @@ workflow {
     Channel.fromPath("/home/ubuntu/data2/to_rm_XY.txt") // 11867 lines
 	.splitCsv(header: false)
 	.take(4)
-        .map{gt_vcf -> tuple(gt_vcf.toString().replaceAll(~/(.*).cn.vcf/, "\$1"), file(gt_vcf))}
+        .map{gt_vcf -> file(gt_vcf)}
+        //.map{gt_vcf -> tuple(gt_vcf.toString().replaceAll(~/(.*).cn.vcf/, "\$1"), file(gt_vcf))}
 	.set{ch_vcf_remove_chrXY}
     
     ch_vcf_remove_chrXY.view()
