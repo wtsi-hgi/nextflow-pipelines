@@ -97,7 +97,7 @@ workflow {
     
     iget_cram(baton_study_id.out.samples_tsv
 	      .map{a,b -> b}
-	      .splitCSV(header=true)
+	      .splitCSV(header: true, sep: '\t')
 	      .map{row->row.sample}, "5643")
     
     //// from irods studyid and list of samplenames
