@@ -1,5 +1,5 @@
 nextflow.preview.dsl=2
-params.runtag = 'copy_number_v2'
+params.runtag = 'remove_XY'
 params.runvcf_remove_chrXY = false
 params.run_copy_number = false
 
@@ -22,7 +22,7 @@ workflow {
 
     Channel.fromPath("/home/ubuntu/data2/results/copynumber/*.gt.vcf")
 	.take(4)
-	.map{gt_vcf -> tuple(gt_vcf.baseName.replaceAll(~/.gt.vcf/, ""), gt_vcf)}
+	.map{gt_vcf -> tuple(gt_vcf.getName.replaceAll(~/.gt.vcf/, ""), gt_vcf)}
 	.set{ch_vcf_remove_chrXY}
     
     if (params.vcf_remove_chrXY)
