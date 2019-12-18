@@ -98,7 +98,8 @@ workflow {
     iget_cram(baton_study_id.out.samples_tsv
 	      .map{a,b -> b}
 	      .splitCsv(header: true, sep: '\t')
-              .filter { it.sample_supplier_name ~/^r.*/}
+	      .map{row->tuple(row.sample, row.sample_supplier_name)}
+              .filter { it[1] ~/^r.*/}
 	      .view()
 	      .map{row->row.sample}
 	      , "5643")
