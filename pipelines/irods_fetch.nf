@@ -5,8 +5,7 @@ include iget from '../modules/irods_fetch/irods.nf' params(run: true, outdir: pa
 workflow {
 
     Channel.fromPath("${baseDir}/../../inputs/samples.tsv")
-        .view()
-	.splitCsv(header: true)
+	.splitCsv(header: true, sep: '\t')
 	.map { row -> tuple(row.sample) }
 	.set{ch_to_iget}
 
