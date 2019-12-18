@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'remove_XY'
-params.runvcf_remove_chrXY = false
+params.run_vcf_remove_chrXY = false
 params.run_copy_number = false
 
 include copy_number_v2 from '../modules/sv-pipeline/copy_number.nf' params(run: true, outdir: params.outdir)
@@ -22,10 +22,10 @@ workflow {
 
     Channel.fromPath("/home/ubuntu/data2/results/copy_number/*.cn.vcf")
 	.take(4)
-	.map{gt_vcf -> tuple(gt_vcf.getName.replaceAll(~/.cn.vcf/, ""), gt_vcf)}
+	.map{gt_vcf -> tuple(gt_vcf.getName().replaceAll(~/.cn.vcf/, ""), gt_vcf)}
 	.set{ch_vcf_remove_chrXY}
     
-    if (params.vcf_remove_chrXY)
+    if (params.run_vcf_remove_chrXY)
 	vcf_remove_chrXY(ch_vcf_remove_chrXY)
 
 
