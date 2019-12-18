@@ -1,6 +1,6 @@
 params.run = true
 
-process copy_number_v2 {
+process vcf_remove_chrXY {
     memory '4G'
     tag "$samplename"
     cpus 2
