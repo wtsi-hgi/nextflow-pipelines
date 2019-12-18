@@ -8,6 +8,7 @@ workflow {
 	.splitCsv(header: true)
 	.map { row -> row.sample }
 	.set{ch_to_iget}
+        .view()
 
     iget(ch_to_iget)
 }
