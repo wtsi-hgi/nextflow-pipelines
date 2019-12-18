@@ -99,10 +99,11 @@ workflow {
 	      .map{a,b -> b}
 	      .splitCsv(header: true, sep: '\t')
 	      .map{row->tuple(row.sample, row.sample_supplier_name)}
-              .filter { it[1] ==~ /^[cC].*/}
-	      .view()
+	      .filter { it[1] ==~ /^[rR].*/} //.filter { it[1] ==~ /^[cC].*/}
 	      .map{a,b->a}
 	      , "5643")
+    
+    //.filter { it[1] ==~ /^[cC].*/} //.filter { it[1] ==~ /^[cC].*/}
     
     //// from irods studyid and list of samplenames
     //iget_cram(
