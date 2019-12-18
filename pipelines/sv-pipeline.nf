@@ -26,7 +26,7 @@ workflow {
         .map{row -> tuple(file(row[0]).getName().replaceAll(~/.cn.vcf/, ""), file(row[0]))}
 	.set{ch_vcf_remove_chrXY}
     
-    ch_vcf_remove_chrXY.view()
+    //ch_vcf_remove_chrXY.view()
     
     if (params.run_vcf_remove_chrXY)
 	vcf_remove_chrXY(ch_vcf_remove_chrXY)
