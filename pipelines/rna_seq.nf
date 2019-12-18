@@ -88,15 +88,22 @@ include multiqc from '../modules/rna_seq/multiqc.nf' params(run: true, outdir: p
 						   runtag : params.runtag)
 include lostcause from '../modules/rna_seq/lostcause.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
+include baton_study_id from '../modules/rna_seq/baton.nf' params(run: true, outdir: params.outdir,
+						   runtag : params.runtag)
 
 workflow {
 
-    //// from irods studyid and list of samplenames
-    iget_cram(
-	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
-	    .flatMap{ it.readLines()}, "5933")
-    crams_to_fastq_gz(iget_cram.out[0])
+    baton_study_id("5643")
     
+    iget_cram(baton_study_id.out.sample.
+	      splitCSV(header=true)
+	      .map{row->row.sample}, "5643")
+    
+    //// from irods studyid and list of samplenames
+    //iget_cram(
+    //	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
+    //	    .flatMap{ it.readLines()}, "5933")
+    crams_to_fastq_gz(iget_cram.out[0])
     ////
 
     //// from cram files:
