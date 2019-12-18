@@ -2,7 +2,7 @@ params.run = true
 params.dropqc = ""
 
 process baton_study_id {
-    tag "${studyid}"
+    tag "${study_id}"
     memory = '4G'
     time '240m'
     cpus 1
@@ -15,13 +15,13 @@ process baton_study_id {
     params.run
 
     input: 
-    val studyid
+    val study_id
 
     output: 
     tuple val(study_id), file('samples.tsv'), emit: samples_tsv
 
     script:
     """
-    bash $workflow.projectDir/../bin/rna_seq/baton.sh ${studyid}
+    bash $workflow.projectDir/../bin/rna_seq/baton.sh ${study_id}
     """
 }
