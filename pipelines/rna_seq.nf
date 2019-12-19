@@ -144,10 +144,9 @@ workflow {
     star_out = star_2pass_basic.out
 
 
-    
     //// 
     leafcutter_bam2junc(star_out[0])
-    leafcutter_clustering(leafcutter_bam2junc.out.collect())
+    leafcutter_clustering(leafcutte_bam2junc.out.collect())
 
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
     
