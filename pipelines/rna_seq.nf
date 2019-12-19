@@ -90,6 +90,8 @@ include lostcause from '../modules/rna_seq/lostcause.nf' params(run: true, outdi
 						   runtag : params.runtag)
 include baton_study_id from '../modules/rna_seq/baton.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
+include heatmap from '../modules/rna_seq/heatmap.nf' params(run: true, outdir: params.outdir,
+						   runtag : params.runtag)
 
 workflow {
 
