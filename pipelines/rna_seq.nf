@@ -132,7 +132,7 @@ workflow {
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
     tximport(salmon.out[0].collect())
-    heatmap(salmon.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
+    heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
     
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 
