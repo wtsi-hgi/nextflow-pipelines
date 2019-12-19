@@ -1,9 +1,8 @@
 params.run = true 
-params.ensembl_lib = "Ensembl 91 EnsDb"
 
-process tximport {
-    tag "tximport $params.ensembl_lib"
-    memory = '80G'
+process heatmap {
+    tag "heatmap"
+    memory = '30G'
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
     time '400m'
@@ -11,32 +10,19 @@ process tximport {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
-    publishDir "${params.outdir}/tximport", mode: 'symlink'
+    publishDir "${params.outdir}/heatmap/", mode: 'symlink'
 
     when:
     params.run
 
     input:
-    file (quant_sf_files)  // from collect()
+    file (count_matrix_tsv)
 
     output:
-    file("fofn_quantfiles.txt")
-    file("txi_gene_counts.csv")
-    file("txi_transcript_counts.csv")
-    file("txi_lengthScaledTPM_gene_counts.csv")
-    file("tximport.rdata")
-    //file "${samplename}.quant.sf" // into ch_salmon_trans
-    //file "${samplename}.quant.genes.sf" //into ch_salmon_genes
-    // file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
+    tuple file("outputs/salmon_PCA_unbiased_toppc.pdf"), file("outputs/salmon_heatmap_toppc.pdf"), emit: pca_heatmap
 
     script:
     """
-    ls . | grep .quant.sf\$ > fofn_quantfiles.txt
-
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/tximport.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/heatmap.R $count_matrix_tsv
     """
-
-    // TODO: prepare columns for merging; extract correct column and transpose (paste) it.
-    // Include the row names so merger can check identity.
-    // The merge step will concatenate the rows and re-transpose to obtain final result.
 }
