@@ -89,6 +89,9 @@ include multiqc from '../modules/rna_seq/multiqc.nf' params(run: true, outdir: p
 include lostcause from '../modules/rna_seq/lostcause.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
 
+include heatmap from '../modules/rna_seq/heatmap.nf' params(run: true, outdir: params.outdir,
+						   runtag : params.runtag)
+
 workflow {
 
     //// from irods studyid and list of samplenames
@@ -117,6 +120,8 @@ workflow {
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
     tximport(salmon.out[0].collect())
+    heatmap(salmon.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
+		
 
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 
@@ -173,5 +178,6 @@ workflow {
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
 	    star_out[2].collect().ifEmpty([]),
 	    salmon.out[2].collect().ifEmpty([]))
+
     
 }
