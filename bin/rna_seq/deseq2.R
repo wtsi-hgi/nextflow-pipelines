@@ -52,7 +52,7 @@ experiment_df %<>% select(g,r,a) %>% mutate_if(is.numeric, as.factor)
 
 
 library("DESeq2")
-ddsTxi <- DESeqDataSetFromTximport(txi,
+dds <- DESeqDataSetFromTximport(txi,
                                    colData = experiment_df,
                                    design = ~ 1)
 
