@@ -194,6 +194,6 @@ workflow {
 	    salmon.out[2].collect().ifEmpty([]))
 
     if(params.run_deseq2)
-	deseq2(Channel.fromPath(params.deseq2_tsv), tximport.out[1], tximport.out[2], tximport.out[3])
+	deseq2(salmon.out[0].collect(), Channel.fromPath(params.deseq2_tsv))
     
 }
