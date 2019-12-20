@@ -17,7 +17,7 @@ process deseq2 {
     params.run
 
     input:
-    file (quant_sf_files)  // from collect()
+    file(quant_sf_files)  // from collect()
     file(deseq2_tsv)
 
     output:
