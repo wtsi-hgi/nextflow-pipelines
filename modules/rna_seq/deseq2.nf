@@ -27,6 +27,6 @@ process deseq2 {
     """
     ls . | grep .quant.sf\$ > fofn_quantfiles.txt
 
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R  \"$params.ensembl_lib\" fofn_quantfiles.txt $deseq2_tsv
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R \"$params.ensembl_lib\" fofn_quantfiles.txt $deseq2_tsv
     """
 }
