@@ -1,7 +1,7 @@
 params.run = true 
 
 process deseq2 {
-    tag "$matrix_dseq2 $deseq2_tsv"
+    tag "$matrix_deseq2 $deseq2_tsv"
     memory = '80G'
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
@@ -16,16 +16,16 @@ process deseq2 {
     params.run
 
     input:
-    file (deseq2_tsv)
-    file(txi_gene_counts.csv)
-    file(txi_transcript_counts.csv)
-    file(txi_lengthScaledTPM_gene_counts.csv)
+    file(deseq2_tsv)
+    file(txi_gene_counts_csv)
+    file(txi_transcript_counts_csv)
+    file(txi_lengthScaledTPM_gene_counts_csv)
 
     output:
     file("deseq2.rdata")
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R txi_gene_counts.csv txi_transcript_counts.csv txi_lengthScaledTPM_gene_counts.csv
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R deseq2_tsv txi_gene_counts_csv txi_transcript_counts_csv txi_lengthScaledTPM_gene_counts_csv
     """
 }
