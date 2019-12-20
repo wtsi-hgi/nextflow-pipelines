@@ -26,6 +26,6 @@ process deseq2 {
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R deseq2_tsv txi_gene_counts_csv txi_transcript_counts_csv txi_lengthScaledTPM_gene_counts_csv
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R $deseq2_tsv $txi_gene_counts_csv $txi_transcript_counts_csv $txi_lengthScaledTPM_gene_counts_csv
     """
 }
