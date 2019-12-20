@@ -1,7 +1,8 @@
 params.run = true 
+params.ensembl_lib = "Ensembl 91 EnsDb"
 
 process deseq2 {
-    tag "$matrix_deseq2 $deseq2_tsv"
+    tag "$deseq2_tsv"
     memory = '80G'
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
@@ -16,16 +17,16 @@ process deseq2 {
     params.run
 
     input:
+    file (quant_sf_files)  // from collect()
     file(deseq2_tsv)
-    file(txi_gene_counts_csv)
-    file(txi_transcript_counts_csv)
-    file(txi_lengthScaledTPM_gene_counts_csv)
 
     output:
     file("deseq2.rdata")
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R $deseq2_tsv $txi_gene_counts_csv $txi_transcript_counts_csv $txi_lengthScaledTPM_gene_counts_csv
+    ls . | grep .quant.sf\$ > fofn_quantfiles.txt
+
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R  \"$params.ensembl_lib\" fofn_quantfiles.txt $deseq2_tsv
     """
 }
