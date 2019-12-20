@@ -24,7 +24,7 @@ process vcf_remove_chrXY {
     tuple val(samplename), file(samplename_gt_vcf)
     
     output: 
-    tuple val(samplename), file("${samplename}.noXY.cn.vcf"), emit: samplename_cn_vcf
+    tuple val(samplename), file("${samplename}.noXY.recode.vcf"), emit: samplename_cn_vcf
 
     script:
     """ 
