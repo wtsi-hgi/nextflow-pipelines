@@ -84,7 +84,7 @@ experiment_df = read_tsv(args[3]) %>% as.data.frame
 experiment_formula =  experiment_df$model_formula[1] #"~ g:a"
 keep_cols = experiment_df$model_cols[1] #"~ g:a" c("g;a")
 keep_cols = strsplit(keep_cols, ";")[[1]]
-comparisons = experiment_df$model_cols[1] # c("gKO.a_0_vs_gWT.a_0;gKO.a_F_vs_gWT.a_F;gKO.a_T_vs_gWT.a_T;gKO.a_TF_vs_gWT.a_TF")
+comparisons = experiment_df$contrast_list[1] # c("gKO.a_0_vs_gWT.a_0;gKO.a_F_vs_gWT.a_F;gKO.a_T_vs_gWT.a_T;gKO.a_TF_vs_gWT.a_TF")
 comparisons = strsplit(comparisons, ";")[[1]]
 
 # experiment_df %<>% select(g,r,a) %>% mutate_if(is.character, as.factor)
