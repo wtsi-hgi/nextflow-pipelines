@@ -21,7 +21,7 @@ process deseq2 {
     file(deseq2_tsv)
 
     output:
-    file("deseq2.rdata")
+    file("outputs")
 
     script:
     """
