@@ -3,7 +3,7 @@ params.runtag = 'UkB_scRNA_fase2_4pooled'
 params.run_cellsnp = true
 params.run_vireo = true
 params.run_seurat = false
-params.run_seurat_on_raw = true // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
+params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
 params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
