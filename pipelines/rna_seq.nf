@@ -14,6 +14,8 @@ params.mito_name = 'MT' // used by mapsummary
 params.runtag = 'study5933' // HG_UKBB_scRNA_Pilot I&II 
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
+params.run_deseq2 = true
+params.deseq2_tsv = "$baseDir/../../inputs/DESeq2.tsv"
 
 params.run_star = true
 def pick_aligner(String aligner) {
@@ -92,6 +94,7 @@ include baton_study_id from '../modules/rna_seq/baton.nf' params(run: true, outd
 						   runtag : params.runtag)
 include heatmap from '../modules/rna_seq/heatmap.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
+include deseq2 from '../modules/rna_seq/deseq2.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
 
 workflow {
 
@@ -188,5 +191,8 @@ workflow {
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
 	    star_out[2].collect().ifEmpty([]),
 	    salmon.out[2].collect().ifEmpty([]))
-    
+ 
+    if(params.run_deseq2)
+	deseq2(salmon.out[0].collect(), Channel.fromPath(params.deseq2_tsv))
+       
 }
