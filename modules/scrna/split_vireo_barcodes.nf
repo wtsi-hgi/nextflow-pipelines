@@ -22,7 +22,7 @@ process 'split_vireo_barcodes' {
 
   script:
    """
-cat vireo_*/donor_ids.tsv | grep -v unassigned | grep -v doublet | cut -f 1,2 | awk '{print > \$2\".tsv\"}'
+cat ${vireo_dir}/donor_ids.tsv | grep -v unassigned | grep -v doublet | cut -f 1,2
 find . -maxdepth 1 -name 'donor*.tsv' -exec gzip {} \\;
 
 for donor_barcodes_file in donor*.tsv.gz
@@ -33,3 +33,4 @@ do
 done
    """
 }
+// | awk '{print > \$2\".tsv\"}'
