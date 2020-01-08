@@ -27,8 +27,7 @@ workflow {
         .map{row -> tuple(file(row[0]).getName().replaceAll(~/.noXY.recode.vcf/, "").replaceAll(~/.noXY.cn.vcf/, ""), file(row[0]))}
 	    .set{ch_to_split}
 	
-	ch_to_split.view()
-        //vcf_split_all_chr(ch_to_split)
+        vcf_split_all_chr(ch_to_split)
     }
     
     if (params.run_vcf_remove_chrXY) {
