@@ -10,7 +10,7 @@ process vcf_split_all_chr {
     stageOutMode 'rsync'
     time '1000m'
     container "copy_number_v2"
-    maxForks 40
+    maxForks 60
     // containerOptions = "--bind /home/ubuntu"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
