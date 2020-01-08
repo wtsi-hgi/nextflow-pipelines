@@ -23,8 +23,8 @@ workflow {
     if (params.run_split_all_chr)
 	Channel.fromPath("/home/ubuntu/data2/to_split_by_chr.txt") // lines
 	.splitCsv(header: false)
-	.take(-1)
-        .map{row -> tuple(file(row[0]).getName().replaceAll(~/.cn.vcf/, ""), file(row[0]))}
+	.take(2)
+        .map{row -> tuple(file(row[0]).getName().replaceAll(~/.noXY.recode.vcf/, "").replaceAll(~/.noXY.cn.vcf/, ""), file(row[0]))}
 	.set{ch_to_split}
         vcf_split_all_chr(ch_to_split)
 
