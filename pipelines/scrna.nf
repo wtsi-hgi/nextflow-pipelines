@@ -71,7 +71,11 @@ workflow {
             combine(ch_samplename_npooled, by: 0).
 	    combine(iget_cellranger.out.cellranger_filtered, by: 0))
 
-        split_vireo_barcodes.out.cellranger_deconv_dirs.view()
+    split_vireo_barcodes.out.cellranger_deconv_dirs.
+	.map { samplename,filtered_deconv_dirs -> filtered_deconv_dirs }
+	.transpose
+	.map {filtered_deconv_dir -> [filtered_deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),filtered_deconv_dir] }
+	.view()
 
     if (params.run_seurat)
 	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
