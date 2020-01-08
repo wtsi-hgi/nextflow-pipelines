@@ -29,7 +29,7 @@ for donor_barcodes_file in donor*.tsv.gz
 do
    donor_n=$(echo \$donor_barcodes_file | tr -dc '0-9')
    cp -r $cellranger_dir cellranger_deconv_${samplename}_\${donor_n}
-   cp \$donor_barcodes_file cellranger_deconv_${samplename}_\${donor_n}/barcodes.tsv.gz
+   cp \$donor_barcodes_file cellranger_deconv_${samplename}_\${donor_n}\/barcodes.tsv.gz
 done
    """
 }
