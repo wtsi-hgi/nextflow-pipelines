@@ -66,7 +66,7 @@ workflow {
     if (params.run_vireo)
 	vireo(cellsnp.out.cellsnp_output_dir.combine(ch_samplename_npooled, by: 0))
 
-    vireo.out.cellsnp_output_dir.
+    vireo.out.vireo_output_dir.
     combine(ch_samplename_npooled, by: 0).
     combine(iget_cellranger.out.cellranger_filtered, by: 0).view()
 
