@@ -3,8 +3,8 @@ params.run = true
 process vcf_split_all_chr {
     memory '4G'
     tag "$samplename"
-    cpus 2
-    disk '60 GB'
+    cpus 1
+    disk '20 GB'
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
