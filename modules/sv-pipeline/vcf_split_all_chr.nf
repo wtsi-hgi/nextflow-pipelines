@@ -24,7 +24,7 @@ process vcf_split_all_chr {
     tuple val(samplename), file(cn_vcf)
     
     output: 
-    tuple val(samplename), file("${samplename}.cn.chr_*.recode.vcf"), emit: samplename_cn_vcf
+    tuple val(samplename), file("${samplename}.cn.chr*.recode.vcf"), emit: samplename_cn_vcf
 
     script:
     """ 
@@ -45,7 +45,7 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
     eval \"\$(conda shell.bash hook)\"
     conda activate py2
     for i in {1..22}
-        do vcftools  --vcf  $cn_vcf  --chr chr\$i  --recode --recode-INFO-all --out  ${samplename}.cn.chr_\$i
+        do vcftools  --vcf  $cn_vcf  --chr chr\$i  --recode --recode-INFO-all --out  ${samplename}.cn.chr\$i
     done
     """
 }
