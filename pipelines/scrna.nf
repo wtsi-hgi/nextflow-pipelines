@@ -15,6 +15,7 @@ Channel.fromPath(params.cellsnp_vcf_candidate_snps)
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
 include cellsnp from '../modules/scrna/cellsnp.nf' params(run: true, outdir: params.outdir)
 include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
+include split_vireo_barcodes from '../modules/scrna/split_vireo_barcodes.nf' params(run: true, outdir: params.outdir)
 include seurat from '../modules/scrna/seurat.nf' params(run: true, outdir: params.outdir)
 // include seurat_rbindmetrics from '../modules/scrna/seurat_rbindmetrics.nf' params(run: true, outdir: params.outdir)
 
@@ -66,9 +67,11 @@ workflow {
     if (params.run_vireo)
 	vireo(cellsnp.out.cellsnp_output_dir.combine(ch_samplename_npooled, by: 0))
 
-    vireo.out.vireo_output_dir.
-    combine(ch_samplename_npooled, by: 0).
-    combine(iget_cellranger.out.cellranger_filtered, by: 0).view()
+        split_vireo_barcodes(vireo.out.vireo_output_dir.
+            combine(ch_samplename_npooled, by: 0).
+	    combine(iget_cellranger.out.cellranger_filtered, by: 0))
+
+        split_vireo_barcodes.out.cellranger_deconv_dirs.view()
 
     if (params.run_seurat)
 	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
