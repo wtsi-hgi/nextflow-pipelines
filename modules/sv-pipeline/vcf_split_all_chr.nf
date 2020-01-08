@@ -44,7 +44,7 @@ export PATH=/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/b
 
     eval \"\$(conda shell.bash hook)\"
     conda activate py2
-    for i in \{1..22\}
+    for i in {1..22}
         do vcftools  --vcf  $cn_vcf  --chr \$i  --recode --recode-INFO-all --out  ${samplename}.cn.chr_\$i
     done
     """
