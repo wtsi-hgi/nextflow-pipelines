@@ -20,15 +20,16 @@ workflow {
     if (params.run_copy_number)
 	copy_number_v2(ch_copy_number_v2)
 
-    if (params.run_split_all_chr)
+    if (params.run_split_all_chr) {
 	Channel.fromPath("/home/ubuntu/data2/to_split_by_chr.txt") // lines
 	.splitCsv(header: false)
 	.take(2)
         .map{row -> tuple(file(row[0]).getName().replaceAll(~/.noXY.recode.vcf/, "").replaceAll(~/.noXY.cn.vcf/, ""), file(row[0]))}
 	.set{ch_to_split}
         vcf_split_all_chr(ch_to_split)
-
-    if (params.run_vcf_remove_chrXY)
+    }
+    
+    if (params.run_vcf_remove_chrXY) {
 	Channel.fromPath("/home/ubuntu/data2/to_rm_XY.txt") // 11867 lines
 	.splitCsv(header: false)
 	.take(-1)
@@ -36,5 +37,5 @@ workflow {
 	.set{ch_vcf_remove_chrXY}
     
         vcf_remove_chrXY(ch_vcf_remove_chrXY)
-
+    }
 }
