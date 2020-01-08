@@ -72,7 +72,7 @@ workflow {
 	    combine(iget_cellranger.out.cellranger_filtered, by: 0))
 
     split_vireo_barcodes.out.cellranger_deconv_dirs
-	.transpose
+	.transpose()
 	.map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
         .set{ch_cellranger_filtered_deconv}
 	.view()
