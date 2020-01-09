@@ -57,7 +57,7 @@ if (file.exists(paste0(to_process,'/barcodes_subset.tsv'))){
     print(length(cells_subset))
     print(head(cells_subset))
     print(paste0("n original cells: ", dim(pbmc.data)[2]))
-    pbmc <- SubsetData(object = pbmc, cells = cells_subset[cells_subet %in% colnames(pbmc.data)])
+    pbmc <- SubsetData(object = pbmc, cells = cells_subset[cells_subset %in% colnames(pbmc.data)])
     print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
 }
 print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
