@@ -25,12 +25,12 @@ process deseq2 {
 
     script:
     """
-export http_proxy=http://wwwcache.sanger.ac.uk:3128
-export https_proxy=http://wwwcache.sanger.ac.uk:3128
-export HTTP_PROXY=http://wwwcache.sanger.ac.uk:3128
-export HTTPS_PROXY=http://wwwcache.sanger.ac.uk:3128
-
     ls . | grep .quant.sf\$ > fofn_quantfiles.txt
     /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/deseq2.R \"$params.ensembl_lib\" fofn_quantfiles.txt $deseq2_tsv
     """
 }
+
+// export http_proxy=http://wwwcache.sanger.ac.uk:3128
+// export https_proxy=http://wwwcache.sanger.ac.uk:3128
+// export HTTP_PROXY=http://wwwcache.sanger.ac.uk:3128
+// export HTTPS_PROXY=http://wwwcache.sanger.ac.uk:3128
