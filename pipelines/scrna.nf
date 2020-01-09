@@ -64,14 +64,12 @@ workflow {
     if (params.run_cellsnp)
 	cellsnp(iget_cellranger.out.cellranger_sample_bam_barcodes, ch_cellsnp_vcf_candidate_snps.collect())
     
-    if (params.run_vireo)
+    if (params.run_vireo) {
 	vireo(cellsnp.out.cellsnp_output_dir.combine(ch_samplename_npooled, by: 0))
 
         split_vireo_barcodes(vireo.out.vireo_output_dir.
             combine(ch_samplename_npooled, by: 0).
 	    combine(iget_cellranger.out.cellranger_filtered, by: 0))
-
-    split_vireo_barcodes.out.cellranger_deconv_dirs.view()
 
         split_vireo_barcodes.out.cellranger_deconv_dirs
 	    .transpose()
@@ -79,6 +77,7 @@ workflow {
             .set{ch_cellranger_filtered_deconv}
     
     ch_cellranger_filtered_deconv.view()
+    }
     
     if (params.run_seurat)
 	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
