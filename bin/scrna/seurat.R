@@ -48,7 +48,21 @@ n_cells_raw = dim(pbmc.data)[2]
 # genes expressed in >= 3 cells (~0.1% of the data). Keep all cells with at
 # least 200 detected genes
 pbmc <- CreateSeuratObject(counts = pbmc.data, min.cells = 3,
-   min.features  = 200, project = "10X_PBMC", assay = "RNA")
+                           min.features  = 200, project = "10X_PBMC", assay = "RNA")
+
+if (file.exists(paste0(to_process,'/barcodes_subset.tsv'))){
+    print(head(colnames(pbmc.data)))
+    cells_subset <- read_tsv(paste0(to_process,'/barcodes_subset.tsv'), header = FALSE)$X1
+    print(paste0("subsetting barcodes: ", paste0(to_process,'/barcodes_subset.tsv')))
+    print(length(cells_subset))
+    print(head(cells_subset))
+    print(paste0("n original cells: ", dim(pbmc.data)[2]))
+    pbmc <- SubsetData(object = pbmc, cells = cells_subset[cells_subet %in% colnames(pbmc.data)])
+    print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
+}
+print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
+
+
 mito.genes <- grep(pattern = "^MT-", x = rownames(pbmc@assays[["RNA"]]), value = TRUE)
 percent.mito <- Matrix::colSums(pbmc@assays[["RNA"]][mito.genes, ])/Matrix::colSums(pbmc@assays[["RNA"]])
 
