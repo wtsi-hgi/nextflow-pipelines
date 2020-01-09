@@ -52,7 +52,7 @@ pbmc <- CreateSeuratObject(counts = pbmc.data, min.cells = 3,
 
 if (file.exists(paste0(to_process,'/barcodes_subset.tsv'))){
     print(head(colnames(pbmc.data)))
-    cells_subset <- read_tsv(paste0(to_process,'/barcodes_subset.tsv'), header = FALSE)$X1
+    cells_subset <- read_delim(paste0(to_process,'/barcodes_subset.tsv'), delim="-", col_names = FALSE)$X1
     print(paste0("subsetting barcodes: ", paste0(to_process,'/barcodes_subset.tsv')))
     print(length(cells_subset))
     print(head(cells_subset))
