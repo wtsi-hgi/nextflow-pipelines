@@ -2,7 +2,7 @@ nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
 params.run_cellsnp = true
 params.run_vireo = true
-params.run_seurat = true
+params.run_seurat = false
 params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
@@ -76,9 +76,17 @@ workflow {
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
 	
-	ch_cellranger_filtered_deconv.view()
-	iget_cellranger.out.cellranger_raw.view()
-	iget_cellranger.out.cellranger_metrics_summary.view()
+	//ch_cellranger_filtered_deconv.view()
+	//iget_cellranger.out.cellranger_raw.view()
+	//iget_cellranger.out.cellranger_metrics_summary.view()
+	
+	iget_cellranger.out.cellranger_metrics_summary
+	    .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2","${samplename}_3"],
+						   metrics_file)}
+	    .transpose()
+	    .view()
+
+	
 
 	run_seurat(iget_cellranger.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
