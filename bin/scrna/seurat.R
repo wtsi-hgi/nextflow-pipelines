@@ -47,22 +47,23 @@ n_cells_raw = dim(pbmc.data)[2]
 # Initialize the Seurat object with the raw (non-normalized data).  Keep all
 # genes expressed in >= 3 cells (~0.1% of the data). Keep all cells with at
 # least 200 detected genes
-pbmc <- CreateSeuratObject(counts = pbmc.data, min.cells = 3,
-                           min.features  = 200, project = "10X_PBMC", assay = "RNA")
-
 if (file.exists(paste0(to_process,'/barcodes_subset.tsv'))){
-    print(head(colnames(pbmc@counts)))
+    print(head(colnames(pbmc.data)))
     cells_subset <- read_delim(paste0(to_process,'/barcodes_subset.tsv'), delim="-", col_names = FALSE)$X1
-    cells_subset = cells_subset[cells_subset %in% colnames(pbmc@counts)]
+    cells_subset = cells_subset[cells_subset %in% colnames(pbmc.data)]
     print(paste0("subsetting barcodes: ", paste0(to_process,'/barcodes_subset.tsv')))
     print(length(cells_subset))
     print(head(cells_subset))
-    print(paste0("n original cells: ", dim(pbmc.data@counts)[2]))
-    pbmc_subset = subset(pbmc, cells = cells_subset)
-    print(paste0("n cells after subset: ", dim(pbmc_subset@counts)[2]))
-    pbmc = pbmc_subset
+    print(paste0("n original cells: ", dim(pbmc.data)[2]))
+    pbmc_subset.data = pbmc.data[,cells_subset]
+    print(paste0("n cells after subset: ", dim(pbmc_subset.data)[2]))
+    pbmc.data = pbmc_subset.data
 }
-print(paste0("n cells after subset: ", dim(pbmc.data@counts)[2]))
+print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
+
+pbmc <- CreateSeuratObject(counts = pbmc.data, min.cells = 3,
+                           min.features  = 200, project = "10X_PBMC", assay = "RNA")
+
 
 
 mito.genes <- grep(pattern = "^MT-", x = rownames(pbmc@assays[["RNA"]]), value = TRUE)
