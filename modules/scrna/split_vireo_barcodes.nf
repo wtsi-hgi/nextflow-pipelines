@@ -23,13 +23,14 @@ process 'split_vireo_barcodes' {
   script:
    """
 cat $vireo_dir/donor_ids.tsv | grep -v unassigned | grep -v doublet | cut -f 1,2 | awk '{print \$1 > \$2\".tsv\"}'
-find . -maxdepth 1 -name 'donor*.tsv' -exec gzip {} \\;
 
-for donor_barcodes_file in donor*.tsv.gz
+for donor_barcodes_file in donor*.tsv
 do
    donor_n=\$(echo \$donor_barcodes_file | tr -dc '0-9')
    cp -Lr $cellranger_dir cellranger_deconv_${samplename}_\${donor_n}
-   cp \$donor_barcodes_file cellranger_deconv_${samplename}_\${donor_n}/barcodes_subset.tsv.gz
+   cp \$donor_barcodes_file cellranger_deconv_${samplename}_\${donor_n}/barcodes_subset.tsv
 done
    """
 }
+
+// find . -maxdepth 1 -name 'donor*.tsv' -exec gzip {} \\;
