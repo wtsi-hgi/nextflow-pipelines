@@ -77,8 +77,12 @@ workflow {
             .set{ch_cellranger_filtered_deconv}
 	
 	ch_cellranger_filtered_deconv.view()
-	
-	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
+	iget_cellranger.out.cellranger_raw.view()
+	iget_cellranger.out.cellranger_metrics_summary.view()
+
+	run_seurat(iget_cellranger.out.cellranger_raw,
+		   ch_cellranger_filtered_deconv,
+		   iget_cellranger.out.cellranger_metrics_summary)
     }
     
     //if (params.run_seurat)
