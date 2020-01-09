@@ -51,18 +51,18 @@ pbmc <- CreateSeuratObject(counts = pbmc.data, min.cells = 3,
                            min.features  = 200, project = "10X_PBMC", assay = "RNA")
 
 if (file.exists(paste0(to_process,'/barcodes_subset.tsv'))){
-    print(head(colnames(pbmc.data)))
+    print(head(colnames(pbmc@counts)))
     cells_subset <- read_delim(paste0(to_process,'/barcodes_subset.tsv'), delim="-", col_names = FALSE)$X1
-    cells_subset = cells_subset[cells_subset %in% colnames(pbmc.data)]
+    cells_subset = cells_subset[cells_subset %in% colnames(pbmc@counts)]
     print(paste0("subsetting barcodes: ", paste0(to_process,'/barcodes_subset.tsv')))
     print(length(cells_subset))
     print(head(cells_subset))
-    print(paste0("n original cells: ", dim(pbmc.data)[2]))
+    print(paste0("n original cells: ", dim(pbmc.data@counts)[2]))
     pbmc_subset = subset(pbmc, cells = cells_subset)
-    print(paste0("n cells after subset: ", dim(pbmc_subset.data)[2]))
+    print(paste0("n cells after subset: ", dim(pbmc_subset@counts)[2]))
     pbmc = pbmc_subset
 }
-print(paste0("n cells after subset: ", dim(pbmc.data)[2]))
+print(paste0("n cells after subset: ", dim(pbmc.data@counts)[2]))
 
 
 mito.genes <- grep(pattern = "^MT-", x = rownames(pbmc@assays[["RNA"]]), value = TRUE)
