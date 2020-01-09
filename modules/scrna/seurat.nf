@@ -8,8 +8,8 @@ process seurat {
     time '1400m'
     memory = '80G'
     cpus 2
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    errorStrategy { task.attempt < 3 ? 'retry' : 'ignore' }
+    maxRetries 2
     publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
     scratch false 
 
