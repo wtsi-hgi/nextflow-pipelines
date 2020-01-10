@@ -24,6 +24,13 @@ include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: t
 
 workflow {
 
-    if (params.run_graphtyper)
+    if (params.run_graphtyper) {
 	graphtyper(ch_bamlist_file)
+
+	graphtyper.out.commands_split
+	    .splitCsv(header=False)
+	    .set{ch_commands_split}
+
+	ch_commands_split.view()
+    }
 }
