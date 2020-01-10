@@ -2,7 +2,7 @@ params.run = true
 
 process graphtyper {
     memory '4G'
-    tag "$bamlist_file"
+    tag "$graphtyper_command"
     cpus 1
     disk '20 GB'
     time '100m'
@@ -10,24 +10,22 @@ process graphtyper {
     maxForks 60
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
-    errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "commands_split.txt"
-    maxRetries 2
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    publishDir "${params.outdir}/graphtyper_cmds/", mode: 'symlink', overwrite: true //, pattern: "commands_split.txt"
+    maxRetries 3
 
     when:
     params.run
      
     input:
-    file(bamlist_file)
-    file(config_sh)
+    val(graphtyper_command)
 
     output: 
-    file("commands_split.txt"), emit: commands_split
+    stdout, emit: stdout
 
     script:
 """ 
-cp -r /graphtyper-pipelines .
-cd ./graphtyper-pipelines
-bash make_graphtyper_pipeline.sh $bamlist_file $config_sh > ../commands_split.txt
+cp -r /graphtyper-pipelines/* .
+bash $graphtyper_command
 """
 }
