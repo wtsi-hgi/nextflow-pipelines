@@ -20,17 +20,21 @@ Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 Channel.fromPath("${baseDir}/../../inputs/ch_graphtyper_pipeline_config.txt")
 	.set{ch_graphtyper_pipeline_config}
 
+include graphtyper_pipeline from '../modules/variant_calling/graphtyper_pipeline.nf' params(run: true, outdir: params.outdir)
 include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
     if (params.run_graphtyper) {
-	graphtyper(ch_bamlist_file, ch_graphtyper_pipeline_config)
+	graphtyper_pipeline(ch_bamlist_file, ch_graphtyper_pipeline_config)
 
-	graphtyper.out.commands_split
+	graphtyper_pipeline.out.commands_split
 	    .splitText()
 	    .set{ch_commands_split}
 
 	ch_commands_split.view()
+
+	graphtyper(ch_commands_split)
+	
     }
 }
