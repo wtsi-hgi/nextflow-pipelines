@@ -1,6 +1,7 @@
 nextflow.preview.dsl=2
 params.runtag = 'test'
-params.run_graphtyper = true
+params.run_graphtyper_pipeline = true
+params.run_graphtyper = false
 
 
 // https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
@@ -25,7 +26,7 @@ include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: t
 
 workflow {
 
-    if (params.run_graphtyper) {
+    if (params.run_graphtyper_pipeline) {
 	graphtyper_pipeline(ch_bamlist_file, ch_graphtyper_pipeline_config)
 
 	graphtyper_pipeline.out.commands_split
@@ -34,7 +35,8 @@ workflow {
 
 	ch_commands_split.view()
 
-	graphtyper(ch_commands_split)
-	
+	if (params.run_graphtyper) {
+	    graphtyper(ch_commands_split)
+	}
     }
 }
