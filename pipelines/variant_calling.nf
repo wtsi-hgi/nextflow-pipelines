@@ -28,7 +28,7 @@ workflow {
 	graphtyper(ch_bamlist_file)
 
 	graphtyper.out.commands_split
-	    .splitCsv(header=False)
+	    .splitText()
 	    .set{ch_commands_split}
 
 	ch_commands_split.view()
