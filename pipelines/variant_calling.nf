@@ -17,15 +17,15 @@ Channel.fromPath(params.ch_genome_fasta_fai)
 Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
 
-Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
-	.set{ch_bamlist_file}
+Channel.fromPath("${baseDir}/../../inputs/ch_graphtyper_pipeline_config.txt")
+	.set{ch_graphtyper_pipeline_config}
 
 include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
     if (params.run_graphtyper) {
-	graphtyper(ch_bamlist_file)
+	graphtyper(ch_bamlist_file, ch_graphtyper_pipeline_config)
 
 	graphtyper.out.commands_split
 	    .splitText()
