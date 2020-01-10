@@ -9,20 +9,20 @@ params.run_graphtyper = true
 // "ref_fasta_index": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa.fai",
 params.genome_fasta = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa"
 Channel.fromPath(params.ch_genome_fasta)
-    .ifEmpty { exit 1, "genome fasta missing: ${params.genome_fasta}" }
     .set {ch_genome_fasta}
 params.genome_fasta_fai = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa.fai"
 Channel.fromPath(params.ch_genome_fasta_fai)
-    .ifEmpty { exit 1, "genome fasta fai missing: ${params.genome_fasta_fai}" }
     .set {ch_genome_fasta_fai}
 
+Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
+	.set{ch_bamlist_file}
+
+Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
+	.set{ch_bamlist_file}
 
 include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: true, outdir: params.outdir)
 
 workflow {
-
-    Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
-	.set{ch_bamlist_file}
 
     if (params.run_graphtyper)
 	graphtyper(ch_bamlist_file)
