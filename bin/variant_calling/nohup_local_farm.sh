@@ -14,6 +14,10 @@
 # conda activate $CONDA_ENVS_DIRS/nextflow
 
 ## on farm5
+export http_proxy=http://wwwcache.sanger.ac.uk:3128
+export https_proxy=http://wwwcache.sanger.ac.uk:3128
+export HTTP_PROXY=http://wwwcache.sanger.ac.uk:3128
+export HTTPS_PROXY=http://wwwcache.sanger.ac.uk:3128
 export PATH=/software/singularity-v3.5.1/bin/:$PATH
 export PATH=/software/hgi/installs/anaconda3/condabin:$PATH
 export PATH=/software/hgi/installs/anaconda3/envs/nextflow/bin:$PATH
