@@ -39,7 +39,7 @@ workflow {
 	// ch_commands_split.view()
 
 	if (params.run_graphtyper) {
-	    graphtyper(ch_bamlist_file, ch_graphtyper_pipeline_config, ch_commands_split)
+	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
 	}
     }
 }
