@@ -1,7 +1,7 @@
 nextflow.preview.dsl=2
 params.runtag = 'test'
 params.run_graphtyper_pipeline = true
-params.run_graphtyper = true
+params.run_graphtyper = false
 
 Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
@@ -34,10 +34,11 @@ workflow {
 	graphtyper_pipeline.out.commands_split
 	    .splitText()
 	    .map{a -> a.replaceAll(~/$\s/, "")}
+	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
 	    .take(4)
 	    .set{ch_commands_split}
 
-	// ch_commands_split.view()
+	ch_commands_split.view()
 
 	if (params.run_graphtyper) {
 	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
