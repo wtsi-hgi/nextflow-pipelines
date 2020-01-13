@@ -18,7 +18,7 @@ Channel.fromPath(params.ch_genome_fasta_fai)
 Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
 
-Channel.fromPath("${baseDir}/../../inputs/ch_graphtyper_pipeline_config.txt")
+Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config.txt")
 	.set{ch_graphtyper_pipeline_config}
 
 include graphtyper_pipeline from '../modules/variant_calling/graphtyper_pipeline.nf' params(run: true, outdir: params.outdir)
