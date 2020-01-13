@@ -11,7 +11,7 @@ process graphtyper {
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/graphtyper_cmds/", mode: 'symlink', overwrite: true //, pattern: "commands_split.txt"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: ""
     maxRetries 3
 
     when:
@@ -23,6 +23,7 @@ process graphtyper {
     val(graphtyper_command)
 
     output: 
+    tuple file("graphtyper_pipeline/results/chr*/*.gz"),file("graphtyper_pipeline/results/chr*/*.gz.tbi"), emit: vcf
     tuple stdout, emit: stdout
 
     script:
