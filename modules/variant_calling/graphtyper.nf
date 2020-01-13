@@ -13,6 +13,10 @@ process graphtyper {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz.tbi"
     maxRetries 3
 
     when:
