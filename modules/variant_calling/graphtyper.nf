@@ -32,6 +32,7 @@ cd ./graphtyper-pipelines
 rm -rf .git
 mkdir ../tmp
 mkdir ../results
+cp call_script.sh ..
 
 $graphtyper_command
 """
