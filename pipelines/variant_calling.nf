@@ -36,7 +36,7 @@ workflow {
 	    .take(4)
 	    .set{ch_commands_split}
 
-	// ch_commands_split.view()
+	ch_commands_split.view()
 
 	if (params.run_graphtyper) {
 	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
