@@ -31,6 +31,7 @@ cp -r /graphtyper-pipelines .
 cd ./graphtyper-pipelines
 mkdir ../tmp
 mkdir ../results
-bash $graphtyper_command
+
+$graphtyper_command
 """
 }
