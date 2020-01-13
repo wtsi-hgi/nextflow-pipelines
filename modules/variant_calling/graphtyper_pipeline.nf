@@ -28,8 +28,6 @@ process graphtyper_pipeline {
 """ 
 cp -r /graphtyper-pipelines .
 cd ./graphtyper-pipelines
-mkdir ../tmp
-mkdir ../results
 bash make_graphtyper_pipeline.sh ../$bamlist_file ../$config_sh > ../commands_split.txt
 """
 }

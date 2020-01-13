@@ -18,6 +18,8 @@ process graphtyper {
     params.run
      
     input:
+    file(bamlist_file)
+    file(config_sh)
     val(graphtyper_command)
 
     output: 
@@ -25,7 +27,10 @@ process graphtyper {
 
     script:
 """ 
-cp -r /graphtyper-pipelines/* .
+cp -r /graphtyper-pipelines .
+cd ./graphtyper-pipelines
+mkdir ../tmp
+mkdir ../results
 bash $graphtyper_command
 """
 }
