@@ -3,7 +3,7 @@ params.run = true
 process graphtyper {
     memory '4G'
     tag "$graphtyper_command"
-    cpus 1
+    cpus 4
     disk '20 GB'
     time '100m'
     container "graphtyper"
