@@ -21,10 +21,10 @@ process graphtyper {
     input:
     file(bamlist_file)
     file(config_sh)
-    val(graphtyper_command)
+    tuple graphtyper_command, chr
 
     output: 
-    tuple file("graphtyper_pipeline/results/chr*/*.gz"),file("graphtyper_pipeline/results/chr*/*.gz.tbi"), emit: vcf
+    tuple file("graphtyper_pipeline/results/$chr/*.gz"),file("graphtyper_pipeline/results/$chr/*.gz.tbi"), emit: vcf
     tuple stdout, emit: stdout
 
     script:
