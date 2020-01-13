@@ -35,7 +35,7 @@ workflow {
 	    .splitText()
 	    .map{a -> a.replaceAll(~/$\s/, "")}
 	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
-	    .take(4)
+	    .take(-1)
 	    .set{ch_commands_split}
 
 	if (params.run_graphtyper) {
