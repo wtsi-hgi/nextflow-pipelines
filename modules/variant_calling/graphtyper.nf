@@ -21,7 +21,7 @@ process graphtyper {
     val(graphtyper_command)
 
     output: 
-    stdout, emit: stdout
+    tuple stdout, emit: stdout
 
     script:
 """ 
