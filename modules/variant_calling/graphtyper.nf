@@ -11,8 +11,8 @@ process graphtyper {
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
     maxRetries 3
 
     when:
@@ -25,6 +25,8 @@ process graphtyper {
 
     output: 
     tuple file("graphtyper-pipelines/results/$chr/*.vcf.gz"),file("graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"), emit: vcf
+    tuple file("graphtyper-pipelines/haps/$chr/*.vcf.gz"),file("graphtyper-pipelines/haps/$chr/*.vcf.gz.tbi"), emit: haps_vcf
+    tuple file("graphtyper-pipelines/hap_calls/$chr/*.vcf.gz"),file("graphtyper-pipelines/hap_calls/$chr/*.vcf.gz.tbi"), emit: hap_calls_vcf
     tuple stdout, emit: stdout
 
     script:
