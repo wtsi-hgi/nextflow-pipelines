@@ -1,7 +1,7 @@
 nextflow.preview.dsl=2
 params.runtag = 'test'
 params.run_graphtyper_pipeline = true
-params.run_graphtyper = false
+params.run_graphtyper = true
 
 Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
