@@ -1,7 +1,7 @@
 nextflow.preview.dsl=2
 params.runtag = 'test'
 params.run_graphtyper_pipeline = true
-params.run_graphtyper = true
+params.run_graphtyper = false
 
 Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
@@ -33,6 +33,7 @@ workflow {
 
 	graphtyper_pipeline.out.commands_split
 	    .splitText()
+	    .replaceAll(~/\s/, "")
 	    .take(4)
 	    .set{ch_commands_split}
 
