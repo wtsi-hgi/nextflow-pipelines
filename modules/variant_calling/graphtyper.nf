@@ -25,7 +25,6 @@ process graphtyper {
 
     output: 
     tuple file("graphtyper-pipelines/results/$chr/*.vcf.gz"),file("graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"), emit: vcf
-
     tuple stdout, emit: stdout
 
     script:
