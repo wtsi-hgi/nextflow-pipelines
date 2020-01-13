@@ -5,7 +5,8 @@ process graphtyper {
     tag "$graphtyper_command"
     cpus 4
     disk '20 GB'
-    time '100m'
+    time '1400m'
+    queue 'long'
     container "graphtyper"
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
