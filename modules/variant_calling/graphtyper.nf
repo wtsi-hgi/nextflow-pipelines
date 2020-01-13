@@ -11,8 +11,8 @@ process graphtyper {
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "*.gz"
-    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "*.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/$chr/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
     maxRetries 3
 
     when:
@@ -40,4 +40,3 @@ $graphtyper_command
 """
 }
 
-// mkdir ../tmp/graphtyper_calling.XXXXXX
