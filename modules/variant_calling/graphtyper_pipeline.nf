@@ -22,7 +22,7 @@ process graphtyper_pipeline {
     file(config_sh)
 
     output: 
-    file("commands_split.txt"), emit: commands_split
+    file("commands_split.txt") emit: commands_split
 
     script:
 """ 
