@@ -30,6 +30,7 @@ process graphtyper {
 cp -r /graphtyper-pipelines .
 cd ./graphtyper-pipelines
 rm -rf .git
+mkdir ../tmp
 mkdir ../tmp/graphtyper_calling.XXXXXX
 mkdir ../results
 
