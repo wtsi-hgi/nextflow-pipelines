@@ -33,7 +33,7 @@ workflow {
 
 	graphtyper_pipeline.out.commands_split
 	    .splitText()
-	    .replaceAll(~/\s/, "")
+	    .map{a -> a.replaceAll(~/\s/, "")}
 	    .take(4)
 	    .set{ch_commands_split}
 
