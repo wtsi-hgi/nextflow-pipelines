@@ -7,7 +7,6 @@ process graphtyper {
     disk '20 GB'
     time '100m'
     container "graphtyper"
-    maxForks 60
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
