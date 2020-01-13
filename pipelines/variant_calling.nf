@@ -33,9 +33,10 @@ workflow {
 
 	graphtyper_pipeline.out.commands_split
 	    .splitText()
+	    .take(4)
 	    .set{ch_commands_split}
 
-	ch_commands_split.view()
+	// ch_commands_split.view()
 
 	if (params.run_graphtyper) {
 	    graphtyper(ch_bamlist_file, ch_graphtyper_pipeline_config, ch_commands_split)
