@@ -31,6 +31,7 @@ process graphtyper {
 """ 
 cp -r /graphtyper-pipelines .
 cd ./graphtyper-pipelines
+sed -i s'/ --no_sort//'g node_script.sh
 rm -rf .git
 mkdir ../tmp
 cp call_script.sh ..
