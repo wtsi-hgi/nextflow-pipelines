@@ -3,8 +3,7 @@ params.runtag = 'test'
 params.run_graphtyper_pipeline = true
 params.run_graphtyper = true
 
-// Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
-Channel.fromPath("${baseDir}/../../../crams_500.txt")
+Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
 	.set{ch_bamlist_file}
 
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config.sh")
