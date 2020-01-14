@@ -1,10 +1,10 @@
 params.run = true
 
 process graphtyper {
-    memory '4G'
+    memory '20G'
     tag "$graphtyper_command"
     cpus 4
-    disk '20 GB'
+    // disk '20 GB'
     time '1400m'
     queue 'long'
     container "graphtyper"
