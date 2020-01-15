@@ -2,9 +2,9 @@ nextflow.preview.dsl=2
 params.runtag = 'test'
 
 params.use_interval_list = true
-params.run_graphtyper_on_interval = false
+params.run_graphtyper_on_interval = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.txt")
-	.set{ch_graphtyper_pipeline_config}
+	.set{ch_iwes_intervals_csv}
 
 
 params.run_graphtyper_pipeline = false 
@@ -49,14 +49,12 @@ workflow {
 	}
     }
 
-    
     if (params.use_interval_list) {
 
-	
-	    .splitText()
-	    .map{a -> a.replaceAll(~/$\s/, "")}
-	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
-	    .take(-1)
+	ch_iwes_intervals_csv
+	    .splitCsv(header: true)
+	    .map { row -> tuple(row.chr, row.start, row.end)}
+	    .take(2)
 	    .set{ch_chr_start_end}
 
 	if (params.run_graphtyper_on_interval) {
