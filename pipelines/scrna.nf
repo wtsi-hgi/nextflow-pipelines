@@ -67,8 +67,15 @@ workflow {
     Channel.fromPath("${baseDir}/../../inputs/irods_cellranger_locations.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
+	.set{ch_samplename_pooled_npooled_location}
+    
+    ch_samplename_pooled_npooled_location
 	.map { a,b,c,d -> [a,d] }
 	.set{ch_samplename_location}
+
+    ch_samplename_pooled_npooled_location
+	.map { a,b,c,d -> [a,c] }
+	.set{ch_samplename_npooled}
 
     iget_cellranger_location(ch_samplename_location)
 
@@ -98,7 +105,7 @@ workflow {
 	run_seurat(iget_cellranger.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
 		   iget_cellranger.out.cellranger_metrics_summary
-	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2","${samplename}_3"],
+	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2"],
 							  metrics_file)}
 		       .transpose()
 	)
