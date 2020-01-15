@@ -1,15 +1,20 @@
 nextflow.preview.dsl=2
 params.runtag = 'test'
-params.run_graphtyper_pipeline = true
-params.run_graphtyper = true
 
-Channel.fromPath("${baseDir}/../../inputs/bamlist.txt")
-	.set{ch_bamlist_file}
+params.use_interval_list = true
+params.run_graphtyper_on_interval = false
+Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.txt")
+	.set{ch_graphtyper_pipeline_config}
 
+
+params.run_graphtyper_pipeline = false 
+params.run_graphtyper = false
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config.sh")
 	.set{ch_graphtyper_pipeline_config}
 
 
+Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4047.txt")
+	.set{ch_bamlist_file}
 
 // https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
 // "ref_dict": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.dict",
@@ -25,6 +30,7 @@ Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config.sh")
 
 include graphtyper_pipeline from '../modules/variant_calling/graphtyper_pipeline.nf' params(run: true, outdir: params.outdir)
 include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: true, outdir: params.outdir)
+include graphtyper_on_interval from '../modules/variant_calling/graphtyper_on_interval.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
@@ -42,4 +48,22 @@ workflow {
 	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
 	}
     }
+
+    
+    if (params.use_interval_list) {
+
+	
+	    .splitText()
+	    .map{a -> a.replaceAll(~/$\s/, "")}
+	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
+	    .take(-1)
+	    .set{ch_chr_start_end}
+
+	if (params.run_graphtyper_on_interval) {
+	    graphtyper_on_interval(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_chr_start_end)
+	}
+    }
+
+
+    
 }
