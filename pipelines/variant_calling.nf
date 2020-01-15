@@ -3,7 +3,7 @@ params.runtag = 'iwes'
 
 params.use_interval_list = true
 params.run_graphtyper_on_interval = true
-params.index_crams = false
+params.index_crams = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config_on_interval.sh")
@@ -12,7 +12,7 @@ Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config_on_interval
 params.run_graphtyper_pipeline = false 
 params.run_graphtyper = false
 
-Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4047.txt")
+Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
 	.set{ch_bamlist_file}
 
 // https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
