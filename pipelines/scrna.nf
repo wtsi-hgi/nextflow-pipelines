@@ -93,7 +93,7 @@ workflow {
 
         split_vireo_barcodes(vireo.out.vireo_output_dir.
 			     combine(ch_samplename_npooled, by: 0).
-			     combine(iget_cellranger.out.cellranger_filtered, by: 0))
+			     combine(iget_cellranger_location.out.cellranger_filtered, by: 0))
 	
         split_vireo_barcodes.out.cellranger_deconv_dirs
 	    .transpose()
@@ -105,9 +105,9 @@ workflow {
 	//iget_cellranger.out.cellranger_metrics_summary.view()
 	
 	
-	run_seurat(iget_cellranger.out.cellranger_raw,
+	run_seurat(iget_cellranger_location.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
-		   iget_cellranger.out.cellranger_metrics_summary
+		   iget_cellranger_location.out.cellranger_metrics_summary
 	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2"],
 							  metrics_file)}
 		       .transpose()
