@@ -67,7 +67,7 @@ workflow {
     Channel.fromPath("${baseDir}/../../inputs/irods_cellranger_locations.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
-	.map { a,b,c,d -> [a,b,c,d] }
+	.map { a,b,c,d -> [a,d] }
 	.set{ch_samplename_location}
 
     iget_cellranger_location(ch_samplename_location)
