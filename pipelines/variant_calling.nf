@@ -1,5 +1,5 @@
 nextflow.preview.dsl=2
-params.runtag = 'test'
+params.runtag = 'iwes'
 
 params.use_interval_list = true
 params.run_graphtyper_on_interval = true
