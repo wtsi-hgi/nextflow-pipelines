@@ -33,12 +33,12 @@ process 'iget_cellranger_location' {
     tuple val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix"), emit: cellranger_raw optional true
     tuple val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix"), emit: cellranger_filtered optional true
     tuple val(samplename), file("cellranger_${samplename}/metrics_summary.csv"), emit: cellranger_metrics_summary optional true
-    tuple val(samplename), file("${sanger_sample_id}.all_founds_in_irods.txt"), file("${samplename}.not_found.txt"), emit: cellranger_missing optional true
+    tuple val(samplename), file("$samplename}.all_founds_in_irods.txt"), file("${samplename}.not_found.txt"), emit: cellranger_missing optional true
 
   script:
     """
-ils ${location} > ${sanger_sample_id}.all_founds_in_irods.txt
-ils ${location} | grep ${sanger_sample_id} > found_in_irods.txt
+ils ${location} > ${samplename}.all_founds_in_irods.txt
+ils ${location} | grep ${samplename} > found_in_irods.txt
 
 iget -Kr ${location} cellranger_${samplename}
    """
