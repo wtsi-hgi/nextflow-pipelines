@@ -5,13 +5,11 @@ params.use_interval_list = true
 params.run_graphtyper_on_interval = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.csv")
 	.set{ch_iwes_intervals_csv}
-
-
-params.run_graphtyper_pipeline = false 
-params.run_graphtyper = false
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config_on_interval.sh")
 	.set{ch_graphtyper_pipeline_config}
 
+params.run_graphtyper_pipeline = false 
+params.run_graphtyper = false
 
 Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4047.txt")
 	.set{ch_bamlist_file}
