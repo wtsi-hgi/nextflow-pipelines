@@ -69,6 +69,8 @@ workflow {
 	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
 	.set{ch_samplename_pooled_npooled_location}
     
+    ch_samplename_pooled_npooled_location.view()
+    
     ch_samplename_pooled_npooled_location
 	.map { a,b,c,d -> [a,d] }
 	.set{ch_samplename_location}
