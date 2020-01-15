@@ -3,7 +3,7 @@ params.runtag = 'iwes'
 
 params.use_interval_list = true
 params.run_graphtyper_on_interval = false
-params.index_crams = false
+params.index_crams = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config_on_interval.sh")
