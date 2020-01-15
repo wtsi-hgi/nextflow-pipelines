@@ -2,7 +2,7 @@ nextflow.preview.dsl=2
 params.runtag = 'iwes'
 
 params.use_interval_list = true
-params.run_graphtyper_on_interval = true
+params.run_graphtyper_on_interval = false
 params.index_crams = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals.csv")
 	.set{ch_iwes_intervals_csv}
