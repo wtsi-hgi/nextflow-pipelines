@@ -1,7 +1,7 @@
 params.run = true
 
 process graphtyper_on_interval {
-    memory '40G'
+    memory '60G'
     tag "$chr $start $end"
     cpus 4
     // disk '20 GB'
