@@ -13,6 +13,7 @@ Channel.fromPath(params.cellsnp_vcf_candidate_snps)
 
 
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
+include iget_cellranger_location from '../modules/scrna/irods_cellranger_location.nf' params(run: true, outdir: params.outdir)
 include cellsnp from '../modules/scrna/cellsnp.nf' params(run: true, outdir: params.outdir)
 include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
 include split_vireo_barcodes from '../modules/scrna/split_vireo_barcodes.nf' params(run: true, outdir: params.outdir)
@@ -46,20 +47,33 @@ workflow run_seurat {
 workflow {
 
     // 1.A: from irods cellranger:
-    Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv")
+//    Channel.fromPath("${baseDir}/../../inputs/study_5631_phase2pooled.csv")
+//	.splitCsv(header: true)
+//	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.well}", "${row.sanger_sample_id}",
+//			    "${row.supplier_sample_name}", "${row.pooled}","${row.n_pooled}", "${row.cellranger}") }
+//	.map { a,b,c,d,e,f,g,h, i -> [c,b,f,h] }
+//	.set{ch_samplename_runid_sangersampleid_npooled}
+//
+//    ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled
+//	.map { a,b,c,d -> [a,b,c] }
+//
+//    ch_samplename_npooled = ch_samplename_runid_sangersampleid_npooled
+//	.map { a,b,c,d -> [a,d] }
+//
+//    iget_cellranger(ch_samplename_runid_sangersampleid)
+
+
+    // 1.B: from specific Irods cellranger locations 
+    Channel.fromPath("${baseDir}/../../inputs/irods_cellranger_locations.csv")
 	.splitCsv(header: true)
-	.map { row -> tuple("${row.study_id}", "${row.run_id}", "${row.samplename}", "${row.well}", "${row.sanger_sample_id}",
-			    "${row.supplier_sample_name}", "${row.pooled}","${row.n_pooled}", "${row.cellranger}") }
-	.map { a,b,c,d,e,f,g,h, i -> [c,b,f,h] }
-	.set{ch_samplename_runid_sangersampleid_npooled}
+	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
+	.map { a,b,c,d -> [a,b,c,d] }
+	.set{ch_samplename_location}
 
-    ch_samplename_runid_sangersampleid = ch_samplename_runid_sangersampleid_npooled
-	.map { a,b,c,d -> [a,b,c] }
+    iget_cellranger_location(ch_samplename_location)
 
-    ch_samplename_npooled = ch_samplename_runid_sangersampleid_npooled
-	.map { a,b,c,d -> [a,d] }
 
-    iget_cellranger(ch_samplename_runid_sangersampleid)
+
     
     if (params.run_cellsnp)
 	cellsnp(iget_cellranger.out.cellranger_sample_bam_barcodes, ch_cellsnp_vcf_candidate_snps.collect())
