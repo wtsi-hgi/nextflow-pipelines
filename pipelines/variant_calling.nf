@@ -53,7 +53,7 @@ workflow {
 
 	if(params.index_crams) {
 	    index_cram(ch_bamlist_file
-		       .splitText().map{a -> file(a)})
+		       .splitText().replaceAll(~/$\s/, "").map{a -> file(a)})
 	}
 	
 	ch_iwes_intervals_csv
