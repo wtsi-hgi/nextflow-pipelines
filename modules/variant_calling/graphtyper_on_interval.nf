@@ -35,9 +35,8 @@ process graphtyper_on_interval {
 
     script:
 """ 
-cp -r /graphtyper-pipelines/* .
+cp -r /graphtyper-pipelines/*.sh .
 sed -i s'/ --no_sort//'g node_script.sh
-rm -rf .git
 
 export CUSTOM_REGION_SIZE=\$(($end - $start + 1))
 export CUSTOM_CHROMOSOMES=\"$chr\"
