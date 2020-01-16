@@ -28,9 +28,9 @@ process graphtyper_on_interval {
     tuple chr, start, end
 
     output: 
-    tuple file("graphtyper-pipelines/results/$chr/*.vcf.gz"),file("graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"), emit: vcf
-    tuple file("graphtyper-pipelines/haps/$chr/*.vcf.gz"),file("graphtyper-pipelines/haps/$chr/*.vcf.gz.tbi"), emit: haps_vcf
-    tuple file("graphtyper-pipelines/hap_calls/$chr/*.vcf.gz"),file("graphtyper-pipelines/hap_calls/$chr/*.vcf.gz.tbi"), emit: hap_calls_vcf
+    tuple file("./results/$chr/*.vcf.gz"),file("./results/$chr/*.vcf.gz.tbi"), emit: vcf
+    tuple file("./haps/$chr/*.vcf.gz"),file("./haps/$chr/*.vcf.gz.tbi"), emit: haps_vcf
+    tuple file("./hap_calls/$chr/*.vcf.gz"),file("./hap_calls/$chr/*.vcf.gz.tbi"), emit: hap_calls_vcf
     tuple stdout, emit: stdout
 
     script:
