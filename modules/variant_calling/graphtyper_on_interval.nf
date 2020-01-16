@@ -35,12 +35,9 @@ process graphtyper_on_interval {
 
     script:
 """ 
-cp -r /graphtyper-pipelines .
-cd ./graphtyper-pipelines
+cp -r /graphtyper-pipelines/* .
 sed -i s'/ --no_sort//'g node_script.sh
 rm -rf .git
-mkdir ../tmp
-cp call_script.sh ..
 
 export CUSTOM_REGION_SIZE=\$(($end - $start + 1))
 export CUSTOM_CHROMOSOMES=\"$chr\"
@@ -52,7 +49,12 @@ echo \$CUSTOM_CHROMOSOMES
 echo \$CUSTOM_SLICE_SIZE
 echo \$CUSTOM_PAD_SIZE
 
-set -e; set -o pipefail; ./node_script.sh ../graphtyper_pipeline_config_on_interval.sh ../$bamlist_file $chr:$start
+set -e; set -o pipefail; ./node_script.sh ./graphtyper_pipeline_config_on_interval.sh ./$bamlist_file $chr:$start
 """
 }
 
+//cp -r /graphtyper-pipelines .
+//cd ./graphtyper-pipelines
+//sed -i s'/ --no_sort//'g node_script.sh
+//rm -rf .git
+//cp call_script.sh ..
