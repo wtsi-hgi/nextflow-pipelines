@@ -60,7 +60,7 @@ workflow {
 	ch_iwes_intervals_csv
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.chr, row.start, row.end)}
-	    .take(1)
+	    .take(100)
 	    .set{ch_chr_start_end}
 
 	if (params.run_graphtyper_on_interval) {
