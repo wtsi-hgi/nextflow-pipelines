@@ -7,8 +7,8 @@ process 'cellsnp' {
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     //cpus = 20 
     //memory = {  220.GB + 50.GB * (task.attempt-1) }
-    cpus = 10 
-    memory = {  150.GB + 50.GB * (task.attempt-1) }
+    cpus = 6 
+    memory = {  100.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
     scratch false
     queue 'basement'
