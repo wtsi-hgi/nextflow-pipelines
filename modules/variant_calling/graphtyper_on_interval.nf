@@ -51,6 +51,7 @@ echo \$CUSTOM_REGION_SIZE
 echo \$CUSTOM_CHROMOSOMES
 echo \$CUSTOM_SLICE_SIZE
 echo \$CUSTOM_PAD_SIZE
+echo \$CUSTOM_NUM_SLICES_RUNNING
 
 
 set -e; set -o pipefail; ./node_script.sh ./graphtyper_pipeline_config_on_interval.sh ./$bamlist_file $chr:$start
