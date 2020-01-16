@@ -5,6 +5,7 @@ process graphtyper_on_interval {
     memory = {  10.GB + 10.GB * (task.attempt - 1) }
     cpus 4
     // disk '20 GB'
+    scratch '/tmp'
     time '1400m'
     queue 'long'
     container "graphtyper"
