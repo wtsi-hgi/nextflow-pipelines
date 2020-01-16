@@ -12,7 +12,8 @@ Channel.fromPath("${baseDir}/../../inputs/graphtyper_pipeline_config_on_interval
 params.run_graphtyper_pipeline = false 
 params.run_graphtyper = false
 
-Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
+//Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
+Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_downsampled.txt")
 	.set{ch_bamlist_file}
 
 // https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
