@@ -1,23 +1,22 @@
 params.run = true
 
 process graphtyper_on_interval {
-    memory '350G'
     tag "$chr $start $end"
+    memory = {  10.GB + 10.GB * (task.attempt - 1) }
     cpus 4
     // disk '20 GB'
     time '1400m'
     queue 'long'
     container "graphtyper"
     containerOptions = "--bind /lustre --bind /tmp"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz.tbi"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz.tbi"
-    maxRetries 0
-    errorStrategy 'terminate'
-    // errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./results/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./results/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./haps/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./haps/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./hap_calls/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./hap_calls/$chr/*.vcf.gz.tbi"
+    maxRetries 5
+    errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
 
     when:
     params.run
