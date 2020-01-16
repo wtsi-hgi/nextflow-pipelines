@@ -41,6 +41,8 @@ sed -i s'/ --no_sort//'g node_script.sh
 mkdir local_tmp
 sed -i s'/^TMP.*TMP_FORMAT})\$/TMP=\\.\\/local_tmp/'g node_script.sh
 
+
+
 export CUSTOM_REGION_SIZE=\$(($end - $start + 1))
 export CUSTOM_CHROMOSOMES=\"$chr\"
 export CUSTOM_NUM_SLICES_RUNNING=1
