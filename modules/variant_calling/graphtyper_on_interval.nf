@@ -9,15 +9,15 @@ process graphtyper_on_interval {
     queue 'long'
     container "graphtyper"
     containerOptions = "--bind /lustre --bind /tmp"
-    // errorStrategy 'terminate'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz.tbi"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/haps/$chr/*.vcf.gz.tbi"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/hap_calls/$chr/*.vcf.gz.tbi"
-    maxRetries 3
+    maxRetries 0
+    errorStrategy 'terminate'
+    // errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
 
     when:
     params.run
