@@ -10,12 +10,12 @@ process graphtyper_on_interval {
     queue 'long'
     container "graphtyper"
     containerOptions = "--bind /lustre --bind /tmp"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./results/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./results/$chr/*.vcf.gz.tbi"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./haps/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./haps/$chr/*.vcf.gz.tbi"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./hap_calls/$chr/*.vcf.gz"
-    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "./hap_calls/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "results/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "results/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "haps/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "haps/$chr/*.vcf.gz.tbi"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "hap_calls/$chr/*.vcf.gz"
+    publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "hap_calls/$chr/*.vcf.gz.tbi"
     maxRetries 5
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
 
@@ -28,9 +28,9 @@ process graphtyper_on_interval {
     tuple chr, start, end
 
     output: 
-    tuple file("./results/$chr/*.vcf.gz"),file("./results/$chr/*.vcf.gz.tbi"), emit: vcf
-    tuple file("./haps/$chr/*.vcf.gz"),file("./haps/$chr/*.vcf.gz.tbi"), emit: haps_vcf
-    tuple file("./hap_calls/$chr/*.vcf.gz"),file("./hap_calls/$chr/*.vcf.gz.tbi"), emit: hap_calls_vcf
+    tuple file("results/$chr/*.vcf.gz"),file("results/$chr/*.vcf.gz.tbi"), emit: vcf
+    tuple file("haps/$chr/*.vcf.gz"),file("haps/$chr/*.vcf.gz.tbi"), emit: haps_vcf
+    tuple file("hap_calls/$chr/*.vcf.gz"),file("hap_calls/$chr/*.vcf.gz.tbi"), emit: hap_calls_vcf
     tuple stdout, emit: stdout
 
     script:
