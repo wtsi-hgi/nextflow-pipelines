@@ -43,7 +43,8 @@ sed -i s'/^TMP.*TMP_FORMAT})\$/TMP=\\.\\/local_tmp/'g node_script.sh
 
 export CUSTOM_REGION_SIZE=\$(($end - $start + 1))
 export CUSTOM_CHROMOSOMES=\"$chr\"
-export CUSTOM_SLICE_SIZE=\$((CUSTOM_REGION_SIZE / 4))
+export CUSTOM_NUM_SLICES_RUNNING=1
+export CUSTOM_SLICE_SIZE=\$((CUSTOM_REGION_SIZE))
 export CUSTOM_PAD_SIZE=\$((CUSTOM_SLICE_SIZE / 4))
 
 echo \$CUSTOM_REGION_SIZE
