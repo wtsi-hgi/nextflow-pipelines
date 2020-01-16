@@ -8,7 +8,7 @@ process graphtyper_on_interval {
     time '1400m'
     queue 'long'
     container "graphtyper"
-    containerOptions = "--bind /lustre"
+    containerOptions = "--bind /lustre --bind /tmp"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "graphtyper-pipelines/results/$chr/*.vcf.gz"
