@@ -7,6 +7,7 @@ process graphtyper_on_interval {
     // disk '20 GB'
     scratch '/tmp'
     time '700m'
+    maxForks 20000
     queue 'normal'
     container "graphtyper"
     containerOptions = "--bind /lustre --bind /tmp"
