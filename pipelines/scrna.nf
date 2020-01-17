@@ -85,7 +85,7 @@ workflow {
 	run_seurat(iget_cellranger.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
 		   iget_cellranger.out.cellranger_metrics_summary
-	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2","${samplename}_3"],
+	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2","${samplename}_3","${samplename}_4"],
 							  metrics_file)}
 		       .transpose()
 	)
