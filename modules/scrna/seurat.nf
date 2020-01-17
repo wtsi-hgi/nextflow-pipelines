@@ -17,7 +17,7 @@ process seurat {
     params.run
 
     input:
-    val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
+    set val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
 
     output:
     file("${samplename}_seurat_image.rdata")
