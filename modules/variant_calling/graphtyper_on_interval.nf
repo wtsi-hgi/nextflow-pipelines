@@ -2,8 +2,8 @@ params.run = true
 
 process graphtyper_on_interval {
     tag "$chr $start $end"
-    memory = {  10.GB + 10.GB * (task.attempt - 1) }
-    cpus 4
+    memory = {  4.GB + 3.GB * (task.attempt - 1) }
+    cpus 1
     // disk '20 GB'
     scratch '/tmp'
     time '1400m'
@@ -37,9 +37,9 @@ process graphtyper_on_interval {
 """ 
 export CUSTOM_REGION_SIZE=\$(($end - $start + 1))
 export CUSTOM_CHROMOSOMES=\"$chr\"
-export CUSTOM_NUM_SLICES_RUNNING=4
-export CUSTOM_SLICE_SIZE=\$((CUSTOM_REGION_SIZE / 4))
-export CUSTOM_PAD_SIZE=\$((CUSTOM_SLICE_SIZE / 4))
+export CUSTOM_NUM_SLICES_RUNNING=1
+export CUSTOM_SLICE_SIZE=\$((CUSTOM_REGION_SIZE / 1))
+export CUSTOM_PAD_SIZE= 200 
 
 echo \$CUSTOM_REGION_SIZE
 echo \$CUSTOM_CHROMOSOMES
@@ -50,6 +50,8 @@ echo \$CUSTOM_NUM_SLICES_RUNNING
 ./node_script.sh ./graphtyper_pipeline_config_on_interval.sh ./$bamlist_file $chr:$start
 """
 }
+
+// \$((CUSTOM_SLICE_SIZE / 4))
 
 //cp -r /graphtyper-pipelines .
 //cd ./graphtyper-pipelines
