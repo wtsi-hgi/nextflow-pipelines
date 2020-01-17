@@ -1,5 +1,6 @@
 nextflow.preview.dsl=2
 
+
 params.min_reads = 500   // used by crams_to_fastq_gz
 params.genome = 'GRCh38' // used by star aligner
 params.fcextra = ""      // used by featurecounts
