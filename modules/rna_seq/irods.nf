@@ -11,6 +11,7 @@ process iget_cram {
     maxForks 12
     publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'symlink', pattern: "*.lostcause.txt", overwrite: true
     publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'symlink', pattern: "*.cram", overwrite: true
+    publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'symlink', pattern: "*.crai", overwrite: true
 
     when:
     params.run
@@ -22,6 +23,7 @@ process iget_cram {
     output: 
     set val(samplename), file('*.cram') optional true // into ch_cram_files
     file('*.lostcause.txt') optional true // into ch_lostcause_irods
+    set val(samplename), file('*.crai') optional true // into ch_cram_files
 
     script:
     """
