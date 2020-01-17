@@ -6,8 +6,8 @@ process graphtyper_on_interval {
     cpus 1
     // disk '20 GB'
     scratch '/tmp'
-    time '1400m'
-    queue 'long'
+    time '700m'
+    queue 'normal'
     container "graphtyper"
     containerOptions = "--bind /lustre --bind /tmp"
     publishDir "${params.outdir}/graphtyper/", mode: 'symlink', overwrite: true, pattern: "results/$chr/*.vcf.gz"
