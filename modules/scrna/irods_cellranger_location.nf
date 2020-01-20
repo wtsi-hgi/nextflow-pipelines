@@ -7,10 +7,11 @@ process 'iget_cellranger_location' {
     stageInMode 'copy'
     stageOutMode 'rsync'
     
+    cpus 1
+    time '120m'
+    
     tag "iget $samplename $location"
     memory = '3G'
-    time '120m'
-    cpus 1
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
