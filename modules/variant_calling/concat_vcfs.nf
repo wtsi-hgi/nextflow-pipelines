@@ -28,7 +28,7 @@ process concat_vcfs {
 
     script:
 """ 
-find $vcfs_location -name '*.vcf.gz' -exec sh -c \"echo {} \\\$(zcat {} | grep -v '^#' | wc -l)\" \\; >> test >> to_concat.list
+find $vcfs_location -name '*.vcf.gz' -exec sh -c \"echo {} \\\$(zcat {} | grep -v '^#' | wc -l)\" \\; >> to_concat.list
 
 cat to_concat.list | grep -v 'gz 0' | sort > to_concat_non_empty.list
 
