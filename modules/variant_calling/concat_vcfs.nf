@@ -11,7 +11,8 @@ process concat_vcfs {
     containerOptions = "--bind /lustre"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/vcfs_concat/", mode: 'symlink', overwrite: true, pattern: "*.vcf.gz"
+    publishDir "${params.outdir}/vcfs_concat/", mode: 'symlink', overwrite: true, pattern: "${name}.vcf.gz"
+    publishDir "${params.outdir}/vcfs_concat/", mode: 'symlink', overwrite: true, pattern: "${name}.vcf.gz.csi"
     maxRetries 3
 
     when:
@@ -22,11 +23,14 @@ process concat_vcfs {
     val(name)
     
     output: 
-    tuple file("${name}.vcf.gz"), emit: vcf_gz
+    tuple file("${name}.vcf.gz"), file("${name}.vcf.gz.csi"), emit: vcf_gz
 
     script:
 """ 
-bcftools concat \$(find $vcfs_location -name '*.vcf.gz' | sort | paste -sd ' ') --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
+find $vcfs_location -name '*.vcf.gz' | sort > to_concat.list
+
+bcftools concat -f to_concat.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
+# bcftools index chr1.vcf.gz
 bcftools index ${name}.vcf.gz
 """
 }
