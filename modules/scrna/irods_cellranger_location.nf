@@ -2,7 +2,7 @@ params.run = true
 
 process 'iget_cellranger_location' {
 
-    disk '60 GB'
+    disk '100 GB'
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
