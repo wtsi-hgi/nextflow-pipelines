@@ -24,6 +24,7 @@ process concat_vcfs {
     
     output: 
     tuple file("${name}.vcf.gz"), file("${name}.vcf.gz.csi"), emit: vcf_gz
+    tuple file("to_concat.list"), file("to_concat_non_empty.list"), emit: concat_list
 
     script:
 """ 
