@@ -18,7 +18,8 @@ process concat_vcfs {
     params.run
      
     input:
-    tuple val(vcfs_location), val(name)
+    val(vcfs_location)
+    val(name)
     
     output: 
     tuple file("${name}.vcf.gz"), emit: vcf_gz
