@@ -2,7 +2,7 @@ params.run = true
 
 process concat_vcfs {
     memory '3G'
-    tag "$cram_file"
+    tag "$vcfs_location $name"
     cpus 1
     // disk '20 GB'
     time '100m'
