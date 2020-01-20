@@ -15,6 +15,7 @@ params.run_graphtyper = false
 
 params.concat_vcfs = true
 ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
+ch_vcfs_concat_prefix = "chr1"
 
 //Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_downsampled.txt")
 Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
@@ -74,7 +75,7 @@ workflow {
     }
 
     if (params.concat_vcfs) {
-	concat_vcfs(ch_vcfs_to_concat)
+	concat_vcfs(ch_vcfs_to_concat, ch_vcfs_concat_prefix)
     }
 
     
