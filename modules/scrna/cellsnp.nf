@@ -15,8 +15,6 @@ process 'cellsnp' {
     container "single_cell"
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    //cpus = 20 
-    //memory = {  220.GB + 50.GB * (task.attempt-1) }
     memory = {  100.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
 
