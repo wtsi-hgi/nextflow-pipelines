@@ -14,6 +14,9 @@ params.run_graphtyper_pipeline = false
 params.run_graphtyper = false
 
 params.concat_vcfs = true
+// ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
+
+// https://confluence.sanger.ac.uk/display/HGI/Interval+WES
 ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
 ch_vcfs_concat_prefix = "chr1"
 
