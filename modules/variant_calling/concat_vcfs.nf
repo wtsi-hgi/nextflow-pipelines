@@ -1,6 +1,6 @@
 params.run = true
 
-process index_cram {
+process concat_vcfs {
     memory '3G'
     tag "$cram_file"
     cpus 1
