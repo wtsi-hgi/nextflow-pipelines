@@ -33,7 +33,7 @@ find $vcfs_location -name '*.vcf.gz' | sort > to_concat.list
 while IFS= read -r file
 do
         NROWS=\$(zcat \"\$file\" | grep -v '^#' | wc -l)
-        if [ \$NROWS = \"0\" ]; then
+        if [ \$NROWS != \"0\" ]; then
         echo \"\$file\" >> to_concat_non_empty.list
         fi
 done < \"to_concat.list\"
