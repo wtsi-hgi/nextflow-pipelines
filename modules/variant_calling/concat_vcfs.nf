@@ -30,10 +30,10 @@ process concat_vcfs {
 """ 
 find $vcfs_location -name '*.vcf.gz' -exec sh -c \"echo {} \\\$(zcat {} | grep -v '^#' | wc -l)\" \\; >> to_concat.list
 
-cat to_concat.list | grep -v 'gz 0\$' | sort > to_concat_non_empty.list
+cat to_concat.list | grep -v 'gz 0\$' | sort | cut -f1 -d ' ' > to_concat_non_empty.list
 
-# bcftools concat -f to_concat_non_empty.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
-# bcftools index ${name}.vcf.gz
+bcftools concat -f to_concat_non_empty.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
+bcftools index ${name}.vcf.gz
 """
 }
 
