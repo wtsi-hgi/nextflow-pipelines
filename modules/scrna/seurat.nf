@@ -4,8 +4,8 @@ process seurat {
     tag "seurat $samplename $raw_filtered"
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
-    queue 'long'
-    time '1400m'
+    queue 'normal'
+    time '700m'
     memory = '80G'
     cpus 2
     errorStrategy { task.attempt < 3 ? 'retry' : 'ignore' }
