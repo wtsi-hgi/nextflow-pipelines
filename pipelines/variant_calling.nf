@@ -12,6 +12,9 @@ Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 params.run_graphtyper_pipeline = false 
 params.run_graphtyper = false
 
+params.concat_vcfs = true
+ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
+
 //Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_downsampled.txt")
 Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
 	.set{ch_bamlist_file}
@@ -32,6 +35,7 @@ include graphtyper_pipeline from '../modules/variant_calling/graphtyper_pipeline
 include graphtyper from '../modules/variant_calling/graphtyper.nf' params(run: true, outdir: params.outdir)
 include graphtyper_on_interval from '../modules/variant_calling/graphtyper_on_interval.nf' params(run: true, outdir: params.outdir)
 include index_cram from '../modules/variant_calling/index_cram.nf' params(run: true, outdir: params.outdir)
+include concat_vcfs from '../modules/variant_calling/concat_vcfs.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
@@ -68,6 +72,9 @@ workflow {
 	}
     }
 
+    if (params.concat_vcfs) {
+	concat_vcfs(ch_vcfs_to_concat)
+    }
 
     
 }
