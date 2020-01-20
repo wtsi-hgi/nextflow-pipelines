@@ -1,6 +1,12 @@
 params.run = true
 
 process 'iget_cellranger_location' {
+
+    disk '60 GB'
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'rsync'
+    
     tag "iget $samplename $location"
     memory = '3G'
     time '120m'
