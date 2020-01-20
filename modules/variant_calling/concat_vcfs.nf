@@ -30,7 +30,6 @@ process concat_vcfs {
 find $vcfs_location -name '*.vcf.gz' | sort > to_concat.list
 
 bcftools concat -f to_concat.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
-# bcftools index chr1.vcf.gz
 bcftools index ${name}.vcf.gz
 """
 }
