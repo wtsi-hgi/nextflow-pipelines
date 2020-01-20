@@ -29,7 +29,16 @@ process concat_vcfs {
 """ 
 find $vcfs_location -name '*.vcf.gz' | sort > to_concat.list
 
-bcftools concat -f to_concat.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
+# remove empy vcfs:
+while IFS= read -r file
+do
+        NROWS=\$(zcat \"\$file\" | grep -v '^#' | wc -l)
+        if [ \$NROWS = \"0\" ]; then
+        echo \"\$file\" >> to_concat_non_empty.list
+        fi
+done < \"to_concat.list\"
+
+bcftools concat -f to_concat_non_empty.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
 bcftools index ${name}.vcf.gz
 """
 }
