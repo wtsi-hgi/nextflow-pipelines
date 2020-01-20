@@ -3,9 +3,9 @@ params.run = true
 process concat_vcfs {
     memory '3G'
     tag "$vcfs_location $name"
-    cpus 1
+    cpus 2
     // disk '20 GB'
-    time '100m'
+    time '700m'
     queue 'normal'
     container "graphtyper"
     containerOptions = "--bind /lustre"
