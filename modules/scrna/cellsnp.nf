@@ -4,7 +4,7 @@ process 'cellsnp' {
 
     disk '150 GB'
     scratch '/tmp'
-    stageInMode 'copy'
+    stageInMode 'symlink'
     stageOutMode 'rsync'
 
     cpus = 20 
@@ -13,6 +13,7 @@ process 'cellsnp' {
 
     tag "cellSNP $samplename"
     container "single_cell"
+    containerOptions = "--bind /"
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     memory = {  100.GB + 50.GB * (task.attempt-1) }
