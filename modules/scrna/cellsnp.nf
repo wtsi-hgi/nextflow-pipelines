@@ -2,7 +2,7 @@ params.run = true
 
 process 'cellsnp' {
 
-    disk '100 GB'
+    disk '150 GB'
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
