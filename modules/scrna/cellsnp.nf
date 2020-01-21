@@ -7,7 +7,7 @@ process 'cellsnp' {
     stageInMode 'symlink'
     stageOutMode 'rsync'
 
-    cpus = 20 
+    cpus = 24
     time '8000m'
     // queue 'basement'
 
