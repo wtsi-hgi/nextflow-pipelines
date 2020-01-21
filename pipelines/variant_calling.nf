@@ -17,7 +17,7 @@ params.concat_vcfs = true
 // ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
 
 // https://confluence.sanger.ac.uk/display/HGI/Interval+WES
-ch_vcfs_to_concat = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/"
+ch_vcfs_to_concat = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/4070_QC_samples/output_vcf/"
 ch_vcfs_concat_prefix = "gatk_chr1"
 
 //Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_downsampled.txt")
