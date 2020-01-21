@@ -6,7 +6,8 @@ params.run_seurat = false
 params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
-params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
+// params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
+params.cellsnp_vcf_candidate_snps = "/home/ubuntu/data/inputs/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
 Channel.fromPath(params.cellsnp_vcf_candidate_snps)
     .ifEmpty { exit 1, "cellsnp_vcf_candidate_snps missing: ${params.cellsnp_vcf_candidate_snps}" }
     .set {ch_cellsnp_vcf_candidate_snps}
