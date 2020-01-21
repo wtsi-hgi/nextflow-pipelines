@@ -15,6 +15,7 @@ process 'cellsnp' {
     container "single_cell"
     containerOptions = "--bind /"
 
+
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     memory = {  100.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
