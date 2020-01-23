@@ -39,11 +39,12 @@ workflow run_seurat {
   //  else
 
     a1 = cellranger_data_filtered.map{samplename,dir -> tuple(samplename.toString(),dir,"filtered")}
+    a2 = cellranger_data_metrics_summary.map{samplename,metrics_summary -> tuple(samplename.toString(),metrics_summary)}
     
-    input_seurat = a1.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
+    input_seurat = a1.combine(a2, by: 0) // add metrics_summary.csv file of each sample
 
     a1.view()
-    cellranger_data_metrics_summary.view()
+    a2.view()
     input_seurat.view()
     
     seurat(input_seurat)
@@ -81,7 +82,7 @@ workflow {
 	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
 	.set{ch_samplename_pooled_npooled_location}
 
-    ch_samplename_pooled_npooled_location.view()
+    //ch_samplename_pooled_npooled_location.view()
     
     ch_samplename_pooled_npooled_location
 	.map { a,b,c,d -> [a,d] }
