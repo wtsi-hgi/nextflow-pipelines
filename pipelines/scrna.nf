@@ -103,17 +103,20 @@ workflow {
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
 	
+	iget_cellranger.out.cellranger_raw.view()
 	ch_cellranger_filtered_deconv.view()
-	//iget_cellranger.out.cellranger_raw.view()
 	//iget_cellranger.out.cellranger_metrics_summary.view()
 	
+	ch_tranpose =iget_cellranger_location.out.cellranger_metrics_summary
+	    .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2"],
+						   metrics_file)}
+	    .transpose()
+
+	ch_tranpose.view()
 	
 	run_seurat(iget_cellranger_location.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
-		   iget_cellranger_location.out.cellranger_metrics_summary
-	     	       .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1","${samplename}_2"],
-							  metrics_file)}
-		       .transpose()
+		   ch_tranpose
 	)
     }
     
