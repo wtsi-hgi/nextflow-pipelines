@@ -56,7 +56,7 @@ workflow run_seurat {
     input_seurat.view()
     ch_rscript_seurat.view()
     
-    seurat(input_seurat, ch_rscript_seurat)
+    seurat(input_seurat, ch_rscript_seurat.collect())
     
     emit: seurat.out.tsneplot_pdf
     emit: seurat.out.stats_xslx
