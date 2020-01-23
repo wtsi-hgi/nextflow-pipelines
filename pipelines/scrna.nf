@@ -54,6 +54,7 @@ workflow run_seurat {
     a1.view()
     a2.view()
     input_seurat.view()
+    ch_rscript_seurat.view()
     
     seurat(input_seurat, ch_rscript_seurat)
     
