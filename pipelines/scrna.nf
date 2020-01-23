@@ -28,6 +28,10 @@ workflow run_seurat {
     get: cellranger_data_metrics_summary
     
     main:
+    cellranger_data_raw.view()
+    cellranger_data_filtered.view()
+    cellranger_data_metrics_summary.view()
+    
     if (params.run_seurat_on_raw)
 	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
 	.mix(cellranger_data_raw.map{samplename,dir -> [samplename,dir,"raw"]}) // raw_feature_bc_matrix
@@ -120,8 +124,8 @@ workflow {
 	)
     }
     
-    //if (params.run_seurat)
+  //  if (params.run_seurat)
 //	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
-	//run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
+//	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
 
 }
