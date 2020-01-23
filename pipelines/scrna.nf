@@ -32,12 +32,12 @@ workflow run_seurat {
     cellranger_data_filtered.view()
     cellranger_data_metrics_summary.view()
     
-    if (params.run_seurat_on_raw)
-	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
-	.mix(cellranger_data_raw.map{samplename,dir -> [samplename,dir,"raw"]}) // raw_feature_bc_matrix
-	.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
-    else
-	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
+    //if (params.run_seurat_on_raw)
+//	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
+//	.mix(cellranger_data_raw.map{samplename,dir -> [samplename,dir,"raw"]}) // raw_feature_bc_matrix
+//	.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
+  //  else
+    input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
 	    .combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
    
     input_seurat.view()
