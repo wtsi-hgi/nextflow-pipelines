@@ -12,6 +12,7 @@ process 'split_vireo_barcodes' {
     time '8000m'
     container "single_cell"
     containerOptions = "--bind /"
+    memory = {  100.GB + 50.GB * (task.attempt-1) }
     ////// FCE
 
     /// farm
