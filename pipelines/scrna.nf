@@ -38,7 +38,7 @@ workflow run_seurat {
 //	.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
   //  else
 
-    a1 = cellranger_data_filtered.map{samplename,dir -> tuple(val(samplename),dir,"filtered")}
+    a1 = cellranger_data_filtered.map{samplename,dir -> tuple(samplename.toString(),dir,"filtered")}
     
     input_seurat = a1.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
 
