@@ -2,16 +2,32 @@ params.run = true
 
 process seurat {
     tag "seurat $samplename $raw_filtered"
+
+    //// FCE
+    disk '100 GB'
+    scratch '/tmp'
+    stageInMode 'symlink'
+    stageOutMode 'rsync'
+    cpus = 8
+    time '8000m'
+    tontainer "single_cell"
+    containerOptions = "--bind /"
+    memory = {  100.GB + 50.GB * (task.attempt-1) }
+    ////// FCE 
+
+    /// farm
+    // containerOptions = "--bind /tmp --bind /lustre"
+    // queue 'long'
+    // time '1400m'
+    // memory = '80G'
+    // cpus 2
+    // errorStrategy { task.attempt < 3 ? 'retry' : 'ignore' }
+    // maxRetries 2
+    // scratch false
+    /// farm
+
     container "singularity-rstudio-seurat-tximport"
-    containerOptions = "--bind /tmp --bind /lustre"
-    queue 'long'
-    time '1400m'
-    memory = '80G'
-    cpus 2
-    errorStrategy { task.attempt < 3 ? 'retry' : 'ignore' }
-    maxRetries 2
     publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
-    scratch false 
 
     when:
     params.run
