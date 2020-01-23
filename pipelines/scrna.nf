@@ -28,18 +28,22 @@ workflow run_seurat {
     get: cellranger_data_metrics_summary
     
     main:
-    cellranger_data_raw.view()
-    cellranger_data_filtered.view()
-    cellranger_data_metrics_summary.view()
+   // cellranger_data_raw.view()
+   // cellranger_data_filtered.view()
+   // cellranger_data_metrics_summary.view()
     
     //if (params.run_seurat_on_raw)
 //	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
 //	.mix(cellranger_data_raw.map{samplename,dir -> [samplename,dir,"raw"]}) // raw_feature_bc_matrix
 //	.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
   //  else
-    input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
-	    .combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
-   
+
+    a1 = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]}
+    
+    input_seurat = a1.combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
+
+    a1.view()
+    cellranger_data_metrics_summary.view()
     input_seurat.view()
     
     seurat(input_seurat)
@@ -107,8 +111,8 @@ workflow {
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
 	
-	iget_cellranger_location.out.cellranger_raw.view()
-	ch_cellranger_filtered_deconv.view()
+//	iget_cellranger_location.out.cellranger_raw.view()
+//	ch_cellranger_filtered_deconv.view()
 	//iget_cellranger.out.cellranger_metrics_summary.view()
 	
 	ch_tranpose =iget_cellranger_location.out.cellranger_metrics_summary
@@ -116,7 +120,7 @@ workflow {
 						   metrics_file)}
 	    .transpose()
 
-	ch_tranpose.view()
+//	ch_tranpose.view()
 	
 	run_seurat(iget_cellranger_location.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
