@@ -12,7 +12,7 @@ process 'vireo' {
     time '8000m'
     tontainer "single_cell"
     containerOptions = "--bind /"
-    ////// FCE
+    ////// FCE 
 
     //// farm
     //cpus =   {  2 * Math.min(1, task.attempt) }
