@@ -12,6 +12,7 @@ process 'vireo' {
     time '8000m'
     tontainer "single_cell"
     containerOptions = "--bind /"
+    memory = {  100.GB + 50.GB * (task.attempt-1) }
     ////// FCE 
 
     //// farm
