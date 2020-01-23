@@ -35,7 +35,8 @@ process seurat {
 
     input:
     set val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
-
+    file(rscript)
+    
     output:
     tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_TSNEPlot.pdf"), emit: tsneplot_pdf
     tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx"), emit: stats_xslx
@@ -44,6 +45,7 @@ process seurat {
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/scrna/seurat.R $samplename $cellranger_matrix_dir $raw_filtered $metrics_summary_csv
+    /usr/bin/Rscript $rscript $samplename $cellranger_matrix_dir $raw_filtered $metrics_summary_csv
+
     """
 }
