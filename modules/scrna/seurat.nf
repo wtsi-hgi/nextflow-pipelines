@@ -10,7 +10,7 @@ process seurat {
     stageOutMode 'rsync'
     cpus = 8
     time '8000m'
-    tontainer "single_cell"
+    container "single_cell"
     containerOptions = "--bind /"
     memory = {  100.GB + 50.GB * (task.attempt-1) }
     ////// FCE 
