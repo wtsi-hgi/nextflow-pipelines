@@ -103,7 +103,7 @@ workflow {
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
 	
-	iget_cellranger.out.cellranger_raw.view()
+	iget_cellranger_location.out.cellranger_raw.view()
 	ch_cellranger_filtered_deconv.view()
 	//iget_cellranger.out.cellranger_metrics_summary.view()
 	
