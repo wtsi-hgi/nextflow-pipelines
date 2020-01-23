@@ -13,6 +13,7 @@ process seurat {
     container "single_cell"
     containerOptions = "--bind /"
     memory = {  100.GB + 50.GB * (task.attempt-1) }
+    maxForks 100
     ////// FCE 
 
     /// farm
