@@ -6,6 +6,13 @@ params.run_seurat = true
 params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 
+// $workflow.projectDir/../bin/scrna/seurat.R
+params.rscript = "/home/ubuntu/data/inputs/seurat.R"
+Channel.fromPath(params.rscript)
+    .ifEmpty { exit 1, "rscript file missing: ${params.rscript}" }
+    .set {ch_rscript}
+
+
 // params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
 params.cellsnp_vcf_candidate_snps = "/home/ubuntu/data/inputs/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
 Channel.fromPath(params.cellsnp_vcf_candidate_snps)
@@ -26,6 +33,7 @@ workflow run_seurat {
     get: cellranger_data_raw
     get: cellranger_data_filtered
     get: cellranger_data_metrics_summary
+    get: ch_rscript_seurat
     
     main:
    // cellranger_data_raw.view()
@@ -47,7 +55,7 @@ workflow run_seurat {
     a2.view()
     input_seurat.view()
     
-    seurat(input_seurat)
+    seurat(input_seurat, ch_rscript_seurat)
     
     emit: seurat.out.tsneplot_pdf
     emit: seurat.out.stats_xslx
@@ -125,7 +133,8 @@ workflow {
 	
 	run_seurat(iget_cellranger_location.out.cellranger_raw,
 		   ch_cellranger_filtered_deconv,
-		   ch_tranpose
+		   ch_tranpose,
+		   ch_rscript
 	)
     }
     
