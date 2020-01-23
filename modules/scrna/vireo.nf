@@ -10,8 +10,7 @@ process 'vireo' {
     stageOutMode 'rsync'
     cpus = 8
     time '8000m'
-    tag "cellSNP $samplename"
-    container "single_cell"
+    tontainer "single_cell"
     containerOptions = "--bind /"
     ////// FCE
 

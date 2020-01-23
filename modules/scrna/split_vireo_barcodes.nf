@@ -3,12 +3,25 @@ params.run = true
 process 'split_vireo_barcodes' {
     tag "$samplename"
 
-    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    cpus =   1
-    memory = 2.GB
-    maxRetries 4
-    time '100m'
+    //// FCE
+    disk '100 GB'
+    scratch '/tmp'
+    stageInMode 'symlink'
+    stageOutMode 'rsync'
+    cpus = 8
+    time '8000m'
+    container "single_cell"
+    containerOptions = "--bind /"
+    ////// FCE
+
+    /// farm
+    // cpus =   1
+    // memory = 2.GB
+    // time '100m'
+    /// farm
     
+    maxRetries 4
+    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
     publishDir "${params.outdir}/split_vireo_barcodes/", mode: 'symlink'
 
     when:
