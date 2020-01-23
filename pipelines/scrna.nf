@@ -35,7 +35,9 @@ workflow run_seurat {
     else
 	input_seurat = cellranger_data_filtered.map{samplename,dir -> [samplename,dir,"filtered"]} // filtered_feature_bc_matrix
 	    .combine(cellranger_data_metrics_summary, by: 0) // add metrics_summary.csv file of each sample
-
+   
+    input_seurat.view()
+    
     seurat(input_seurat)
     
     emit: seurat.out.tsneplot_pdf
