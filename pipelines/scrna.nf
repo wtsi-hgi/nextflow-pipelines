@@ -101,7 +101,7 @@ workflow {
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
 	
-	//ch_cellranger_filtered_deconv.view()
+	ch_cellranger_filtered_deconv.view()
 	//iget_cellranger.out.cellranger_raw.view()
 	//iget_cellranger.out.cellranger_metrics_summary.view()
 	
@@ -115,8 +115,8 @@ workflow {
 	)
     }
     
-    if (params.run_seurat)
-	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
-	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
+    //if (params.run_seurat)
+//	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
+	//run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
 
 }
