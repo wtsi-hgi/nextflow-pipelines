@@ -14,7 +14,7 @@
 # conda activate $CONDA_ENVS_DIRS/nextflow
 
 ## on farm5
-export PATH=/software/singularity-v3.4.2/bin/:$PATH
+export PATH=/software/singularity-v3.5.1/bin/:$PATH
 export PATH=/software/hgi/installs/anaconda3/condabin:$PATH
 export PATH=/software/hgi/installs/anaconda3/envs/nextflow/bin:$PATH
 export CONDA_ENVS_DIRS=/software/hgi/installs/anaconda3/envs
