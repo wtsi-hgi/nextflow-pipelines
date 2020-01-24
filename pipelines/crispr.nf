@@ -81,6 +81,8 @@ workflow {
     merge_fastq_batches.out[0]
 	.map{ samplename, fastqs -> tuple(samplename, fastqs, "June35.guide_library.csv", 0, 19, 0, 19) }
 	.set{ch_samplename_fastq_library_match}
+
+    ch_samplename_fastq_library_match.view()
     
     count_crispr_reads(ch_samplename_fastq_library_match, ch_library_files.collect())
 
