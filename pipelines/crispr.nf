@@ -77,7 +77,7 @@ workflow {
 	    .mix(merge_fastq_batches.out[0]))
 
     multiqc(fastqc.out.collect())
-
+    
     merge_fastq_batches.out[0]
 	.map{ samplename, fastqs -> tuple(samplename, fastqs, "June35.guide_library.csv", 0, 19, 0, 19) }
 	.set{ch_samplename_fastq_library_match}
