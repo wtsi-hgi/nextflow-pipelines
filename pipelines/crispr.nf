@@ -83,6 +83,7 @@ workflow {
 	.set{ch_samplename_fastq_library_match}
 
     ch_samplename_fastq_library_match.view()
+    ch_library_files.view()
     
     count_crispr_reads(ch_samplename_fastq_library_match, ch_library_files.collect())
 
