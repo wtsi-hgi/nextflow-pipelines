@@ -10,6 +10,13 @@ Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr1.csv")
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 	.set{ch_graphtyper_pipeline_config}
 
+////////// how-to prep intervals from bed format:
+// 14142 intervals for chr2:
+//  cd /lustre/scratch114/projects/interval_wes/graphtyper_test/
+//  echo "chr,start,end" > inputs/iwes_intervals_chr2.csv
+//  cat /lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/chr2_S04380110_Padded+1_merged.bed | sed s'/\t/,/'g >> inputs/iwes_intervals_chr2.csv 
+//////////
+
 params.run_graphtyper_pipeline = false 
 params.run_graphtyper = false
 
