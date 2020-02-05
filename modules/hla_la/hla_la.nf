@@ -3,30 +3,33 @@ params.run = true
 process hla_la {
     memory '4G'
     tag "$samplename"
-    cpus 1
-    disk '20 GB'
+    cpus 22
+    disk '80 GB'
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
     time '1000m'
     container "hla-la-1.0.1"
+    containerOptions = "--bind /tmp"
     maxForks 2
-    // containerOptions = "--bind /home/ubuntu"
     // errorStrategy 'terminate'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/copy_number_splitchr/chr1/", mode: 'symlink', overwrite: true, pattern: "${samplename}.cn.chr1.recode.vcf"
+    publishDir "${params.outdir}/hla_la/", mode: 'symlink', overwrite: true, pattern: "${samplename}.cn.chr1.recode.vcf"
     maxRetries 1
 
     when:
     params.run
      
     input: 
-    tuple val(samplename), file(cn_vcf)
+    tuple val(eganid), val(irods_cram)
     
     output: 
-    tuple val(samplename), file("${samplename}.cn.chr*.recode.vcf"), emit: samplename_cn_vcf
+    tuple val(eganid), file("${eganid}.cn.chr*.recode.vcf"), emit: out
 
     script:
     """ 
+iget ${irods_cram}
+s3cmd sync -r s3://hla/.hla-la/graphs/PRG_MHC_GRCh38_withIMGT /tmp/ # this is 29G could be put in /tmp?
+HLA-LA.pl --BAM *.cram --graph /tmp/PRG_MHC_GRCh38_withIMGT --sampleID $eganid --workingDir . --maxThreads 22
     """
 }
