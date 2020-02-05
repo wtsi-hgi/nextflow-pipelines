@@ -7,11 +7,18 @@ params.index_crams = false
 // on interval file-list use:
 params.use_interval_list = true
 params.run_graphtyper_on_interval = true
-Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
+// Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
+Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_all.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 	.set{ch_graphtyper_pipeline_config}
 
+
+////////// how-to prep intervals from bed format:
+//  cd /lustre/scratch114/projects/interval_wes/graphtyper_test/
+//  echo "chr,start,end" > inputs/iwes_intervals_all.csv
+//  cat /lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/exomes/S04380110_Padded_merged.bed | sed s'/\t/,/'g >> inputs/iwes_intervals_all.csv 
+//////////
 
 ////////// how-to prep intervals from bed format:
 // 14142 intervals for chr2:
