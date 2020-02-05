@@ -1,5 +1,6 @@
 nextflow.preview.dsl=2
 params.runtag = 'iwes'
+/// lfs quota -h -g interval_wes /lustre/scratch114
 
 params.index_crams = false
 
@@ -10,6 +11,7 @@ Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 	.set{ch_graphtyper_pipeline_config}
+
 
 ////////// how-to prep intervals from bed format:
 // 14142 intervals for chr2:
