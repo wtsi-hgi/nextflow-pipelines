@@ -11,7 +11,7 @@ workflow {
     Channel.fromPath("${baseDir}/../../inputs/EGAN_to_cram_19534_drop_dups.csv")
 	.splitCsv(header: true)
 	.take(1)
-	.map { row -> tuple(row.accession_number, row.irods_cram)}
+	.map { row -> tuple(row.accession_number, row.merge_location)}
 	.set{ch_eganid_irodscram}
 
     if (params.run_hla_la)
