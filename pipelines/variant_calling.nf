@@ -3,8 +3,9 @@ params.runtag = 'iwes'
 
 params.index_crams = false
 
-params.use_interval_list = false
-params.run_graphtyper_on_interval = false
+// on interval file-list use:
+params.use_interval_list = true
+params.run_graphtyper_on_interval = true
 Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
@@ -17,15 +18,17 @@ Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 //  cat /lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/chr2_S04380110_Padded+1_merged.bed | sed s'/\t/,/'g >> inputs/iwes_intervals_chr2.csv 
 //////////
 
+// not on interval file-list
 params.run_graphtyper_pipeline = false 
 params.run_graphtyper = false
 
-params.concat_vcfs = true
+// to concat vcfs after run done
+params.concat_vcfs = false
 // ch_vcfs_to_concat = "/lustre/scratch114/projects/interval_wes/graphtyper_test/results/graphtyper/results/chr1/"
 
 // https://confluence.sanger.ac.uk/display/HGI/Interval+WES
 ch_vcfs_to_concat = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/4070_QC_samples/output_vcf/"
-ch_vcfs_concat_prefix = "gatk_chr1"
+ch_vcfs_concat_prefix = "gatk_chr2"
 
 //Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_downsampled.txt")
 Channel.fromPath("${baseDir}/../../inputs/bqsr_crams_4070.txt")
