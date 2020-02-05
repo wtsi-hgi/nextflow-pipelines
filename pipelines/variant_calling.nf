@@ -5,7 +5,7 @@ params.index_crams = false
 
 params.use_interval_list = false
 params.run_graphtyper_on_interval = false
-Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr1.csv")
+Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
 	.set{ch_iwes_intervals_csv}
 Channel.fromPath("${baseDir}/../../inputs/graphtyper_scripts/*.sh")
 	.set{ch_graphtyper_pipeline_config}
