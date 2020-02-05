@@ -29,6 +29,10 @@ process hla_la {
     script:
     """ 
 iget ${irods_cram}
+CHKSUMIRODS=\$(ils -L $irods_cram | tail -n 1 | awk '{print \$1;}')
+# CHKSUMLOCAL=\$(md5sum *.cram | awk '{print \$1;}')
+md5sum -c CHKSUMIRODS *.cram
+
 s3cmd sync -r s3://hla/.hla-la/graphs/PRG_MHC_GRCh38_withIMGT /tmp/ # this is 29G could be put in /tmp?
 HLA-LA.pl --BAM *.cram --graph /tmp/PRG_MHC_GRCh38_withIMGT --sampleID $eganid --workingDir . --maxThreads 22
     """
