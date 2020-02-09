@@ -89,7 +89,7 @@ workflow {
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.chr, row.start, row.end)}
 	    .take(-1)
-	    .filter { it[0] ==~ /chr[3456789]/} //.filter { it[1] ==~ /^[cC].*/}
+	    .filter { it[0] ==~ /chr[56]/} //.filter { it[1] ==~ /^[cC].*/}
 	    .set{ch_chr_start_end}
 
 	if (params.run_graphtyper_on_interval) {
