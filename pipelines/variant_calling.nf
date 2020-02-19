@@ -37,7 +37,7 @@ workflow {
 	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
 	    .take(100)
 	    .groupTuple()
-	    //.map { tag, lines -> tuple( groupKey(tag, lines.size()), lines ) }
+	    .map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
 	    //.transpose()
 	    .view()
 
