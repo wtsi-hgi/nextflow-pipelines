@@ -40,6 +40,7 @@ workflow {
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
+}
 //
 //    graphtyper_pipeline.out.commands_split
 //	    .splitText()
