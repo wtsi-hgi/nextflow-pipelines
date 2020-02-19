@@ -13,7 +13,7 @@ ch_vcfs_concat_prefix = "ibd"
 
 // colnames: shard,vcf,tbi,coord,x1,x2,x3,batch
 Channel.fromPath("${baseDir}/../../inputs/part4.csv")
-	.set{ch_bamlist_file}
+	.set{ch_input_shards}
 
 // https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
 // "ref_dict": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.dict",
@@ -32,6 +32,7 @@ Channel.fromPath("${baseDir}/../../inputs/part4.csv")
 workflow {
 
     if (params.run_intersect_concat) {
+	ch_input_shards
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
 	    .take(100)
