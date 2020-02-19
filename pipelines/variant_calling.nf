@@ -35,9 +35,10 @@ workflow {
 	ch_input_shards
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
-	    .take(100)
+	    .take(2)
+	    .transpose()
 	    .groupTuple()
-	    .map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
+	    //.map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
 	    //.transpose()
 	    .view()
 
