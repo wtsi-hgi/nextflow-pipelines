@@ -32,43 +32,49 @@ include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' p
 
 workflow {
 
-    if (params.run_graphtyper_pipeline) {
-	graphtyper_pipeline(ch_bamlist_file, ch_graphtyper_pipeline_config)
-
-	graphtyper_pipeline.out.commands_split
-	    .splitText()
-	    .map{a -> a.replaceAll(~/$\s/, "")}
-	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
-	    .take(-1)
-	    .set{ch_commands_split}
-
-	if (params.run_graphtyper) {
-	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
-	}
-    }
-
-    if (params.use_interval_list) {
-
-	if(params.index_crams) {
-	    index_cram(ch_bamlist_file
-		       .splitText().take(-1).map{a -> file(a.replaceAll(~/$\s/, ""))})
-	}
-	
-	ch_iwes_intervals_csv
+    if (params.run_intersect_concat) {
 	    .splitCsv(header: true)
-	    .map { row -> tuple(row.chr, row.start, row.end)}
+	    .map { row -> tuple(row.chr, file(row.vcf), file(row.tbi))}
 	    .take(-1)
-	    .filter { it[0] ==~ /chr[56]/} //.filter { it[1] ==~ /^[cC].*/}
-	    .set{ch_chr_start_end}
 
-	if (params.run_graphtyper_on_interval) {
-	    graphtyper_on_interval(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_chr_start_end)
-	}
+	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
-
-    if (params.concat_vcfs) {
-	concat_vcfs(ch_vcfs_to_concat, ch_vcfs_concat_prefix)
-    }
-
-    
-}
+//
+//    graphtyper_pipeline.out.commands_split
+//	    .splitText()
+//	    .map{a -> a.replaceAll(~/$\s/, "")}
+//	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
+//	    .take(-1)
+//	    .set{ch_commands_split}
+//
+//	if (params.run_graphtyper) {
+//	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
+//	}
+//    }
+//
+//    if (params.use_interval_list) {
+//
+//	if(params.index_crams) {
+//	    index_cram(ch_bamlist_file
+//		       .splitText().take(-1).map{a -> file(a.replaceAll(~/$\s/, ""))})
+//	}
+//	
+//	ch_iwes_intervals_csv
+//	    .splitCsv(header: true)
+//	    .map { row -> tuple(row.chr, row.start, row.end)}
+//	    .take(-1)
+//	    .filter { it[0] ==~ /chr[56]/} //.filter { it[1] ==~ /^[cC].*/}
+//	    .set{ch_chr_start_end}
+//
+//	if (params.run_graphtyper_on_interval) {
+//	    graphtyper_on_interval(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_chr_start_end)
+//	}
+//    }
+//
+//    if (params.concat_vcfs) {
+//	concat_vcfs(ch_vcfs_to_concat, ch_vcfs_concat_prefix)
+//    }
+//
+//    
+//}
+//
