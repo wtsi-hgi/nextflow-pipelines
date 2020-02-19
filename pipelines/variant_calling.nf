@@ -36,8 +36,8 @@ workflow {
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
 	    .take(2)
-	    .transpose()
 	    .groupTuple()
+	    .transpose()
 	    //.map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
 	    //.transpose()
 	    .view()
