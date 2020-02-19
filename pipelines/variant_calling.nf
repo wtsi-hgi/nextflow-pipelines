@@ -36,6 +36,9 @@ workflow {
 	    .splitCsv(header: true)
 	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
 	    .take(100)
+	    .groupTuple()
+	    //.map { tag, lines -> tuple( groupKey(tag, lines.size()), lines ) }
+	    //.transpose()
 	    .view()
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
