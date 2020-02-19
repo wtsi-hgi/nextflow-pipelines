@@ -34,7 +34,7 @@ workflow {
     if (params.run_intersect_concat) {
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .take(3)
+	    .take(103)
 	    .map { row -> tuple(row.batch, [file(row.vcf), file(row.tbi)])}
 	    .map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
 	    .groupTuple()
