@@ -34,10 +34,9 @@ workflow {
     if (params.run_intersect_concat) {
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
-	    .take(2)
+	    .map { row -> tuple(row.batch, [file(row.vcf), file(row.tbi)])}
+	    .take(3)
 	    .groupTuple()
-	    .transpose()
 	    //.map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
 	    //.transpose()
 	    .view()
