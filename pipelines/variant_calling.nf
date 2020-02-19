@@ -1,6 +1,5 @@
 nextflow.preview.dsl=2
-params.runtag = 'iwes'
-/// lfs quota -h -g interval_wes /lustre/scratch114
+params.runtag = 'ibd_concat'
 
 params.index_crams = false
 
@@ -28,16 +27,17 @@ Channel.fromPath("${baseDir}/../../inputs/part4.csv")
 //Channel.fromPath(params.ch_genome_fasta_fai)
 //    .set {ch_genome_fasta_fai}
 
-include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' params(run: true, outdir: params.outdir)
+//include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
     if (params.run_intersect_concat) {
 	    .splitCsv(header: true)
-	    .map { row -> tuple(row.chr, file(row.vcf), file(row.tbi))}
-	    .take(-1)
+	    .map { row -> tuple(row.batch, file(row.vcf), file(row.tbi))}
+	    .take(100)
+	    .view()
 
-	run_intersect_concat(ch_batches, ch_intersect_bed)
+//	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
 //
 //    graphtyper_pipeline.out.commands_split
