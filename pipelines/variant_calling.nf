@@ -12,6 +12,7 @@ Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
 params.run_intersect_concat = true 
 ch_vcfs_concat_prefix = "ibd"
 
+// colnames: shard,vcf,tbi,coord,x1,x2,x3,batch
 Channel.fromPath("${baseDir}/../../inputs/part4.csv")
 	.set{ch_bamlist_file}
 
