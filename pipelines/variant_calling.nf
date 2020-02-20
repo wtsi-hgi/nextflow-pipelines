@@ -57,9 +57,8 @@ workflow {
 	    .take(1)
 	    .set{ch_by_50}
 //	
-//	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
+	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
 
-//	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
 }
 //
