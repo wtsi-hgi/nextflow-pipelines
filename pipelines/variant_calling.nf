@@ -47,7 +47,6 @@ workflow {
 	    .groupTuple()
 	    .take(1)
 	    .set{ch_by_50}
-	    .view()
 	
 	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
 
