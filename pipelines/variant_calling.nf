@@ -35,13 +35,11 @@ workflow {
 	
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .take(103)
 	    .map { row -> tuple(row.batch, file(row.vcf))}
 	    .set{ch_vcfs}
 	
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .take(103)
 	    .map { row -> tuple(row.batch, file(row.tbi))}
 	    .set{ch_tbis}
 
