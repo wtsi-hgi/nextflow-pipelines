@@ -27,7 +27,7 @@ Channel.fromPath("${baseDir}/../../inputs/part4.csv")
 //Channel.fromPath(params.ch_genome_fasta_fai)
 //    .set {ch_genome_fasta_fai}
 
-//include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' params(run: true, outdir: params.outdir)
+include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' params(run: true, outdir: params.outdir)
 
 workflow {
 
@@ -49,7 +49,7 @@ workflow {
 	    .set{ch_by_50}
 	    .view()
 	
-	sect_concat_vcfs(ch_by_50)
+	sect_concat_vcfs(ch_by_50, ch_intersect_bed)
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
