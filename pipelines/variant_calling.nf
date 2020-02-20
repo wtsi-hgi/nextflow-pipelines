@@ -45,9 +45,11 @@ workflow {
 
 	ch_vcfs.mix(ch_tbis)
 	    .groupTuple()
-	    .take(2)
+	    .take(1)
+	    .set{ch_by_50}
 	    .view()
 	
+	sect_concat_vcfs(ch_by_50)
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
