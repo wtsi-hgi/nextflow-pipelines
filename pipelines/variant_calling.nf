@@ -35,8 +35,9 @@ workflow {
 	
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .take(1)
+	    .take(2)
 	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
+	    .map{a,b,c -> tuple(a,b.mkdirs("${baseDir}/../../results/vcfs/${a}/"),c)}
 	    .map{a,b,c -> tuple(a,b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
 	    .set{ch_vcfs}
 	
