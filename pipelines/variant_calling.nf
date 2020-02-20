@@ -49,7 +49,7 @@ workflow {
 	    .set{ch_by_50}
 	    .view()
 	
-	sect_concat_vcfs(ch_by_50, ch_intersect_bed)
+	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
