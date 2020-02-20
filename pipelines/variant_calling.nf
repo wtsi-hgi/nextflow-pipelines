@@ -38,7 +38,8 @@ workflow {
 	    .take(2)
 	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
 	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results/vcfs/${a}/").mkdir())}
-	    .map{a,b,c,d -> tuple(a,b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
+	    .map{a,b,c,d -> tuple(a,b, b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
+	    .map{a,b,c,d -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
 	    .set{ch_vcfs}
 	
 	ch_vcfs.view()
