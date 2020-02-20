@@ -22,13 +22,14 @@ process sect_concat_vcfs {
     file(bed)
     
     output:
-    stdout
+    tuple val(batch),file("test")
     //tuple file("${name}.vcf.gz"), file("${name}.vcf.gz.csi"), emit: vcf_gz
     //tuple file("to_concat.list"), file("to_concat_non_empty.list"), emit: concat_list
 
     script:
 """ 
 ls -ltra
+touch test
 """
 }
 
