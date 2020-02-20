@@ -32,13 +32,24 @@ Channel.fromPath("${baseDir}/../../inputs/part4.csv")
 workflow {
 
     if (params.run_intersect_concat) {
+	
 	ch_input_shards
 	    .splitCsv(header: true)
 	    .take(103)
-	    .map { row -> tuple(row.batch, [file(row.vcf), file(row.tbi)])}
-	    .map { batch, vcf_files -> tuple( groupKey(batch, vcf_files.size()), vcf_files ) }
+	    .map { row -> tuple(row.batch, file(row.vcf))}
+	    .set{ch_vcfs}
+	
+	ch_input_shards
+	    .splitCsv(header: true)
+	    .take(103)
+	    .map { row -> tuple(row.batch, file(row.tbi))}
+	    .set{ch_tbis}
+
+	ch_vcfs.mix(ch_tbis)
 	    .groupTuple()
+	    .take(1)
 	    .view()
+	
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
