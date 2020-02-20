@@ -35,20 +35,23 @@ workflow {
 	
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .map { row -> tuple(row.batch, file(row.vcf))}
+	    .take(1)
+	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
+	    .map{a,b,c -> tuple(a,b.mklink("${baseDir}/../../results/vcfs/$batch/${c}.output.vcf.gz"))}
 	    .set{ch_vcfs}
 	
-	ch_input_shards
-	    .splitCsv(header: true)
-	    .map { row -> tuple(row.batch, file(row.tbi))}
-	    .set{ch_tbis}
-
-	ch_vcfs.mix(ch_tbis)
-	    .groupTuple()
-	    .take(1)
-	    .set{ch_by_50}
-	
-	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
+	ch_vcfs.view()
+//	ch_input_shards
+//	    .splitCsv(header: true)
+//	    .map { row -> tuple(row.batch, file(row.tbi))}
+//	    .set{ch_tbis}
+//
+//	ch_vcfs.mix(ch_tbis)
+//	    .groupTuple()
+//	    .take(1)
+//	    .set{ch_by_50}
+//	
+//	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
 
 //	run_intersect_concat(ch_batches, ch_intersect_bed)
     }
