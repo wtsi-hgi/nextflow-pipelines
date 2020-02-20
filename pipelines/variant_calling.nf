@@ -44,7 +44,6 @@ workflow {
 	    .set{ch_tbis}
 
 	ch_vcfs.mix(ch_tbis)
-	    .groupTuple()
 	    .take(1)
 	    .view()
 	
