@@ -37,7 +37,7 @@ workflow {
 	    .splitCsv(header: true)
 	    .take(1)
 	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
-	    .map{a,b,c -> tuple(a,b.mklink("${baseDir}/../../results/vcfs/$batch/${c}.output.vcf.gz"))}
+	    .map{a,b,c -> tuple(a,b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
 	    .set{ch_vcfs}
 	
 	ch_vcfs.view()
