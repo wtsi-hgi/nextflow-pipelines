@@ -31,7 +31,7 @@ process sect_concat_vcfs {
 """ 
 for vcf_file in *.output.vcf.gz
 do
-    bcftools norm -O z --rm-dup all -R ${bed} -o intersected.\${vcf_file} \${vcf_file}
+    bcftools norm -O z --rm-dup none -R ${bed} -o intersected.\${vcf_file} \${vcf_file}
     bcftools index intersected.\${vcf_file}
 done
 

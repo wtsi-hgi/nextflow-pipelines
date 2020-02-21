@@ -9,7 +9,7 @@ Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
 
 // not on interval file-list
 params.run_createsymlinks = false 
-params.run_intersect_concat = true 
+params.run_intersect_concat = true
 ch_vcfs_concat_prefix = "ibd"
 
 // colnames: shard,vcf,tbi,coord,x1,x2,x3,batch
@@ -75,7 +75,7 @@ workflow {
 
 	ch_vcfs.mix(ch_tbis)
 	    .groupTuple()
-	    .take(200)
+	    .take(-1)
 	    .set{ch_by_50}
 
 	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
