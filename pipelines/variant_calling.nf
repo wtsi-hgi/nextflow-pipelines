@@ -8,6 +8,7 @@ Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
 	.set{ch_intersect_bed}
 
 // not on interval file-list
+params.run_createsymlinks = false 
 params.run_intersect_concat = true 
 ch_vcfs_concat_prefix = "ibd"
 
@@ -31,40 +32,60 @@ include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' p
 
 workflow {
 
-    if (params.run_intersect_concat) {
+    if (params.run_createsymlinks) {
 	
 	ch_input_shards
 	    .splitCsv(header: true)
-	    .take(200)
+	    .take(-1)
 	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
-	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results/vcfs/${a}/").mkdir())}
-	    .set(ch_vcfs_dirs)
-
-	ch_vcfs_dirs.view()
+	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results").mkdir())}
+	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/vcfs").mkdir())}
+	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/vcfs/${a}/").mkdir())}
+	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz", overwrite: true))}
+	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
+	    .set{ch_vcfs_symlinks}
 	
-//	ch_vcfs_dirs
-//	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz", overwrite: true))}
-//	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
-//	    .set{ch_vcfs}
-//	
-//	ch_input_shards
-//	    .splitCsv(header: true)
-//	    .take(200)
-//	    .map { row -> tuple(row.batch, file(row.tbi), row.coord)}
-//	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results/tbis/${a}/").mkdir())}
-//	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi", overwrite: true))}
-//	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/tbi/${a}/${c}.output.vcf.gz.tbi"))}
-//	    .set{ch_tbis}
-//
-//	ch_vcfs.mix(ch_tbis)
-//	    .groupTuple()
-//	    .take(1)
-//	    .set{ch_by_50}
-////	
-//	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
+	ch_input_shards
+	    .splitCsv(header: true)
+	    .take(-1)
+	    .map { row -> tuple(row.batch, file(row.tbi), row.coord)}
+	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results").mkdir())}
+	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/tbis").mkdir())}
+	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/tbis/${a}/").mkdir())}
+	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi", overwrite: true))}
+	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi"))}
+	    .set{ch_tbis_symlinks}
 
     }
+
+    if (params.run_intersect_concat) {
+	ch_input_shards
+	    .splitCsv(header: true)
+	    .take(-1)
+	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
+	    .map{a,b,c -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
+	    .set{ch_vcfs}
+	
+	ch_input_shards
+	    .splitCsv(header: true)
+	    .take(-1)
+	    .map { row -> tuple(row.batch, file(row.tbi), row.coord)}
+	    .map{a,b,c -> tuple(a,file("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi"))}
+	    .set{ch_tbis}
+
+	ch_vcfs.mix(ch_tbis)
+	    .groupTuple()
+	    .take(200)
+	    .set{ch_by_50}
+
+	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
+    }
 }
+
+
+
+
+
 //
 //    graphtyper_pipeline.out.commands_split
 //	    .splitText()
