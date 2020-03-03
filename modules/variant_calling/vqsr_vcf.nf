@@ -11,8 +11,8 @@ process vqsr_vcf {
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/vep_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vep.vcf.gz"
-    publishDir "${params.outdir}/vep_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vep.vcf.gz.csi"
+    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vqsr.vcf.gz"
+    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vqsr.vcf.gz.csi"
     
     maxRetries 2
 
@@ -20,20 +20,22 @@ process vqsr_vcf {
     params.run
      
     input:
-    tuple val(name), file(vcf), file(csi)
+    tuple file(vcf), file(csi)
     
     output:
-    tuple val(name), file("*.vep.vcf.gz"), file("*.vep.vcf.gz.csi"), emit: name_vcf_csi 
+    tuple file("*.vqsr.vcf.gz"), file("*.vqsr.vcf.gz.csi"), emit: vcf_csi 
 
     script:
     def simplename = vcf.getSimpleName()
 """ 
 sleep 30
 export DIR=\$PWD 
-/software/singularity-v3.5.1/bin/singularity exec --bind /lustre --bind \$DIR --bind /software/hgi/containers/vep-loftee/mount_vep:/opt/vep/.vep --pwd /opt/vep/src/ensembl-vep /software/hgi/containers/vep-loftee/vep-loftee-light.img ./vep --verbose --offline --species homo_sapiens --assembly GRCh38 --everything --cache --dir_cache /opt/vep/.vep/ --dir_plugins /opt/vep/.vep/Plugins/ --species homo_sapiens --vcf --allele_number --force_overwrite --fasta /opt/vep/.vep/homo_sapiens/97_GRCh38/Homo_sapiens.GRCh38.dna.toplevel.fa.gz --plugin LoF,loftee_path:/opt/vep/.vep/Plugins,human_ancestor_fa:/opt/vep/.vep/human_ancestor.fa.gz,gerp_bigwig:/opt/vep/.vep/gerp_conservation_scores.homo_sapiens.GRCh38.bw,gerp_database:/opt/vep/.vep/gerp_conservation_scores.homo_sapiens.GRCh38.bw,conservation_file:/opt/vep/.vep/loftee.sql,run_splice_predictions:0,donor_disruption_mes_cutoff:6,acceptor_disruption_mes_cutoff:7 -i \$DIR/$vcf -o \$DIR/${simplename}.vep.vcf
-
-bgzip ${simplename}.vep.vcf
-bcftools index ${simplename}.vep.vcf.gz
+/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel.sh ${vcf} && \\
+/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_snp.sh  ${vcf} && \\
+/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel_apply.sh ${vcf} && \\ 
+/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_snp_apply.sh ${vcf} \\
 """
 }
 
+// bgzip ${simplename}.vqsr.vcf
+// bcftools index ${simplename}.vqsr.vcf.gz
