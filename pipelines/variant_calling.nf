@@ -20,7 +20,7 @@ workflow {
 	.combine(
 	ch_vcfs_gz_csi
 	    .map{csi -> tuple(csi.getSimpleName(),csi)}, by: 0)
-	.take(2)
+	.take(4)
 	.set{ch_name_vcf_csi}
     
     ch_name_vcf_csi.view()
