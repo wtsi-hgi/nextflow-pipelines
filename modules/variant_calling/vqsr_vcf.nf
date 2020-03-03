@@ -31,7 +31,7 @@ process vqsr_vcf {
 sleep 30
 export DIR=\$PWD 
 /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel.sh ${vcf} && \\
-/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_snp.sh  ${vcf} && \\
+/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_snp.sh ${vcf} && \\
 /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel_apply.sh ${vcf} && \\ 
 /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_snp_apply.sh ${vcf} \\
 """
