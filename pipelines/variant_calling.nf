@@ -43,14 +43,3 @@ workflow {
 	}
     }
 }
-
-
-
-
-
-
-
-
-//Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
-//	.set{ch_intersect_bed}
-
