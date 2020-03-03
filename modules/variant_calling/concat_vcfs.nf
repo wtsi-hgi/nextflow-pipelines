@@ -3,7 +3,7 @@ params.run = true
 process concat_vcfs {
     memory '6G'
     tag "concat"
-    cpus 1
+    cpus 2
     conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     scratch '/tmp'
     stageInMode 'copy'
