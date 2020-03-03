@@ -30,7 +30,8 @@ process vqsr_vcf {
 """ 
 sleep 10
 
-/lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel.sh ${vcf} && \\
+# /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/VQSR_indel.sh ${vcf}
+
 CWD=\$PWD 
 GATK="/lustre/scratch119/humgen/teams/hgi/users/ad7/gatk-4.1.0.0/gatk-package-4.1.0.0-local.jar"
 JAVA="/lustre/scratch119/realdata/mdt2/projects/interval_wgs/hgi/tools/java-8-openjdk-amd64/bin/java"
