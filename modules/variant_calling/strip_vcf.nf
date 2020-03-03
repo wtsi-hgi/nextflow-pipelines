@@ -30,10 +30,11 @@ process strip_vcf {
     script:
     def simplename = vcf.getSimpleName()
 """ 
+sleep 10
 N_VARIANTS=\$(zcat $vcf | grep -v '^#' |  wc -l)
 if [ \"\${N_VARIANTS}\" -eq "0" ]
 then
-   echo \"N variants in input vcf is 0\" > ${simplename}.zero_variants.txt
+   echo \"N variants in input vcf is 0\" > ${simplename}.zero_variants.txt && sleep 5
 else
 bcftools view -G -o ${simplename}.stripped.vcf.gz -O z $vcf
 bcftools index ${simplename}.stripped.vcf.gz
