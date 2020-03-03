@@ -1,6 +1,6 @@
 nextflow.preview.dsl=2
 params.run_strip = true
-params.run_vep = false
+params.run_vep = true
 params.run_vqsr = false
 
 params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/vcfs_concatenated"
@@ -22,7 +22,7 @@ workflow {
 	.take(2)
 	.set{ch_name_vcf_csi}
     
-    ch_name_vcf_csi.view()
+//   ch_name_vcf_csi.view()
 
     if (params.run_strip) {
 	strip_vcf(ch_name_vcf_csi)
