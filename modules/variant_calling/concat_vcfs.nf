@@ -2,7 +2,7 @@ params.run = true
 
 process concat_vcfs {
     memory '6G'
-    tag "$batch"
+    tag "concat"
     cpus 1
     conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     scratch '/tmp'
@@ -11,9 +11,9 @@ process concat_vcfs {
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "*.genome.vcf.gz"
-    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "*.genome.vcf.gz.csi"
-    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "vcf_files_sorted"
+    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "*.genome.sorted.vcf.gz"
+    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "*.genome.sorted.vcf.gz.csi"
+    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "vcf_files_sorted"
     maxRetries 2
 
     when:
