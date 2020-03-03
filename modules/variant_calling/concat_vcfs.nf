@@ -20,11 +20,11 @@ process concat_vcfs {
     params.run
      
     input:
-    tuple val(batch), file(vcf_files)
+    file(vcf_files)
     
     output:
-    tuple val(batch), file("*.genome.vcf.gz"), file("*.genome.vcf.gz.csi"), emit: batch_vcf 
-    tuple val(batch), file("vcf_files_sorted"), emit: batch_vcflist 
+    tuple file("*.genome.vcf.gz"), file("*.genome.vcf.gz.csi"), emit: concat_vcf 
+    file("vcf_files_sorted"), emit: vcflist 
 
     script:
 """ 
