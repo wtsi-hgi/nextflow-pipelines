@@ -11,8 +11,8 @@ process concat_vcfs {
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "*.genome.sorted.vcf.gz"
-    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "*.genome.sorted.vcf.gz.csi"
+    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "genome.sorted.vcf.gz"
+    publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "genome.sorted.vcf.gz.csi"
     publishDir "${params.outdir}/concat/", mode: 'symlink', overwrite: true, pattern: "vcf_files_sorted"
     maxRetries 2
 
@@ -23,7 +23,7 @@ process concat_vcfs {
     file(vcf_files)
     
     output:
-    tuple file("*.genome.sorted.vcf.gz"), file("*.genome.sorted.vcf.gz.csi"), emit: concat_vcf 
+    tuple file("genome.sorted.vcf.gz"), file("genome.sorted.vcf.gz.csi"), emit: concat_vcf 
    // file("vcf_files_sorted"), emit: vcflist 
 
     script:
