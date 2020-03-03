@@ -20,10 +20,10 @@ process vqsr_vcf {
     params.run
      
     input:
-    tuple file(vcf), file(csi)
+    tuple file(vcf), file(tbi)
     
     output:
-    tuple file("*.vqsr.vcf.gz"), file("*.vqsr.vcf.gz.csi"), emit: vcf_csi 
+    tuple file("*.vqsr.vcf.gz"), file("*.vqsr.vcf.gz.tbi"), emit: vcf_csi 
 
     script:
     def simplename = vcf.getSimpleName()
