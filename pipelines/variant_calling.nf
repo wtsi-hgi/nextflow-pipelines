@@ -38,7 +38,7 @@ workflow {
 //		concat_vcfs.out.concat_vcf.view()
 		
 		if (params.run_vqsr) {
-		    vqsr_vcf(concat_vcfs.out.concat_vcf)
+		    vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
 		}
 	    }
 	}
