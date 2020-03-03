@@ -10,7 +10,7 @@ Channel.fromPath("${params.vcfs_dir}/*.vcf.gz.csi")
 	.set{ch_vcfs_gz_csi}
 
 include strip_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
-//include vep_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
+include vep_vcf from '../modules/variant_calling/vep_vcf.nf' params(run: true, outdir: params.outdir)
 //include vqsr_vcf from '../modules/variant_calling/vqsr_vcf.nf' params(run: true, outdir: params.outdir)
 
 workflow {
