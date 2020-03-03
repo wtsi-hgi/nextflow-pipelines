@@ -42,7 +42,7 @@ Mills_indel=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Mills_and_1000G
 axiomPoly_resource=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Axiom_Exome_Plus.genotypes.all_populations.poly.hg38.vcf.gz
 
 echo INDELS
-singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
  	--reference \"\${ref_genome}\" \
  	-V ${vcf} \
  	--resource:mills,known=false,training=true,truth=true,prior=12.0 \${Mills_indel} \
@@ -71,7 +71,7 @@ singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/c
  	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
 
 echo SNPS
-singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
 	--reference \${ref_genome} \
 	-V ${vcf} \
 	--resource:hapmap,known=false,training=true,truth=true,prior=15.0 \${hapmap} \
@@ -102,7 +102,7 @@ singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/c
 	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
 
 echo indel_apply
-singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O recal_indel${vcf} \
  	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.indels.tranches \
@@ -112,7 +112,7 @@ singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scra
         -mode INDEL
 
 echo SNP_apply
-singularity exec -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O "recal_snp${vcf} \
  	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.tranches \
