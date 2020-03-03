@@ -2,7 +2,7 @@ params.run = true
 
 process vqsr_vcf {
     memory '6G'
-    tag "$name"
+    tag "vqsr $vcf"
     cpus 2
     //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     //scratch '/tmp'
@@ -43,7 +43,7 @@ axiomPoly_resource=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Axiom_Ex
 
 echo INDELS
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
- 	--reference \"\${ref_genome}\" \
+ 	--reference \${ref_genome} \
  	-V ${vcf} \
  	--resource:mills,known=false,training=true,truth=true,prior=12.0 \${Mills_indel} \
  	--resource:axiomPoly,known=false,training=true,truth=false,prior=10.0 \${axiomPoly_resource} \
@@ -117,7 +117,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /
  	-O "recal_snp${vcf} \
  	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.tranches \
         --recal-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.recal \
- 	--reference ${ref_genome} \
+ 	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.7 \
         -mode SNP
 
