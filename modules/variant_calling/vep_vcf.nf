@@ -30,7 +30,7 @@ process vep_vcf {
 """ 
 sleep 10
 
-N_VARIANTS=\$(zcat chrY:18500470-chrY:18736643.stripped.vcf.gz | grep -v '^#' |  wc -l)
+N_VARIANTS=\$(zcat $vcf | grep -v '^#' |  wc -l)
 if [ \"\${N_VARIANTS}\" -eq "0" ]; then
    echo \"N variants in input vcf is 0\";
    exit 200;
