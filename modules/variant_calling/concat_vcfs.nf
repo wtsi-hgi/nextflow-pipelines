@@ -34,6 +34,7 @@ cat vcf_files | sort > vcf_files_sorted
 bcftools concat -n -O z -f vcf_files_sorted -o concat.vcf.gz
 bcftools sort -O z concat.vcf.gz -o genome.sorted.vcf.gz
 bcftools index genome.sorted.vcf.gz
+tabix genome.sorted.vcf.gz
 """
 }
 
