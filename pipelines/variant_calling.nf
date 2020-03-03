@@ -13,7 +13,7 @@ Channel.fromPath("${params.vcfs_dir}/*.vcf.gz.csi")
 include strip_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
 include vep_vcf from '../modules/variant_calling/vep_vcf.nf' params(run: true, outdir: params.outdir)
 include concat_vcfs from '../modules/variant_calling/concat_vcfs.nf' params(run: true, outdir: params.outdir)
-//include vqsr_vcf from '../modules/variant_calling/vqsr_vcf.nf' params(run: true, outdir: params.outdir)
+include vqsr_vcf from '../modules/variant_calling/vqsr_vcf.nf' params(run: true, outdir: params.outdir)
 
 workflow {
     ch_vcfs_gz
@@ -21,7 +21,7 @@ workflow {
 	.combine(
 	ch_vcfs_gz_csi
 	    .map{csi -> tuple(csi.getSimpleName(),csi)}, by: 0)
-	.take(8)
+	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_csi}
 //   ch_name_vcf_csi.view()
 
@@ -37,9 +37,9 @@ workflow {
 		concat_vcfs(vep_vcf.out.name_vcf_csi.collect())
 	    }
 //	    
-//	    if (params.run_vqsr) {
-//		vqsr_vcf()
-//	    }
+	    if (params.run_vqsr) {
+		vqsr_vcf()
+	    }
 	}
     }
 }
