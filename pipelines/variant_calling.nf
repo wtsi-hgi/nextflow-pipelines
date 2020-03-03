@@ -38,7 +38,7 @@ workflow {
 	    }
 //	    
 	    if (params.run_vqsr) {
-		vqsr_vcf()
+		vqsr_vcf(concat_vcfs.out.vcf_csi)
 	    }
 	}
     }
