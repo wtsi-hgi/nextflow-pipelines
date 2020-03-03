@@ -27,6 +27,7 @@ workflow {
 
     if (params.run_strip) {
 	strip_vcf(ch_name_vcf_csi)
+	strip_vcf.out.name_vcf_csi.view()
 //	
 //	if (params.run_vep) {
 //	    vep_vcf(strip_vcf.out.)
