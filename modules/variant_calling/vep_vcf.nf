@@ -1,18 +1,17 @@
 params.run = true
 
-process strip_vcf {
+process vep_vcf {
     memory '6G'
     tag "$name"
     cpus 1
-    conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
+    //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     //scratch '/tmp'
     //stageInMode 'copy'
     //stageOutMode 'copy'
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/strip_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.stripped.vcf.gz"
-    publishDir "${params.outdir}/strip_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.stripped.vcf.gz.csi"
+    publishDir "${params.outdir}/vep_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.sorted.vcf.gz"
     
     maxRetries 2
 
