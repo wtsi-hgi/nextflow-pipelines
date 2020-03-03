@@ -2,7 +2,7 @@ nextflow.preview.dsl=2
 params.run_strip = true
 params.run_vep = true
 params.run_concat = true
-params.run_vqsr = false
+params.run_vqsr = true
 
 params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/vcfs_concatenated"
 Channel.fromPath("${params.vcfs_dir}/*.vcf.gz")
