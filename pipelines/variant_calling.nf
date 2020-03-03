@@ -1,84 +1,40 @@
 nextflow.preview.dsl=2
-params.runtag = 'ibd_concat'
+params.runtag = 'ibd_vqsr'
+params.run_strip = false
+params.run_vep = false
+params.run_vqsr = false
 
-params.index_crams = false
+params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/vcfs_concatenated"
+Channel.fromPath("${params.vcfs_dir}/*.vcf.gz")
+	.set{ch_vcfs_gz}
+Channel.fromPath("${params.vcfs_dir}/*.vcf.gz.csi")
+	.set{ch_vcfs_gz_csi}
 
-// Channel.fromPath("${baseDir}/../../inputs/iwes_intervals_chr2.csv")
-Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
-	.set{ch_intersect_bed}
-
-// not on interval file-list
-params.run_createsymlinks = false 
-params.run_intersect_concat = true
-ch_vcfs_concat_prefix = "ibd"
-
-// colnames: shard,vcf,tbi,coord,x1,x2,x3,batch
-Channel.fromPath("${baseDir}/../../inputs/part4.csv")
-	.set{ch_input_shards}
-
-// https://gitlab.internal.sanger.ac.uk/hgi-projects/ibd-x10/cromwell/blob/master/ScatterMarkDup_BQSR_HC_inputs.json
-// "ref_dict": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.dict",
-// "ref_fasta": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa",
-// "ref_fasta_index": "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa.fai",
-
-//params.genome_fasta = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa"
-//Channel.fromPath(params.ch_genome_fasta)
-//    .set {ch_genome_fasta}
-//params.genome_fasta_fai = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa.fai"
-//Channel.fromPath(params.ch_genome_fasta_fai)
-//    .set {ch_genome_fasta_fai}
-
-include sect_concat_vcfs from '../modules/variant_calling/sect_concat_vcfs.nf' params(run: true, outdir: params.outdir)
+include strip_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
+//include vep_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
+//include vqsr_vcf from '../modules/variant_calling/vqsr_vcf.nf' params(run: true, outdir: params.outdir)
 
 workflow {
+    ch_vcfs_gz
+	.map{vcf -> tuple(vcf.getSimpleName(),vcf)}
+	.combine(
+	ch_vcfs_gz_csi
+	    .map{csi -> tuple(csi.getSimpleName(),csi)})
+	.take(2)
+	.set{ch_name_vcf_csi}
+    
+    ch_name_vcf_csi.view()
 
-    if (params.run_createsymlinks) {
-	
-	ch_input_shards
-	    .splitCsv(header: true)
-	    .take(-1)
-	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
-	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results").mkdir())}
-	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/vcfs").mkdir())}
-	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/vcfs/${a}/").mkdir())}
-	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz", overwrite: true))}
-	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
-	    .set{ch_vcfs_symlinks}
-	
-	ch_input_shards
-	    .splitCsv(header: true)
-	    .take(-1)
-	    .map { row -> tuple(row.batch, file(row.tbi), row.coord)}
-	    .map{a,b,c -> tuple(a,b,c,file("${baseDir}/../../results").mkdir())}
-	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/tbis").mkdir())}
-	    .map{a,b,c,d -> tuple(a,b,c,file("${baseDir}/../../results/tbis/${a}/").mkdir())}
-	    .map{a,b,c,d -> tuple(a,c, b.mklink("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi", overwrite: true))}
-	    .map{a,c,f -> tuple(a,file("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi"))}
-	    .set{ch_tbis_symlinks}
-
-    }
-
-    if (params.run_intersect_concat) {
-	ch_input_shards
-	    .splitCsv(header: true)
-	    .take(-1)
-	    .map { row -> tuple(row.batch, file(row.vcf), row.coord)}
-	    .map{a,b,c -> tuple(a,file("${baseDir}/../../results/vcfs/${a}/${c}.output.vcf.gz"))}
-	    .set{ch_vcfs}
-	
-	ch_input_shards
-	    .splitCsv(header: true)
-	    .take(-1)
-	    .map { row -> tuple(row.batch, file(row.tbi), row.coord)}
-	    .map{a,b,c -> tuple(a,file("${baseDir}/../../results/tbis/${a}/${c}.output.vcf.gz.tbi"))}
-	    .set{ch_tbis}
-
-	ch_vcfs.mix(ch_tbis)
-	    .groupTuple()
-	    .take(-1)
-	    .set{ch_by_50}
-
-	sect_concat_vcfs(ch_by_50, ch_intersect_bed.collect())
+    if (params.run_strip) {
+	strip_vcf(ch_name_vcf_csi)
+//	
+//	if (params.run_vep) {
+//	    vep_vcf(strip_vcf.out.)
+//	    
+//	    if (params.run_vqsr) {
+//		vqsr_vcf()
+//	    }
+//	}
     }
 }
 
@@ -86,42 +42,9 @@ workflow {
 
 
 
-//
-//    graphtyper_pipeline.out.commands_split
-//	    .splitText()
-//	    .map{a -> a.replaceAll(~/$\s/, "")}
-//	    .map{a -> tuple(a, a.replaceAll(~/:.*$/, "").replaceAll(~/^.*chr/, "chr"))}
-//	    .take(-1)
-//	    .set{ch_commands_split}
-//
-//	if (params.run_graphtyper) {
-//	    graphtyper(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_commands_split)
-//	}
-//    }
-//
-//    if (params.use_interval_list) {
-//
-//	if(params.index_crams) {
-//	    index_cram(ch_bamlist_file
-//		       .splitText().take(-1).map{a -> file(a.replaceAll(~/$\s/, ""))})
-//	}
-//	
-//	ch_iwes_intervals_csv
-//	    .splitCsv(header: true)
-//	    .map { row -> tuple(row.chr, row.start, row.end)}
-//	    .take(-1)
-//	    .filter { it[0] ==~ /chr[56]/} //.filter { it[1] ==~ /^[cC].*/}
-//	    .set{ch_chr_start_end}
-//
-//	if (params.run_graphtyper_on_interval) {
-//	    graphtyper_on_interval(ch_bamlist_file.collect(), ch_graphtyper_pipeline_config.collect(), ch_chr_start_end)
-//	}
-//    }
-//
-//    if (params.concat_vcfs) {
-//	concat_vcfs(ch_vcfs_to_concat, ch_vcfs_concat_prefix)
-//    }
-//
-//    
-//}
-//
+
+
+
+//Channel.fromPath("${baseDir}/../../inputs/S04380110_Padded_merged.bed")
+//	.set{ch_intersect_bed}
+
