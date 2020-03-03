@@ -11,10 +11,10 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'study5933' // HG_UKBB_scRNA_Pilot I&II 
+params.runtag = 'study5607' // HG_UKBB_scRNA_Pilot I&II 
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
-params.run_deseq2 = true
+params.run_deseq2 = false
 params.deseq2_tsv = "$baseDir/../../inputs/DESeq2.tsv"
 
 params.run_star = true
@@ -98,15 +98,15 @@ include deseq2 from '../modules/rna_seq/deseq2.nf' params(run: true, outdir: par
 
 workflow {
 
-    baton_study_id("5643")
+    baton_study_id("5607")
     
     iget_cram(baton_study_id.out.samples_tsv
 	      .map{a,b -> b}
 	      .splitCsv(header: true, sep: '\t')
 	      .map{row->tuple(row.sample, row.sample_supplier_name)}
-	      .filter { it[1] ==~ /^[rR].*/} //.filter { it[1] ==~ /^[cC].*/}
+	      //.filter { it[1] ==~ /^[rR].*/} //.filter { it[1] ==~ /^[cC].*/}
 	      .map{a,b->a}
-	      , "5643")
+	      , "5607")
     
     //.filter { it[1] ==~ /^[cC].*/} //.filter { it[1] ==~ /^[cC].*/}
     
