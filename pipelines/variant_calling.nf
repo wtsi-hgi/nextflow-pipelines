@@ -1,6 +1,5 @@
 nextflow.preview.dsl=2
-params.runtag = 'ibd_vqsr'
-params.run_strip = false
+params.run_strip = true
 params.run_vep = false
 params.run_vqsr = false
 
