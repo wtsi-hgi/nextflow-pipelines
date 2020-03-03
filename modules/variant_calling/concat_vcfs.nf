@@ -1,39 +1,39 @@
 params.run = true
 
 process concat_vcfs {
-    memory '60G'
-    tag "$vcfs_location $name"
-    cpus 2
-    // disk '20 GB'
+    memory '6G'
+    tag "$batch"
+    cpus 1
+    conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
+    scratch '/tmp'
+    stageInMode 'copy'
+    stageOutMode 'copy'
     time '700m'
     queue 'normal'
-    container "graphtyper"
-    containerOptions = "--bind /lustre"
-    // errorStrategy 'terminate'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/vcfs_concat/", mode: 'symlink', overwrite: true, pattern: "${name}.vcf.gz"
-    publishDir "${params.outdir}/vcfs_concat/", mode: 'symlink', overwrite: true, pattern: "${name}.vcf.gz.csi"
-    maxRetries 3
+    errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
+    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "*.genome.vcf.gz"
+    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "*.genome.vcf.gz.csi"
+    publishDir "${params.outdir}/concat/$batch/", mode: 'symlink', overwrite: true, pattern: "vcf_files_sorted"
+    maxRetries 2
 
     when:
     params.run
      
     input:
-    val(vcfs_location)
-    val(name)
+    tuple val(batch), file(vcf_files)
     
-    output: 
-    tuple file("${name}.vcf.gz"), file("${name}.vcf.gz.csi"), emit: vcf_gz
-    tuple file("to_concat.list"), file("to_concat_non_empty.list"), emit: concat_list
+    output:
+    tuple val(batch), file("*.genome.vcf.gz"), file("*.genome.vcf.gz.csi"), emit: batch_vcf 
+    tuple val(batch), file("vcf_files_sorted"), emit: batch_vcflist 
 
     script:
 """ 
-find $vcfs_location -maxdepth 1 -name 'chr1:*.vcf.gz' -exec sh -c \"echo {} \\\$(zcat {} | grep -v '^#' | wc -l)\" \\; >> to_concat.list
+ls *.vcf.gz | grep -v tbi | grep -v csi > vcf_files
+cat vcf_files | sort > vcf_files_sorted
 
-cat to_concat.list | grep -v 'gz 0\$' | cut -f1 -d ' ' | sort > to_concat_non_empty.list
-
-bcftools concat -f to_concat_non_empty.list --allow-overlaps | bcftools sort -o ${name}.vcf.gz -O z
-bcftools index ${name}.vcf.gz
+bcftools concat -n -O z -f vcf_files_sorted -o concat.vcf.gz
+bcftools sort -O z concat.vcf.gz -o genome.sorted.vcf.gz
+bcftools index genome.sorted.vcf.gz
 """
 }
 
