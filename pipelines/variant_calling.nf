@@ -35,10 +35,9 @@ workflow {
 	    
 	    if (params.run_concat) {
 		concat_vcfs(vep_vcf.out.name_vcf_csi.collect())
-		concat_vcfs.out.vcf_csi.view()
 		
 		if (params.run_vqsr) {
-		    vqsr_vcf(concat_vcfs.out.vcf_csi)
+		    vqsr_vcf(concat_vcfs.out.concat_vcf)
 		}
 	    }
 	}
