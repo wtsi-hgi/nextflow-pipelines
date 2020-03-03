@@ -3,7 +3,7 @@ params.run = true
 process vqsr_vcf {
     memory '6G'
     tag "$name"
-    cpus 1
+    cpus 2
     //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     //scratch '/tmp'
     //stageInMode 'copy'
