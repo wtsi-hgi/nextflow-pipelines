@@ -12,6 +12,7 @@ process vep_vcf {
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
     publishDir "${params.outdir}/vep_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vep.vcf.gz"
+    publishDir "${params.outdir}/vep_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vep.vcf.gz.csi"
     
     maxRetries 2
 
