@@ -28,7 +28,7 @@ process vep_vcf {
     script:
     def simplename = vcf.getSimpleName()
 """ 
-sleep 30
+sleep 10
 
 N_VARIANTS=\$(zcat chrY:18500470-chrY:18736643.stripped.vcf.gz | grep -v '^#' |  wc -l)
 if [ \"\${N_VARIANTS}\" -eq "0" ]; then
