@@ -24,7 +24,7 @@ process concat_vcfs {
     
     output:
     tuple file("*.genome.sorted.vcf.gz"), file("*.genome.sorted.vcf.gz.csi"), emit: concat_vcf 
-    file("vcf_files_sorted"), emit: vcflist 
+   // file("vcf_files_sorted"), emit: vcflist 
 
     script:
 """ 
