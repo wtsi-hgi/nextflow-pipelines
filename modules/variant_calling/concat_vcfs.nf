@@ -5,9 +5,9 @@ process concat_vcfs {
     tag "concat"
     cpus 2
     conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
-    scratch '/tmp'
-    stageInMode 'copy'
-    stageOutMode 'copy'
+    //scratch '/tmp'
+    //stageInMode 'copy'
+    //stageOutMode 'copy'
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
