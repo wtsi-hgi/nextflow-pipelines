@@ -1,6 +1,7 @@
 nextflow.preview.dsl=2
 params.run_strip = true
 params.run_vep = true
+params.run_concat = true
 params.run_vqsr = false
 
 params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/vcfs_concatenated"
@@ -22,7 +23,6 @@ workflow {
 	    .map{csi -> tuple(csi.getSimpleName(),csi)}, by: 0)
 	.take(2)
 	.set{ch_name_vcf_csi}
-    
 //   ch_name_vcf_csi.view()
 
     if (params.run_strip) {
@@ -31,6 +31,11 @@ workflow {
 	
 	if (params.run_vep) {
 	    vep_vcf(strip_vcf.out.name_vcf_csi)
+//	vep_vcf.out.name_vcf_csi.view()
+	    
+	    if (params.run_concat) {
+		concat_vcfs(vep_vcf.out.name_vcf_csi.collect())
+	    }
 //	    
 //	    if (params.run_vqsr) {
 //		vqsr_vcf()
