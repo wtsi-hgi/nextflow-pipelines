@@ -33,6 +33,7 @@ sleep 10
 N_VARIANTS=\$(zcat $vcf | grep -v '^#' |  wc -l)
 if [ \"\${N_VARIANTS}\" -eq "0" ]; then
    echo \"N variants in input vcf is 0\";
+   sleep 5
    exit 200;
 fi
 
