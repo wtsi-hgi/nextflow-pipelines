@@ -1,15 +1,8 @@
 #!/usr/bin/env Rscript
 args = commandArgs(trailingOnly=TRUE)
-library(AnnotationHub)
 library(tximport)
 library(magrittr)
 library(readr)
-files_df = read.csv(args[2], header = FALSE)
-files <- file.path(files_df[,1])
-names(files) <- as.character(files) %>% gsub(".quant.sf","",.)
-all(file.exists(files))
-#################
-
 library(gplots)
 library(biomaRt)
 library(reshape2)
@@ -29,14 +22,18 @@ library(RColorBrewer)
 library(genefilter)
 library(ggbiplot)
 library(DESeq2)
-library(ggrepel)
+
 select = dplyr :: select
-
-dir.create('./outputs', showWarnings = FALSE)
-
 rename = dplyr::rename
 select = dplyr::select
 
-${samplename}.ReadsPerGene.out.tab
+dir.create('./outputs', showWarnings = FALSE)
 
-write.csv(tx.salmon.scale$counts, "txi_lengthScaledTPM_gene_counts.csv")
+tabs = list.files('.') %>% keep(~ str_detect(.x,'.ReadsPerGene.out.tab'))
+tabs_names = map(tabs, ~ gsub('.ReadsPerGene.out.tab','',.x))
+tabs_read = pmap(list(tabs, tabs_names), ~ read_tsv(.x, skip=5, col_names = c('Gene','x2','x3','Count')) %>%
+               select(Gene,Count) %>% mutate(sample = .y))
+
+reduced = tabs_read %>% reduce(bind_rows)
+mat = reduced %>% spread(sample, Count)
+write_tsv(mat, 'star_tabgenes_matrix.tsv')
