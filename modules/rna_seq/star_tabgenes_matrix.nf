@@ -19,7 +19,7 @@ process star_tabgenes_matrix {
     file (tagenes_files)
 
     output:
-    tuple val("star"), file("star_tabgenes_matrix.tsv"), emit: matrix
+    tuple val("star"), file("star_tabgenes_matrix.tsv"), emit: star_matrix
 
     script:
     """
