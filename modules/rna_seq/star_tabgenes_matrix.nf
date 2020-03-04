@@ -23,6 +23,6 @@ process star_tabgenes_matrix {
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/heatmap.R
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/star_tabgenes_matrix.R
     """
 }
