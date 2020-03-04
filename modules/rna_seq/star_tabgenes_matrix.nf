@@ -7,8 +7,8 @@ process star_tabgenes_matrix {
     containerOptions = "--bind /tmp --bind /lustre"
     time '400m'
     cpus 1
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
+    errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
+    maxRetries 1
     
     publishDir "${params.outdir}/heatmap/", mode: 'symlink'
 
