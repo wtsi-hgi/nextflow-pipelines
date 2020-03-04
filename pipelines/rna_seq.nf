@@ -95,6 +95,8 @@ include baton_study_id from '../modules/rna_seq/baton.nf' params(run: true, outd
 include heatmap from '../modules/rna_seq/heatmap.nf' params(run: true, outdir: params.outdir,
 						   runtag : params.runtag)
 include deseq2 from '../modules/rna_seq/deseq2.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
+include star_tabgenes_matrix from '../modules/rna_seq/star_tabgenes_matrix.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
+
 
 workflow {
 
@@ -148,6 +150,8 @@ workflow {
 
 
     //// 
+    star_tabgenes_matrix(star_2pass_basic.out.samplename_readspergene_tab.collect())
+    
     leafcutter_bam2junc(star_out[0])
     leafcutter_clustering(leafcutter_bam2junc.out.collect())
 
