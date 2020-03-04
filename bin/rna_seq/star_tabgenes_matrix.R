@@ -11,7 +11,6 @@ library(broom)
 library(magrittr)
 library(dplyr)
 library(tidyr)
-library(purrr)
 library(broom)
 library(stringr)
 library(tibble)
@@ -22,6 +21,7 @@ library(RColorBrewer)
 library(genefilter)
 library(ggbiplot)
 library(DESeq2)
+library(purrr)
 
 select = dplyr :: select
 rename = dplyr::rename
@@ -34,6 +34,6 @@ tabs_names = map(tabs, ~ gsub('.ReadsPerGene.out.tab','',.x))
 tabs_read = pmap(list(tabs, tabs_names), ~ read_tsv(.x, skip=5, col_names = c('Gene','x2','x3','Count')) %>%
                select(Gene,Count) %>% mutate(sample = .y))
 
-reduced = tabs_read %>% reduce(bind_rows)
+reduced = tabs_read %>% purrr::reduce(bind_rows)
 mat = reduced %>% spread(sample, Count)
 write_tsv(mat, 'star_tabgenes_matrix.tsv')
