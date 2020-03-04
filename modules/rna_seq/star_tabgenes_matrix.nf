@@ -10,7 +10,7 @@ process star_tabgenes_matrix {
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
     
-    publishDir "${params.outdir}/heatmap/", mode: 'symlink'
+    publishDir "${params.outdir}/combined/", mode: 'symlink'
 
     when:
     params.run
