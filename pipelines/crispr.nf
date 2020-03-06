@@ -1,19 +1,18 @@
 nextflow.preview.dsl=2
-params.runtag = 'walkup92_TIM123'
+params.runtag = 'walkup103_v1.1.0'
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
 // collect library tables:
 // params.guide_libraries = "${baseDir}/../../guide_libraries/*.guide_library.csv"
-//params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
-params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
+params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
+//params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
 // add guide library of each sample:
 // params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
-// params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123_libraries.csv"
-params.samplename_library = "${baseDir}/../../inputs/walkup92_TIM123contamination_libraries.csv"
+params.samplename_library = "${baseDir}/../../inputs/walkup103_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
@@ -46,7 +45,7 @@ workflow {
 
     // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
     // Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
-    Channel.fromPath("${baseDir}/../../inputs/walkup92_TIM123_fastqs.csv")
+    Channel.fromPath("${baseDir}/../../inputs/walkup103_fastqs.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
