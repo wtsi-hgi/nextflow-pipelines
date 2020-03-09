@@ -1,5 +1,4 @@
 nextflow.preview.dsl=2
-// branch rna_seq_dddmouse
 
 params.min_reads = 500   // used by crams_to_fastq_gz
 params.genome = 'GRCh38' // used by star aligner
@@ -11,7 +10,7 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'study5607' // HG_RNASeq of cellular DDD models pilot
+params.runtag = 'dddmouse1' // HG_RNASeq of cellular DDD models pilot
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 params.run_deseq2 = false
