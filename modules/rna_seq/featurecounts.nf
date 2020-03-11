@@ -8,7 +8,8 @@ params.unstranded = false
 
 process featureCounts {
     tag "${samplename}"
-    container "nfcore-rnaseq"
+    // container "nfcore-rnaseq"
+    conda "/lustre/scratch118/humgen/resources/conda/star"
     memory = '5G'
     time '300m'
     cpus 1
