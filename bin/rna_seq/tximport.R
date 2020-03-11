@@ -8,7 +8,8 @@ library(AnnotationHub)
 library(tximport)
 library(magrittr)
 library(readr)
-queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+#queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+queries = query(AnnotationHub(), c(args[1], "Mus musculus"))
 edb = queries[[1]]
 edb
 Tx <- transcripts(edb, return.type="DataFrame")
