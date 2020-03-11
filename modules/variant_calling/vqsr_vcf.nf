@@ -11,8 +11,7 @@ process vqsr_vcf {
     time '700m'
     queue 'normal'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vqsr.vcf.gz"
-    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.vqsr.vcf.gz.csi"
+    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.pdf"
     
     maxRetries 2
 
@@ -23,7 +22,8 @@ process vqsr_vcf {
     tuple file(vcf), file(tbi)
     
     output:
-    tuple file("*.vqsr.vcf.gz"), file("*.vqsr.vcf.gz.tbi"), emit: vcf_csi 
+    tuple file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
+    tuple file("*.R"), file("*.pdf"), emit: plots
 
     script:
     def simplename = vcf.getSimpleName()
