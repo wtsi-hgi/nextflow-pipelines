@@ -27,8 +27,8 @@ def pick_aligner(String aligner) {
 // params.se_suffix    = '.fastq.gz'
 
 //params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
-//Channel.fromPath(params.star_index)
-Channel.fromPath("/lustre/scratch118/humgen/resources/conda/star_index")
+params.star_index = "/lustre/scratch118/humgen/resources/conda/star_index"
+Channel.fromPath(params.star_index)
     .ifEmpty { exit 1, "star index file not found: ${params.star_index}" }
     .set { ch_star_index}
 
