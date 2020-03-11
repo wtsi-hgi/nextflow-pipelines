@@ -50,10 +50,11 @@ Channel.fromPath(params.salmon_index)
     .set {ch_salmon_index}
 
 // params.salmon_trans_gene = params.genome ? params.genomes[ params.genome ].salmon_trans_gene ?: false : false
-params.salmon_trans_gene = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/trans_gene.txt"
-Channel.fromPath(params.salmon_trans_gene)
-    .ifEmpty { exit 1, "Salmon trans gene file not found: ${params.salmon_trans_gene}" }
-    .set {ch_salmon_trans_gene}
+
+//params.salmon_trans_gene = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/trans_gene.txt"
+//Channel.fromPath(params.salmon_trans_gene)
+//    .ifEmpty { exit 1, "Salmon trans gene file not found: ${params.salmon_trans_gene}" }
+//    .set {ch_salmon_trans_gene}
 
 
 include iget_cram from '../modules/rna_seq/irods.nf' params(run:true, outdir: params.outdir,
@@ -136,7 +137,7 @@ workflow {
     
     fastqc(ch_samplename_crams)
 
-    salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
+    salmon(ch_samplename_crams, ch_salmon_index.collect()) //, ch_salmon_trans_gene.collect())
 
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
 
