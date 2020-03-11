@@ -11,7 +11,7 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'dddmouse1' // HG_RNASeq of cellular DDD models pilot
+params.runtag = 'dddmouse' // HG_RNASeq of cellular DDD models pilot
 params.ensembl_lib = "Ensembl 91 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 params.run_deseq2 = false
@@ -32,7 +32,6 @@ Channel.fromPath("/lustre/scratch118/humgen/resources/conda/star_index")
     .ifEmpty { exit 1, "star index file not found: ${params.star_index}" }
     .set { ch_star_index}
 
-salmon_index = "/lustre/scratch118/humgen/resources/conda/salmon_tindex"
 
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
 Channel.fromPath("/lustre/scratch118/humgen/resources/ddd_mouse_genomes/with_cassette/Mus_musculus.GRCm38.99.gtf")
@@ -44,7 +43,8 @@ Channel.fromPath(params.biotypes_header)
     .set { ch_biotypes_header }
 
 // params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
-params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/salmon"
+// params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/salmon"
+params.salmon_index = "/lustre/scratch118/humgen/resources/conda/salmon_tindex"
 Channel.fromPath(params.salmon_index)
     .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
     .set {ch_salmon_index}
