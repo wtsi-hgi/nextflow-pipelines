@@ -18,7 +18,7 @@ process salmon {
     input:
     set val(samplename), file(reads) // from ch_salmon
     file salmon_index_dir // from ch_salmon_index.collect()
-    file salmon_trans_gene_txt // from ch_salmon_trans_gene.collect()
+    //file salmon_trans_gene_txt // from ch_salmon_trans_gene.collect()
 
     output:
     file "${samplename}.quant.sf" // into ch_salmon_trans
@@ -39,7 +39,6 @@ process salmon {
         -o . \\
         -1 ${reads[0]} \\
         -2 ${reads[1]} \\
-        -g ${salmon_trans_gene_txt} \\
         --useVBOpt \\
         --numBootstraps 100
     mv quant.sf ${samplename}.quant.sf
@@ -54,3 +53,5 @@ process salmon {
     // Include the row names so merger can check identity.
     // The merge step will concatenate the rows and re-transpose to obtain final result.
 }
+
+       // -g ${salmon_trans_gene_txt} \\
