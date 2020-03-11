@@ -70,6 +70,7 @@ include tximport from '../modules/rna_seq/tximport.nf' params(run: true, outdir:
 						 ensembl_lib: params.ensembl_lib)
 
 include star_2pass_basic from '../modules/rna_seq/star_2pass_basicmode.nf' params(run: true, outdir: params.outdir)
+include star_transcriptomesam from '../modules/rna_seq/star_transcriptomesam.nf' params(run: true, outdir: params.outdir)
 
 include star_2pass_1st_pass from '../modules/rna_seq/star_2pass_firstpass.nf' params(run: true, outdir: params.outdir)
 include star_2pass_merge_junctions from '../modules/rna_seq/star_2pass_merge_junctions.nf' params(run: true, outdir: params.outdir)
@@ -145,6 +146,7 @@ workflow {
     heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
     
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+    star_transcriptomesam(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 
     //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
