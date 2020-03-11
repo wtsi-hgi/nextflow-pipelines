@@ -58,7 +58,8 @@ process 'star_transcriptomesam' {
         --outFileNamePrefix ${samplename}.
 
   # Index the BAM file
-  samtools index ${samplename}.Aligned.sortedByCoord.out.bam
+  rm ${samplename}.Aligned.sortedByCoord.out.bam
+  samtools index ${samplename}.Aligned.toTranscriptome.out.bam
   rm -f Log.out 
   rm -f log.out 
   """
