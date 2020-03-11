@@ -1,7 +1,8 @@
 nextflow.preview.dsl=2
 
 params.min_reads = 500   // used by crams_to_fastq_gz
-params.genome = 'GRCh38' // used by star aligner
+//params.genome = 'GRCh38' // used by star aligner
+
 params.fcextra = ""      // used by featurecounts
 params.min_pct_aln  = 5 // used to filter STAR alignements, checking if align rate below threshold
 params.singleend = false       // used by featurecounts
@@ -25,13 +26,16 @@ def pick_aligner(String aligner) {
 // params.pe_suffix_pattern  = '_{1,2}.fastq.gz'
 // params.se_suffix    = '.fastq.gz'
 
-params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
-Channel.fromPath(params.star_index)
+//params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
+//Channel.fromPath(params.star_index)
+Channel.fromPath("/lustre/scratch118/humgen/resources/conda/star_index")
     .ifEmpty { exit 1, "star index file not found: ${params.star_index}" }
     .set { ch_star_index}
-    
+
+salmon_index = "/lustre/scratch118/humgen/resources/conda/salmon_tindex"
+
 params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
-Channel.fromPath(params.gtf)
+Channel.fromPath("/lustre/scratch118/humgen/resources/ddd_mouse_genomes/with_cassette/Mus_musculus.GRCm38.99.gtf")
     .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
     .set { ch_gtf_star }
 
