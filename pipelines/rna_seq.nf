@@ -113,5 +113,5 @@ workflow {
 	.map{a,b,c-> tuple(a,c)}
     
     to_iget.view()
-    //iget_cram(to_iget)
+    iget_cram(to_iget)
 }
