@@ -16,8 +16,7 @@ process iget_cram {
     params.run
 
     input: 
-    val samplename //from sample_list_irods.flatMap{ it.readLines() }
-    val studyid //from sample_list_irods.flatMap{ it.readLines() }
+    tuple val(samplename), val(studyid)
 
     output: 
     set val(samplename), file('*.cram') optional true // into ch_cram_files
