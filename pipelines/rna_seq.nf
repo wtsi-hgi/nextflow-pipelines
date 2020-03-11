@@ -33,8 +33,9 @@ Channel.fromPath(params.star_index)
     .set { ch_star_index}
 
 
-params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
-Channel.fromPath("/lustre/scratch118/humgen/resources/ddd_mouse_genomes/with_cassette/Mus_musculus.GRCm38.99.gtf")
+// params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
+params.gtf = "/lustre/scratch118/humgen/resources/ddd_mouse_genomes/with_cassette/Mus_musculus.GRCm38.99.gtf"
+Channel.fromPath(params.gtf)
     .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
     .set { ch_gtf_star }
 
