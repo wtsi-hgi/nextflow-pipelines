@@ -111,6 +111,7 @@ workflow {
 	.splitCsv(header: true, sep: '\t')
 	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
 	.map{a,b,c-> tuple(a,c)}
+	.toSortedList()
     
     to_iget.view()
     iget_cram(to_iget)
