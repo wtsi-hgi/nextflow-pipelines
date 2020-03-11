@@ -27,6 +27,8 @@ process salmon {
 
     script:
     """
+  export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
+
     salmon quant \\
         -i ${salmon_index_dir} \\
         -l ISR \\
