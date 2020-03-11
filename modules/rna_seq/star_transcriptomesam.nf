@@ -43,7 +43,7 @@ process 'star_transcriptomesam' {
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+  export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
 
     STAR --genomeDir ${genomeDir} \\
         --sjdbGTFfile $gtf \\
