@@ -116,13 +116,13 @@ workflow {
 	//.toSortedList()
     
     //to_iget.view()
-    iget_cram(to_iget.take(2))
+    iget_cram(to_iget)
 
     //// from irods studyid and list of samplenames
     //iget_cram(
     //	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
     //	    .flatMap{ it.readLines()}, "5933")
-    crams_to_fastq_gz(iget_cram.out[0])
+    crams_to_fastq_gz(iget_cram.out[0].take(2))
     ////
 
     //// from cram files:
