@@ -116,7 +116,7 @@ workflow {
 	//.toSortedList()
     
     //to_iget.view()
-    iget_cram(to_iget)
+    iget_cram(to_iget.take(2))
 
     //// from irods studyid and list of samplenames
     //iget_cram(
