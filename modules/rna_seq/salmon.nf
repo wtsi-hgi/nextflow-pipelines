@@ -4,7 +4,8 @@ process salmon {
     tag "salmon $samplename"
     //memory = '10G'
     memory = {  10.GB + 20.GB * (task.attempt-1) }
-    container "salmon"
+    // container "salmon"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
     time '700m'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
