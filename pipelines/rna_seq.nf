@@ -114,7 +114,7 @@ workflow {
 	.map{a,b,c-> tuple(a,c)}
 	//.toSortedList()
     
-    to_iget.view()
+    //to_iget.view()
     iget_cram(to_iget)
 
     //// from irods studyid and list of samplenames
