@@ -2,7 +2,8 @@ params.run = true
 
 process 'star_2pass_basic' {
     tag "${samplename}"
-    container "nfcore-rnaseq"
+    // container "nfcore-rnaseq"
+    conda "/lustre/scratch118/humgen/resources/conda/star"
     time '600m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
