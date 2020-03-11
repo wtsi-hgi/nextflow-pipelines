@@ -201,7 +201,7 @@ workflow {
 	    ch_multiqc_fc_aligner.collect().ifEmpty([]),
 	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
 	    star_out[2].collect().ifEmpty([]),
-	    salmon.out[2].collect().ifEmpty([]))
+	    salmon.out[1].collect().ifEmpty([]))
  
     if(params.run_deseq2)
 	deseq2(salmon.out[0].collect(), Channel.fromPath(params.deseq2_tsv))
