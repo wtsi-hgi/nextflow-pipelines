@@ -9,7 +9,7 @@ process baton_study_id {
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
     maxForks 12
-    publishDir "${params.outdir}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
+    publishDir "${params.outdir}/samples/${study_id}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
 
     when:
     params.run
