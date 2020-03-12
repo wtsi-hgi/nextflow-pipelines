@@ -34,7 +34,6 @@ python /lustre/scratch118/humgen/resources/rstudio_server_libs/DEXSeq/python_scr
     -f bam \\
     -a 10 \\
     ${dexseq_gff} ${bam} ${samplename}.dexseq.txt
-
   """
 }
 // https://bioconductor.org/packages/3.11/bioc/vignettes/DEXSeq/inst/doc/DEXSeq.html
