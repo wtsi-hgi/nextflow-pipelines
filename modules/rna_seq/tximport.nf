@@ -1,5 +1,5 @@
 params.run = true 
-params.ensembl_lib = "Ensembl 91 EnsDb"
+params.ensembl_lib = "Ensembl 99 EnsDb"
 
 process tximport {
     tag "tximport $params.ensembl_lib"
@@ -32,6 +32,7 @@ process tximport {
 
     script:
     """
+    export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
     ls . | grep .quant.sf\$ > fofn_quantfiles.txt
 
     /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/tximport.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
