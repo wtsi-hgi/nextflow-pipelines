@@ -15,7 +15,7 @@ workflow {
 	.map{vcf -> tuple(vcf.getSimpleName(),vcf)}
 	.combine(
 	ch_vcfs_gz_tbi
-	    .map{tbi -> tuple(csi.getSimpleName(),tbi)}, by: 0)
+	    .map{tbi -> tuple(tbi.getSimpleName(),tbi)}, by: 0)
 	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
     ch_name_vcf_tbi.view()
