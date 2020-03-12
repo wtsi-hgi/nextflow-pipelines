@@ -19,7 +19,7 @@ workflow {
 	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
     ch_name_vcf_tbi.view()
-    println "End"
+    println "End od workflow."
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
-
+    vqsr_vcf(ch_name_vcf_tbi)
 }
