@@ -4,8 +4,9 @@ params.ensembl_lib = "Ensembl 91 EnsDb"
 process tximport {
     tag "tximport $params.ensembl_lib"
     memory = '80G'
-    container "singularity-rstudio-seurat-tximport"
-    containerOptions = "--bind /tmp --bind /lustre"
+    //container "singularity-rstudio-seurat-tximport"
+    //containerOptions = "--bind /tmp --bind /lustre"
+    conda "/lustre/scratch118/humgen/resources/conda/star"
     time '400m'
     cpus 1
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
