@@ -43,16 +43,17 @@ Channel.fromPath(params.gff_dexseq)
     .ifEmpty { exit 1, "GFF annotation file not found: ${params.gtf}" }
     .set { ch_gff_dexseq }
 
-Channel.fromPath(params.biotypes_header)
-    .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
-    .set { ch_biotypes_header }
-
 // params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
 // params.salmon_index = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/salmon"
 params.salmon_index = "/lustre/scratch118/humgen/resources/conda/salmon_tindex"
 Channel.fromPath(params.salmon_index)
     .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
     .set {ch_salmon_index}
+
+
+Channel.fromPath(params.biotypes_header)
+    .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
+    .set { ch_biotypes_header }
 
 // params.salmon_trans_gene = params.genome ? params.genomes[ params.genome ].salmon_trans_gene ?: false : false
 
