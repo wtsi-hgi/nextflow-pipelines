@@ -6,7 +6,8 @@ process salmon {
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     // container "salmon"
     conda '/lustre/scratch118/humgen/resources/conda/star'
-    time '700m'
+    queue 'long'
+    time '1400m'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     maxRetries 6
     
@@ -43,6 +44,7 @@ process salmon {
         -2 ${reads[1]} \\
         --useVBOpt \\
         --numBootstraps 100
+    mv quant.sf ${samplename}.quant.sf
     mkdir -p my_outs/${samplename}/libParams
     mkdir -p my_outs/${samplename}/aux_info
     ln -f aux_info/meta_info.json my_outs/${samplename}/aux_info/meta_info.json
