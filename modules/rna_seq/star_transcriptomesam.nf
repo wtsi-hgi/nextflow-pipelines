@@ -11,12 +11,11 @@ process 'star_transcriptomesam' {
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
     
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam.bai"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.bam"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.tab"
     
-    publishDir "${params.outdir}/star_pass2_basic_multiqc/", mode: 'copy',
+    publishDir "${params.outdir}/star_transcriptomesam_multiqc/", mode: 'copy',
         saveAs: { filename ->
             if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
             else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
@@ -33,12 +32,11 @@ process 'star_transcriptomesam' {
     params.run
     
   output:
-    set val(samplename), file ('*.bam'), file ('*.bai') //into star_aligned_with_bai
+    set val(samplename), file ("${samplename}.Aligned.toTranscriptome.out.bam") //into star_aligned_with_bai
     set val(samplename), file("*Log.final.out"), file ('*.bam') //into star_aligned
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     set file("*.Log.final.out"), file("*.Log.out"), file("*.progress.out") //into ch_alignment_logs_star
     file "*.SJ.out.tab"
-    tuple val(samplename), file("${samplename}.ReadsPerGene.out.tab"), emit: samplename_readspergene_tab
 
   script:
 
