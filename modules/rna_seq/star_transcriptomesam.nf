@@ -4,7 +4,7 @@ process 'star_transcriptomesam' {
     tag "${samplename}"
     // container "nfcore-rnaseq"
     conda "/lustre/scratch118/humgen/resources/conda/star"
-    time '600m'
+    time '700m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
