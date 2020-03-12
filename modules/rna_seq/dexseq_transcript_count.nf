@@ -7,13 +7,11 @@ process 'dexseq_transcript_count' {
     time '700m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
-    cpus =   {  2 * 2 * Math.min(2, task.attempt) }
-    memory = {  80.GB + 40.GB * (task.attempt-1) }
-    maxRetries 3
+    cpus =  1 // {  2 * 2 * Math.min(2, task.attempt) }
+    memory = 10.GB //{  80.GB + 40.GB * (task.attempt-1) }
+    maxRetries 2
     
-    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.bam"
-    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/dexseq_transcript_count/", mode: 'symlink', pattern: "${samplename}.dexseq.txt"
 
   input:
     set val(samplename), file(bam) //from ch_star // _reads_only
