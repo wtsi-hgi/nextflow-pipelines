@@ -38,6 +38,11 @@ Channel.fromPath(params.gtf)
     .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
     .set { ch_gtf_star }
 
+params.gff_dexseq = "/lustre/scratch118/humgen/resources/conda/DEXSeq.Mus_musculus.GRCm38.99.gff"
+Channel.fromPath(params.gff_dexseq)
+    .ifEmpty { exit 1, "GFF annotation file not found: ${params.gtf}" }
+    .set { ch_gff_dexseq }
+
 Channel.fromPath(params.biotypes_header)
     .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
     .set { ch_biotypes_header }
@@ -149,7 +154,7 @@ workflow {
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     
     star_transcriptomesam(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-    dexseq_transcript_count(star_transcriptomesam.out[0])
+    dexseq_transcript_count(star_transcriptomesam.out[0], ch_gff_dexseq)
     //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     //star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
