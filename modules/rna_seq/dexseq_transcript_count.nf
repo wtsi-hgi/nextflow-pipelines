@@ -30,7 +30,14 @@ process 'dexseq_transcript_count' {
   """
   export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
 
-python /lustre/scratch118/humgen/resources/rstudio_server_libs/DEXSeq/python_scripts/dexseq_count.py ${dexseq_gff} ${bam} ${samplename}.dexseq.txt
+python /lustre/scratch118/humgen/resources/rstudio_server_libs/DEXSeq/python_scripts/dexseq_count.py \\
+    -p yes \\
+    -s reverse \\
+    -f bam \\
+    -a 10 \\
+    ${dexseq_gff} ${bam} ${samplename}.dexseq.txt
+
   """
 }
+// https://bioconductor.org/packages/3.11/bioc/vignettes/DEXSeq/inst/doc/DEXSeq.html
 
