@@ -18,8 +18,11 @@ workflow {
 	    .map{tbi -> tuple(tbi.getSimpleName(),tbi)}, by: 0)
 	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
-    ch_name_vcf_tbi.view()
-    println "End od workflow."
+    ch_name_vcf_tbimap{name, vcf,tbi -> tuple(vcf,tbi)}.view()
+   // ch_name_vcf_tbi.view()
+
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
-    vqsr_vcf(ch_name_vcf_tbi)
+  //  vqsr_vcf(ch_name_vcf_tbi)
+
+      println "End of workflow."
 }
