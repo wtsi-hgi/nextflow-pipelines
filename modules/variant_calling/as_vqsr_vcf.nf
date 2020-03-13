@@ -1,7 +1,7 @@
 params.run = true
 
 process vqsr_vcf {
-    memory '5G'
+    memory '75G'
     tag "vqsr $vcf"
     cpus 2
     //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
