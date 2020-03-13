@@ -55,8 +55,8 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
  	-an ReadPosRankSum \
  	-an FS \
  	-an SOR \
+     --use-allele-specific-annotations \
  	-mode INDEL \
-    -AS
  	--max-gaussians 4 \
  	-O ${vcf}.indels.recal \
  	--tranches-file ${vcf}.indels.tranches \
@@ -87,8 +87,8 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	-an ReadPosRankSum \
 	-an FS \
 	-an SOR \
+    --use-allele-specific-annotations \
 	-mode SNP \
-    -AS
 	--max-gaussians 6 \
 	-O ${vcf}.snps.recal \
 	--tranches-file ${vcf}.snps.tranches \
