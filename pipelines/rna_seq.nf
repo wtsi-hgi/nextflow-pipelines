@@ -155,7 +155,7 @@ workflow {
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     
     star_transcriptomesam(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
-    dexseq_transcript_count(star_transcriptomesam.out[0], ch_gff_dexseq)
+    dexseq_transcript_count(star_transcriptomesam.out[0], ch_gff_dexseq.collect())
     //star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     //star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     //star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
