@@ -20,7 +20,7 @@ workflow {
 	.set{ch_name_vcf_tbi}
     ch_name_vcf_tbi.map{name, vcf,tbi -> tuple(vcf,tbi)}.view()
    // ch_name_vcf_tbi.view()
-
+    vqsr_vcf(ch_name_vcf_tbi.map{name, vcf,tbi -> tuple(vcf,tbi)})
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
   //  vqsr_vcf(ch_name_vcf_tbi)
 

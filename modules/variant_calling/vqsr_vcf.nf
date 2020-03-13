@@ -1,7 +1,7 @@
 params.run = true
 
 process vqsr_vcf {
-    memory '750G'
+    memory '75G'
     tag "vqsr $vcf"
     cpus 2
     //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
@@ -56,6 +56,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
  	-an FS \
  	-an SOR \
  	-mode INDEL \
+	 -AS
  	--max-gaussians 4 \
  	-O ${vcf}.indels.recal \
  	--tranches-file ${vcf}.indels.tranches \
@@ -87,6 +88,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	-an FS \
 	-an SOR \
 	-mode SNP \
+	-AS
 	--max-gaussians 6 \
 	-O ${vcf}.snps.recal \
 	--tranches-file ${vcf}.snps.tranches \
