@@ -2,7 +2,7 @@ nextflow.preview.dsl=2
 params.run_vqsr = true
 
 
-params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf/"
+params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf"
 Channel.fromPath("${params.vcfs_dir}/interval_wes_stripped.vcf.gz")
 	.set{ch_vcfs_gz}
 Channel.fromPath("${params.vcfs_dir}/interval_wes_stripped.vcf.gz.tbi")
