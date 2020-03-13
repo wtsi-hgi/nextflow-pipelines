@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+git checkout rna_seq_dddmouse
+git pull --recurse-submodules 
+git submodule sync
+git submodule update --init --recursive --remote
+git add .gitmodules && git add nextflow-pipelines && git commit -m "modified submodule URL" && git push -u origin
+
 # farm5 config
 export http_proxy=http://wwwcache.sanger.ac.uk:3128
 export https_proxy=http://wwwcache.sanger.ac.uk:3128
