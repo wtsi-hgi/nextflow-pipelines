@@ -22,7 +22,7 @@ workflow {
     ch_name_vcf_tbi.map{name, vcf,tbi -> tuple(vcf,tbi)}.view()
    // ch_name_vcf_tbi.view()
    if (params.run_vqsr) {
-       vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(vcf,tbi)})
+      // vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(vcf,tbi)})
        vqsr_vcf('/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf/interval_wes_stripped.vcf.gz','/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf/interval_wes_stripped.vcf.gz.tbi')
    }
 
