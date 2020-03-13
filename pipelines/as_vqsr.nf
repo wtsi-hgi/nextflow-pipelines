@@ -19,11 +19,12 @@ workflow {
 	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
 
+    ch_name_vcf_tbi.view()
     ch_name_vcf_tbi.map{name, vcf,tbi -> tuple(vcf,tbi)}.view()
+
    // ch_name_vcf_tbi.view()
    if (params.run_vqsr) {
-      // vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(vcf,tbi)})
-       vqsr_vcf('/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf/interval_wes_stripped.vcf.gz','/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf/interval_wes_stripped.vcf.gz.tbi')
+      vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(vcf,tbi)})
    }
 
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
