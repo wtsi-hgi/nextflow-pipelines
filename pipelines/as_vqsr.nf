@@ -19,7 +19,8 @@ workflow {
 	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
 
-    ch_name_vcf_tbi.view()
+    ch_vcfs_gz.view()
+    ch_vcfs_gz_tbi.view()
 
    // ch_name_vcf_tbi.view()
    if (params.run_vqsr) {
