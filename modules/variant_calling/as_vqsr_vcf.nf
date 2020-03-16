@@ -107,8 +107,8 @@ echo indel_apply
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O recal_indel${vcf} \
- 	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.indels.tranches \
-        --recal-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.indels.recal \
+ 	--tranches-file ${vcf}.indels.tranches \
+        --recal-file ${vcf}.indels.recal \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.5 \
         -mode INDEL
@@ -117,8 +117,8 @@ echo SNP_apply
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O "recal_snp${vcf} \
- 	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.tranches \
-        --recal-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.recal \
+ 	--tranches-file ${vcf}.snps.tranches  \
+        --recal-file ${vcf}.snps.recal \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.7 \
         -mode SNP
