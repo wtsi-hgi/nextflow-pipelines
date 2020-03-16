@@ -9,7 +9,8 @@ process baton_study_id {
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
     maxForks 12
-    publishDir "${params.outdir}/samples/${study_id}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
+    publishDir "${params.outdir}/samples/study_id_${study_id}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
+    publishDir "${params.outdir}/samples/study_id_${study_id}/", mode: 'copy', pattern: "samples_noduplicates.tsv", overwrite: true
 
     when:
     params.run
@@ -19,9 +20,11 @@ process baton_study_id {
 
     output: 
     tuple val(study_id), file('samples.tsv'), emit: samples_tsv
+    tuple val(study_id), file('samples_noduplicates.tsv'), emit: samples_noduplicates_tsv
 
     script:
     """
     bash $workflow.projectDir/../bin/rna_seq/baton.sh ${study_id}
+    awk '!a[\$1]++' samples.tsv > samples_noduplicates.tsv
     """
 }
