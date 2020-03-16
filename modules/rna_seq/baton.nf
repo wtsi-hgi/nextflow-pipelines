@@ -25,6 +25,7 @@ process baton_study_id {
     script:
     """
     bash $workflow.projectDir/../bin/rna_seq/baton.sh ${study_id}
-    awk '!a[\$1]++' samples.tsv > samples_noduplicates.tsv
+    awk '!a[\$1]++' samples.tsv > samples_noduplicates.tsv 
     """
 }
+// awk removes duplicates in the sense that one sanger sample can have several run_id
