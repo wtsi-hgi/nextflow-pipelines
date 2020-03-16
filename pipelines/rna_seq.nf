@@ -7,7 +7,7 @@ params.fcextra = ""      // used by featurecounts
 params.min_pct_aln  = 5 // used to filter STAR alignements, checking if align rate below threshold
 params.singleend = false       // used by featurecounts
 params.forward_stranded = false  // used by featurecounts
-params.reverse_stranded = true  // used by featurecounts
+
 params.unstranded = false  // used by featurecounts
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
@@ -115,7 +115,7 @@ workflow {
     ch_studies = Channel.from( '5367', '4821', '4771', '5777')
     baton_study_id(ch_studies)
 
-    to_iget = baton_study_id.out.samples_tsv
+    to_iget = baton_study_id.out.samples_noduplicates_tsv
 	.map{a,b -> b}
 	.splitCsv(header: true, sep: '\t')
 	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
