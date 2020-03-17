@@ -49,7 +49,6 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
  	--resource:axiomPoly,known=false,training=true,truth=false,prior=10.0 \${axiomPoly_resource} \
  	--resource:dbsnp,known=true,training=false,truth=false,prior=2.0 \${dbSNP} \
  	--trust-all-polymorphic \
- 	-an DP \
  	-an QD \
  	-an MQRankSum \
  	-an ReadPosRankSum \
@@ -64,12 +63,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
  	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
  	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
  	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
- 	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 \
- 	-tranche 89.0 -tranche 88.0 -tranche 87.0 -tranche 86.0 -tranche 85.0 \
- 	-tranche 84.0 -tranche 83.0 -tranche 82.0 -tranche 81.0 -tranche 80.0 \
-	-tranche 79.0 -tranche 78.0 -tranche 77.0 -tranche 76.0 -tranche 75.0 \
- 	-tranche 74.0 -tranche 73.0 -tranche 72.0 -tranche 71.0 -tranche 70.0 \
- 	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
+ 	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 
 
 echo SNPS
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
@@ -80,7 +74,6 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	--resource:1000G,known=false,training=true,truth=false,prior=10.0 \${snps_1000G} \
 	--resource:dbsnp,known=true,training=false,truth=false,prior=7.0 \${dbSNP} \
 	--trust-all-polymorphic \
-	-an DP \
 	-an QD \
 	-an MQ \
 	-an MQRankSum \
@@ -96,15 +89,11 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
 	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
 	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
-	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 \
-	-tranche 89.0 -tranche 88.0 -tranche 87.0 -tranche 86.0 -tranche 85.0 \
-	-tranche 84.0 -tranche 83.0 -tranche 82.0 -tranche 81.0 -tranche 80.0 \
-	-tranche 79.0 -tranche 78.0 -tranche 77.0 -tranche 76.0 -tranche 75.0 \
-	-tranche 74.0 -tranche 73.0 -tranche 72.0 -tranche 71.0 -tranche 70.0 \
-	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
+	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 
+
 
 echo indel_apply
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O recal_indel${vcf} \
  	--tranches-file ${vcf}.indels.tranches \
@@ -114,7 +103,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /
         -mode INDEL
 
 echo SNP_apply
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O "recal_snp${vcf} \
  	--tranches-file ${vcf}.snps.tranches  \
