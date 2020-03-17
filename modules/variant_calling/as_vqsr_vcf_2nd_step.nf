@@ -1,6 +1,6 @@
 params.run = true
 
-process vqsr_vcf {
+process vqsr_vcf_apply {
     memory '75G'
     tag "vqsr $vcf"
     cpus 2

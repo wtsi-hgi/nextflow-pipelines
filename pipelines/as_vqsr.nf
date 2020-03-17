@@ -9,7 +9,7 @@ Channel.fromPath("${params.vcfs_dir}/interval_wes_stripped.vcf.gz.tbi")
 	.set{ch_vcfs_gz_tbi}
 
 include vqsr_vcf from '../modules/variant_calling/as_vqsr_vcf_1st_step.nf' params(run: true, outdir: params.outdir)
-include vqsr_vcf_second_step from '../modules/variant_calling/as_vqsr_vcf_2nd_step.nf' params(run: true, outdir: params.outdir)
+include vqsr_vcf_apply from '../modules/variant_calling/as_vqsr_vcf_2nd_step.nf' params(run: true, outdir: params.outdir)
 
 workflow {
     ch_vcfs_gz
