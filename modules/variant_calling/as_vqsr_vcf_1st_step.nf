@@ -19,10 +19,10 @@ process vqsr_vcf {
     params.run
      
     input:
-    tuple val(name), file(vcf), file(tbi)
+    tuple file(name), file(vcf), file(tbi)
     
     output:
-    tuple val(name), file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
+    tuple file(name), file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
     tuple file("${name}.snps.recal"), file("${name}.indels.recal"), emit: recal
     tuple file("*.R"), file("*.pdf"), emit: plots
 
