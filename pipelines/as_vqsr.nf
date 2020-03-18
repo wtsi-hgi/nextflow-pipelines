@@ -17,7 +17,7 @@ workflow {
 	.combine(
 	ch_vcfs_gz_tbi
 	    .map{tbi -> tuple(tbi.getSimpleName(),tbi)}, by: 0)
-	.take(1) // replace with take(-1) to select all inputs
+	.take(2) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
 
     

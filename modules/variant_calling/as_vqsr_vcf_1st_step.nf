@@ -58,9 +58,9 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
      --use-allele-specific-annotations \
  	-mode INDEL \
  	--max-gaussians 4 \
- 	-O  ${vcf}.indels.recal \
- 	--tranches-file ${vcf}.indels.tranches \
- 	--rscript-file ${vcf}.indels.plots.R \
+ 	-O  ${name}.indels.recal \
+ 	--tranches-file ${name}.indels.tranches \
+ 	--rscript-file ${name}.indels.plots.R \
  	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
  	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
  	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
@@ -84,9 +84,9 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
     --use-allele-specific-annotations \
 	-mode SNP \
 	--max-gaussians 6 \
-	-O ${vcf}.snps.recal \
-	--tranches-file ${vcf}.snps.tranches \
-	--rscript-file ${vcf}.snps.plots.R \
+	-O ${name}.snps.recal \
+	--tranches-file ${name}.snps.tranches \
+	--rscript-file ${name}.snps.plots.R \
 	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
 	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
 	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
