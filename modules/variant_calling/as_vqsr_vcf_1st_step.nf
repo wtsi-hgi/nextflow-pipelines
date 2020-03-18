@@ -19,10 +19,10 @@ process vqsr_vcf {
     params.run
      
     input:
-    tuple file(name), file(vcf), file(tbi)
+    tuple val(name), file(vcf), file(tbi)
     
     output:
-    tuple file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
+    tuple val(name), file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
     tuple file("${name}.snps.recal"), file("${name}.indels.recal"), emit: recal
     tuple file("*.R"), file("*.pdf"), emit: plots
 
@@ -91,6 +91,8 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
 	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
 	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 
+
+    
 
 """
 }

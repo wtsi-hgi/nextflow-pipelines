@@ -1,5 +1,6 @@
 nextflow.preview.dsl=2
 params.run_vqsr = true
+params.apply_vqsr = true
 
 
 params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf"
@@ -21,16 +22,30 @@ workflow {
 	.set{ch_name_vcf_tbi}
 
     
-    ch_vcfs_gz_tbi.view()
 
 
 
    // ch_name_vcf_tbi.view()
    if (params.run_vqsr) {
-     vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(file(name),file(vcf),file(tbi))})
+     vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(val(name),file(vcf),file(tbi))})
     //vqsr_vcf.out.name_vcf_csi.view()
     vqsr_vcf.out.recal.view()
     vqsr_vcf.out.tranches.view()
+   }
+    ch_name_vcf_tbi
+  .combine(
+    vqsr_vcf.out.recal
+  )
+  .combine(
+    vqsr_vcf.out.tranches
+  )
+  .set(vqsr_step1_out)
+
+  vqsr_step1_out.view()
+    
+   if (params.apply_vqsr) {
+     vqsr_vcf_apply(vqsr_step1_out.map(name,vcf,tbi, snp_recal, indel_recal, snp_tranch, indel_tranch ) 
+     -> tuple(val(name),file(vcf),file(tbi), file(snp_recal), file(indel_recal),file(snp_tranch), file(indel_tranch) ))
    }
 
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})

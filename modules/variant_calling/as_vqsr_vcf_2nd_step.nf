@@ -19,11 +19,10 @@ process vqsr_vcf_apply {
     params.run
      
     input:
-    tuple file(vcf), file(tbi)
+    tuple val(name) file(vcf), file(snp_tranch), file(indel_tranch), file(snp_recal), file(indel_recal)
     
     output:
-    tuple file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
-    tuple file("*.R"), file("*.pdf"), emit: plots
+    tuple file("recal_indel_${vcf}"), file("recal_snp_${vcf}"), emit: apply_output
 
     script:
     def simplename = vcf.getSimpleName()
@@ -33,8 +32,8 @@ echo indel_apply
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O recal_indel_${vcf} \
- 	--tranches-file ${vcf}.indels.tranches \
-    --recal-file ${vcf}.indels.recal \
+ 	--tranches-file ${indel_tranch} \
+    --recal-file ${indel_recal} \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.5 \
         -mode INDEL
@@ -42,9 +41,9 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /
 echo SNP_apply
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
- 	-O "recal_snp_${vcf} \
- 	--tranches-file ${vcf}.snps.tranches  \
-    --recal-file ${vcf}.snps.recal \
+ 	-O recal_snp_${vcf} \
+ 	--tranches-file ${snp_tranch}  \
+    --recal-file ${snp_recal} \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.7 \
         -mode SNP
