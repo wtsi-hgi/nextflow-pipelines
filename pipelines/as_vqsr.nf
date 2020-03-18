@@ -44,7 +44,7 @@ workflow {
   vqsr_step1_out.view()
     
    if (params.apply_vqsr) {
-     vqsr_vcf_apply(vqsr_step1_out.map{name,vcf,tbi, snp_recal, indel_recal, snp_tranch, indel_tranch  -> tuple(val(name),file(vcf),file(tbi), file(snp_recal), file(indel_recal),file(snp_tranch), file(indel_tranch) ))
+     vqsr_vcf_apply(vqsr_step1_out.map{name,vcf,tbi, snp_recal, indel_recal, snp_tranch, indel_tranch  -> tuple(val(name),file(vcf),file(tbi), file(snp_recal), file(indel_recal),file(snp_tranch), file(indel_tranch))})
    }
 
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
