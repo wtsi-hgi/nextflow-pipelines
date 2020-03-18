@@ -39,7 +39,7 @@ workflow {
   vqsr_step1_out.view()
     
    if (params.apply_vqsr) {
-     vqsr_vcf_apply(vqsr_step1_out.map{name,vcf,tbi, snp_recal,snp_recal_index indel_recal, indel_recal_index, snp_tranch, indel_tranch  -> tuple(file(name),file(vcf),file(tbi), file(snp_recal), file(snp_recal_index), file(indel_recal), file(indel_recal_index), file(snp_tranch), file(indel_tranch))})
+     vqsr_vcf_apply(vqsr_step1_out.map{name,vcf,tbi, snp_recal,snp_recal_index, indel_recal, indel_recal_index, snp_tranch, indel_tranch  -> tuple(file(name),file(vcf),file(tbi), file(snp_recal), file(snp_recal_index), file(indel_recal), file(indel_recal_index), file(snp_tranch), file(indel_tranch))})
    }
 
 //vqsr_vcf(concat_vcfs.out.concat_vcf.map{vcf,csi,tbi -> tuple(vcf,tbi)})
