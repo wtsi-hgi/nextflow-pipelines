@@ -27,7 +27,8 @@ process vqsr_vcf_apply {
     script:
     def simplename = vcf.getSimpleName()
 
-'''
+""" 
+sleep 10
 CWD=\$PWD 
 GATK=/lustre/scratch119/humgen/teams/hgi/users/ad7/gatk-4.1.0.0/gatk-package-4.1.0.0-local.jar
 JAVA=/lustre/scratch119/realdata/mdt2/projects/interval_wgs/hgi/tools/java-8-openjdk-amd64/bin/java
@@ -59,6 +60,6 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /
         --truth-sensitivity-filter-level 99.7 \
         -mode SNP
 
-'''
+"""
 
 }
