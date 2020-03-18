@@ -28,6 +28,17 @@ process vqsr_vcf_apply {
     def simplename = vcf.getSimpleName()
 
 '''
+CWD=\$PWD 
+GATK=/lustre/scratch119/humgen/teams/hgi/users/ad7/gatk-4.1.0.0/gatk-package-4.1.0.0-local.jar
+JAVA=/lustre/scratch119/realdata/mdt2/projects/interval_wgs/hgi/tools/java-8-openjdk-amd64/bin/java
+ref_genome=/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/hs38DH.fa
+dbSNP=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/dbsnp_138.hg38.vcf.gz
+hapmap=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/hapmap_3.3.hg38.vcf.gz
+omni_1000G=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/1000G_omni2.5.hg38.vcf.gz
+snps_1000G=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/1000G_phase1.snps.high_confidence.hg38.vcf.gz
+Mills_indel=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Mills_and_1000G_gold_standard.indels.hg38.vcf.gz
+axiomPoly_resource=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Axiom_Exome_Plus.genotypes.all_populations.poly.hg38.vcf.gz
+
 echo indel_apply
 singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch118/humgen/hgi/projects/interval_wes/joint_calls/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
