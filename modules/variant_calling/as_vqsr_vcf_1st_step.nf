@@ -23,7 +23,7 @@ process vqsr_vcf {
     
     output:
     tuple file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
-    tuple file("${name}.snps.recal"), file("${name}.indels.recal"), emit: recal
+    tuple file("${name}.snps.recal"), file("${name}.snps.recal.idx"), file("${name}.indels.recal"),file("${name}.indels.recal.idx") emit: recal
     tuple file("*.R"), file("*.pdf"), emit: plots
 
     script:
