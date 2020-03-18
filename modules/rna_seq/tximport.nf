@@ -35,7 +35,7 @@ process tximport {
     export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
     ls . | grep .quant.sf\$ > fofn_quantfiles.txt
 
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/tximport.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
+    Rscript $workflow.projectDir/../bin/rna_seq/tximport.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
     """
 
     // TODO: prepare columns for merging; extract correct column and transpose (paste) it.
