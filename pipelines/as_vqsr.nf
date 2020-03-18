@@ -32,14 +32,9 @@ workflow {
     vqsr_vcf.out.recal.view()
     vqsr_vcf.out.tranches.view()
    }
-    ch_name_vcf_tbi
-  .combine(
-    vqsr_vcf.out.recal
-  )
-  .combine(
-    vqsr_vcf.out.tranches
-  )
-  .set(vqsr_step1_out)
+    ch_name_vcf_tbi.combine(
+    vqsr_vcf.out.recal).combine(
+    vqsr_vcf.out.tranches).set{vqsr_step1_out}
 
   vqsr_step1_out.view()
     
