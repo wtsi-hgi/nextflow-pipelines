@@ -13,6 +13,8 @@ include vqsr_vcf from '../modules/variant_calling/as_vqsr_vcf_1st_step.nf' param
 include vqsr_vcf_apply from '../modules/variant_calling/as_vqsr_vcf_2nd_step.nf' params(run: true, outdir: params.outdir)
 
 workflow {
+
+  // combine vcf name and its tbi index file to one channel to use as input to vqsr
     ch_vcfs_gz
 	.map{vcf -> tuple(vcf.getSimpleName(),vcf)}
 	.combine(
@@ -21,23 +23,21 @@ workflow {
 	.take(2) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_tbi}
 
-    
-
-
-
-   // ch_name_vcf_tbi.view()
+  //run VariantRecalibrator
    if (params.run_vqsr) {
      vqsr_vcf(ch_name_vcf_tbi.map{name,vcf,tbi -> tuple(file(name),file(vcf),file(tbi))})
     //vqsr_vcf.out.name_vcf_csi.view()
     vqsr_vcf.out.recal.view()
     vqsr_vcf.out.tranches.view()
    }
+
+   //Combine the output of Variantrecalibrator into one channel to use as input to ApplyVQSR step
     ch_name_vcf_tbi.combine(
     vqsr_vcf.out.recal).combine(
     vqsr_vcf.out.tranches).set{vqsr_step1_out}
-
-  vqsr_step1_out.view()
+    vqsr_step1_out.view()
     
+    //Run apply VQSR
    if (params.apply_vqsr) {
      vqsr_vcf_apply(vqsr_step1_out.map{name,vcf,tbi, snp_recal,snp_recal_index, indel_recal, indel_recal_index, snp_tranch, indel_tranch  -> tuple(file(name),file(vcf),file(tbi), file(snp_recal), file(snp_recal_index), file(indel_recal), file(indel_recal_index), file(snp_tranch), file(indel_tranch))})
    }
