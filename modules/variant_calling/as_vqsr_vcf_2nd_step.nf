@@ -19,7 +19,7 @@ process vqsr_vcf_apply {
     params.run
      
     input:
-    tuple file(name), file(vcf), file(tbi), file(snp_tranch), file(indel_tranch), file(snp_recal), file(indel_recal)
+    tuple file(name), file(vcf), file(tbi), file(snp_recal), file(indel_recal),file(snp_tranch), file(indel_tranch)
     
     output:
     tuple file("recal_indel_${vcf}"), file("recal_snp_${vcf}"), emit: apply_output
