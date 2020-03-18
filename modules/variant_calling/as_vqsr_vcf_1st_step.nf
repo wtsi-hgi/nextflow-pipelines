@@ -57,7 +57,7 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
      --use-allele-specific-annotations \
  	-mode INDEL \
  	--max-gaussians 4 \
- 	-O ${vcf}.indels.recal \
+ 	-O  ${vcf}.indels.recal \
  	--tranches-file ${vcf}.indels.tranches \
  	--rscript-file ${vcf}.indels.plots.R \
  	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
