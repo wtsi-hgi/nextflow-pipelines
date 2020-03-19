@@ -1,4 +1,7 @@
 #!/usr/bin/env Rscript
+Sys.setenv(LANG="en_US.UTF-8")
+lustre_libs = "/lustre/scratch118/humgen/resources/rstudio_server_libs"
+.libPaths(lustre_libs)
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)==0) {
