@@ -2,13 +2,14 @@ params.run = true
 
 process 'star_2pass_1st_pass' {
     tag "1st pass ${samplename}"
-    container "nfcore-rnaseq"
-    time '600m'
+    // container "nfcore-rnaseq"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
+    time '720m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
     memory = {  80.GB + 40.GB * (task.attempt-1) }
-    maxRetries 3
+    maxRetries 5
     
     publishDir "${params.outdir}/star_pass2_1stpass/$samplename", mode: 'symlink', pattern: "*.out"
     publishDir "${params.outdir}/star_pass2_1stpass/$samplename", mode: 'symlink', pattern: "*.tab"
@@ -36,7 +37,7 @@ process 'star_2pass_1st_pass' {
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
     # first pass 
     STAR --genomeDir ${genomeDir} \\
