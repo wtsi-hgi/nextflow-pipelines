@@ -9,18 +9,21 @@ process 'cellsnp' {
 
     cpus = 24
     time '8000m'
+    memory = 100.GB 
+// {  100.GB + 50.GB * (task.attempt-1) }
     // queue 'basement'
 
+    // maxForks 2
     tag "cellSNP $samplename"
     container "single_cell"
     containerOptions = "--bind /"
 
 
-    errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    memory = {  100.GB + 50.GB * (task.attempt-1) }
-    maxRetries 4
+    errorStrategy = { task.attempt <= 3 ? 'retry' : 'ignore' }
+    maxRetries 3
+    
 
-    publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
+    publishDir "${params.outdir}/cellsnp/", mode: 'symlink', pattern: "cellsnp_${samplename}"
 
     when:
     params.run 
@@ -31,6 +34,7 @@ process 'cellsnp' {
     
     output:
     tuple val(samplename), file("cellsnp_${samplename}"), emit: cellsnp_output_dir
+    tuple val(samplename), file("cellsnp_${samplename}/cellSNP.cells.vcf.gz"), emit: samplename_cellsvcfgz
 
   script:
    """

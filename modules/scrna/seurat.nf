@@ -13,7 +13,9 @@ process seurat {
     container "single_cell"
     containerOptions = "--bind /"
     memory = {  100.GB + 50.GB * (task.attempt-1) }
-    maxForks 100
+    maxForks 200
+    errorStrategy { task.attempt < 4 ? 'retry' : 'ignore' }
+    maxRetries 4
     ////// FCE 
 
     /// farm

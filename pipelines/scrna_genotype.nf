@@ -1,10 +1,17 @@
 nextflow.preview.dsl=2
 params.runtag = 'UkB_scRNA_fase2_4pooled'
+//1
 params.run_cellsnp = true
-params.run_vireo = true
-params.run_seurat = true
-params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
+//2.1
+params.run_vireo = false
+//2.2
+params.run_subset_genotype = true
+params.subset_genotype_samplelist = "${baseDir}/../../inputs/geno_subset_files.csv"
+params.run_vireo_with_genotype = true
+//3
+params.run_seurat = false
 
+params.run_seurat_on_raw = false // run seurat on raw_feature_bc_matrix (in addition to filtered_feature_bc_matrix)
 
 // $workflow.projectDir/../bin/scrna/seurat.R
 params.rscript = "/home/ubuntu/data/inputs/seurat.R"
@@ -12,19 +19,22 @@ Channel.fromPath(params.rscript)
     .ifEmpty { exit 1, "rscript file missing: ${params.rscript}" }
     .set {ch_rscript}
 
-
 // params.cellsnp_vcf_candidate_snps = "$baseDir/../assets/scrna/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
-params.cellsnp_vcf_candidate_snps = "/home/ubuntu/data/inputs/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
+// params.cellsnp_vcf_candidate_snps = "/home/ubuntu/data/inputs/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz"
+// params.cellsnp_vcf_candidate_snps = "${baseDir}/../../inputs/s1.s45.sorted.vcf.gz"
+params.cellsnp_vcf_candidate_snps = "/home/ubuntu/data/inputs/reheader.vcf.gz"
 Channel.fromPath(params.cellsnp_vcf_candidate_snps)
     .ifEmpty { exit 1, "cellsnp_vcf_candidate_snps missing: ${params.cellsnp_vcf_candidate_snps}" }
     .set {ch_cellsnp_vcf_candidate_snps}
-
 
 include iget_cellranger from '../modules/scrna/irods_cellranger.nf' params(run: true, outdir: params.outdir)
 include iget_cellranger_location from '../modules/scrna/irods_cellranger_location.nf' params(run: true, outdir: params.outdir)
 include cellsnp from '../modules/scrna/cellsnp.nf' params(run: true, outdir: params.outdir)
 include vireo from '../modules/scrna/vireo.nf' params(run: true, outdir: params.outdir)
+include subset_genotype from '../modules/scrna/subset_genotype.nf' params(run: true, outdir: params.outdir)
+include vireo_with_genotype from '../modules/scrna/vireo_with_genotype.nf' params(run: true, outdir: params.outdir)
 include split_vireo_barcodes from '../modules/scrna/split_vireo_barcodes.nf' params(run: true, outdir: params.outdir)
+include split_vireo_barcodes_genotype from '../modules/scrna/split_vireo_barcodes_genotype.nf' params(run: true, outdir: params.outdir)
 include seurat from '../modules/scrna/seurat.nf' params(run: true, outdir: params.outdir)
 // include seurat_rbindmetrics from '../modules/scrna/seurat_rbindmetrics.nf' params(run: true, outdir: params.outdir)
 
@@ -91,7 +101,7 @@ workflow {
 //	.map { row -> tuple("${row.samplename}", "${row.pooled}","${row.n_pooled}", "${row.location}") }
 //	.set{ch_samplename_pooled_npooled_location}
 
-    Channel.fromPath("${baseDir}/../../inputs/cellranger_sorted_rerun.csv")
+    Channel.fromPath("${baseDir}/../../inputs/cellranger_sorted_rerun_geno.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.lane}", "${row.samplename}", "${row.cellranger}/outs") }
 	.set{ch_samplename_location}
@@ -101,7 +111,7 @@ workflow {
 	.combine(ch_samplename_location, by:0)
 	.map { lane,n_samples,name,loc -> tuple(name, "true", n_samples, loc) }
 	.set{ch_samplename_pooled_npooled_location}
-    ch_samplename_pooled_npooled_location.view()
+ //   ch_samplename_pooled_npooled_location.view()
     
     ch_samplename_pooled_npooled_location
 	.map { a,b,c,d -> [a,d] }
@@ -130,44 +140,75 @@ workflow {
 	// cellsnp(iget_cellranger_location.out.cellranger_sample_bam_barcodes, ch_cellsnp_vcf_candidate_snps.collect())
 	cellsnp(ch_cellranger_sample_bam_barcodes, ch_cellsnp_vcf_candidate_snps.collect())
     
+    if (params.run_subset_genotype) {
+
+	Channel.fromPath(params.subset_genotype_samplelist)
+	    .splitCsv(header: true)
+	    .map { row -> tuple("${row.samplename}", file(row.subset_file),
+			file(params.cellsnp_vcf_candidate_snps)) }
+	    .set{ch_subsets}
+	//ch_subsets.view()
+
+	cellsnp.out.samplename_cellsvcfgz
+	    .map{a,b -> tuple("${a}",b)}
+	    .set{ch_samplename_cellsvcfgz}
+
+	ch_samplename_cellsvcfgz
+	    .combine(ch_subsets, by: 0)
+	    .set {ch_to_subset}
+	//ch_to_subset.view()
+	subset_genotype(ch_to_subset)
+//	
+	if (params.run_vireo_with_genotype) {
+	    vireo_with_genotype(cellsnp.out.cellsnp_output_dir.combine(
+		subset_genotype.out.samplename_subsetvcf, by: 0))
+	    
+            split_vireo_barcodes_genotype(vireo_with_genotype.out.vireo_output_dir.
+				 combine(ch_cellranger_filtered, by: 0))
+            split_vireo_barcodes_genotype.out.cellranger_deconv_dirs
+		.transpose()
+		.map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
+		.set{ch_cellranger_filtered_deconv}
+	}
+    }
+    
     if (params.run_vireo) {
 	vireo(cellsnp.out.cellsnp_output_dir.combine(ch_samplename_npooled, by: 0))
-
+	
         split_vireo_barcodes(vireo.out.vireo_output_dir.
 			     combine(ch_samplename_npooled, by: 0).
 			     combine(ch_cellranger_filtered, by: 0))
 			     //combine(iget_cellranger_location.out.cellranger_filtered, by: 0))
-	
         split_vireo_barcodes.out.cellranger_deconv_dirs
 	    .transpose()
 	    .map { samplename,deconv_dir -> tuple(deconv_dir.getName().replaceAll(~/cellranger_deconv_/, ""),deconv_dir) }
             .set{ch_cellranger_filtered_deconv}
-	
-//	iget_cellranger_location.out.cellranger_raw.view()
-//	ch_cellranger_filtered_deconv.view()
-	//iget_cellranger.out.cellranger_metrics_summary.view()
-	
-	//ch_tranpose =iget_cellranger_location.out.cellranger_metrics_summary
-	ch_tranpose = ch_cellranger_metrics_summary
-	    .map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1",
-						    "${samplename}_2","${samplename}_3",
-						    "${samplename}_4",
-						    "${samplename}_5"],
-						   metrics_file)}
-	    .transpose()
-
-	//ch_tranpose.view()
-	
-	run_seurat(
-	    //iget_cellranger_location.out.cellranger_raw,
-		   ch_cellranger_filtered_deconv,
-		   ch_tranpose,
-		   ch_rscript
-	)
     }
     
-  //  if (params.run_seurat)
+    //	iget_cellranger_location.out.cellranger_raw.view()
+    //	ch_cellranger_filtered_deconv.view()
+    //iget_cellranger.out.cellranger_metrics_summary.view()
+    
+    //ch_tranpose =iget_cellranger_location.out.cellranger_metrics_summary
+    ch_tranpose = ch_cellranger_metrics_summary
+	.map{samplename, metrics_file -> tuple(["${samplename}_0","${samplename}_1",
+						"${samplename}_2","${samplename}_3",
+						"${samplename}_4",
+						"${samplename}_5"],
+					       metrics_file)}
+	.transpose()
+    
+    //ch_tranpose.view()
+    
+    run_seurat(
+	//iget_cellranger_location.out.cellranger_raw,
+	ch_cellranger_filtered_deconv,
+	ch_tranpose,
+	ch_rscript
+    )
+    
+}
+//  if (params.run_seurat)
 //	run_seurat(iget_cellranger.out[2],ch_cellranger_filtered_deconv, iget_cellranger.out[4])
 //	run_seurat(iget_cellranger.out[2],iget_cellranger.out[3],iget_cellranger.out[4])
 
-}
