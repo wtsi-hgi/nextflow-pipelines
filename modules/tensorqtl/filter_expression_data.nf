@@ -1,7 +1,7 @@
 params.run = true
 
 process filter_expression_data {
-    tag "${prefix}"
+    tag ""
     queue 'normal'
     maxForks 2
     conda '/lustre/scratch118/humgen/resources/conda_envs/R3.6'
@@ -10,7 +10,7 @@ process filter_expression_data {
     cpus 1
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
-    publishDir "${params.outdir}/filter_expression_data/", mode: 'symlink', pattern: "expression_data.filtered.bed", overwrite: true
+    publishDir "${params.outdir}/filter_expression_data/", mode: 'symlink', pattern: "expression_data.filtered.bed.gz", overwrite: true
 
     when:
     params.run
@@ -21,12 +21,22 @@ process filter_expression_data {
     val(pcent_samples) 
 
     output: 
-    tuple file("expression_data.filtered.bed"), emit: expression_data
+    tuple file("expression_data.filtered.bed.gz"), emit: expression_data
 
     script:
     """
 export PATH=/lustre/scratch118/humgen/resources/conda_envs/R3.6/bin:\$PATH
-exports R_LIBS=/lustre/scratch118/humgen/resources/rstudio_server_libs
-cp ${expression_data} expression_data.filtered.bed
+export R_LIBS=/lustre/scratch118/humgen/resources/rstudio_server_libs
+
+zcat ${expression_data} > tmp_expression.bed
+
+Rscript $workflow.projectDir/../bin/tensorqtl/filter_expression_bed.R tmp_expression.bed
+rm tmp_expression.bed
+
+bgzip -c expression_data.filtered.bed > expression_data.filtered.bed.gz
+rm expression_data.filtered.bed
+
+# for tests:
+# cp ${expression_data} expression_data.filtered.bed.gz
     """
 }

@@ -1,7 +1,7 @@
 params.run = true
 
 process convert_plink_format {
-    tag "${params.plink_prefix}"
+    tag "${plink_prefix}"
     queue 'normal'
     maxForks 2
     conda '/lustre/scratch118/humgen/resources/conda_envs/tensorqtl'
@@ -26,10 +26,10 @@ process convert_plink_format {
     """
 export PATH=/lustre/scratch118/humgen/resources/conda_envs/tensorqtl/bin:\$PATH
 
-plink2 --bfile ${plink_prefix} --keep-allele-order --recode vcf --out ${plink_prefix}.vcf
-bgzip -c ${plink_prefix}.vcf ${plink_prefix}.vcf.gz
+plink2 --bfile ${plink_prefix} --keep-allele-order --recode vcf --out ${plink_prefix}
+bgzip -c ${plink_prefix}.vcf > ${plink_prefix}.vcf.gz
 
 # tabix -p vcf ${plink_prefix}.vcf.gz
-# rm -f ${plink_prefix}.vcf
+rm -f ${plink_prefix}.vcf
     """
 }

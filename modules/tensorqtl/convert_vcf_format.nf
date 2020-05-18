@@ -1,7 +1,7 @@
 params.run = true
 
 process convert_vcf_format {
-    tag "${params.plink_prefix}"
+    tag "${plink_prefix}"
     queue 'normal'
     maxForks 2
     conda '/lustre/scratch118/humgen/resources/conda_envs/tensorqtl'

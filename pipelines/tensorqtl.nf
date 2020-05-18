@@ -39,7 +39,7 @@ workflow {
 	    .set{ch_bed_bim_fam}
     }
     
-    if(params.convert_vcf_format) {
+    if(params.convert_plink_to_vcf) {
 	convert_plink_format(ch_bed_bim_fam, params.plink_prefix)
     }
     
