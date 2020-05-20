@@ -26,6 +26,20 @@ process convert_vcf_format {
     """
 export PATH=/lustre/scratch118/humgen/resources/conda_envs/tensorqtl/bin:\$PATH
 
-plink2 --make-bed --vcf ${vcf_gz} --out ${plink_prefix}
+tabix -p vcf ${vcf_gz}
+
+# add chr to chr names
+for i in {1..22} X Y MT
+do
+  echo \"\$i chr\$i\" >> chr_name_conv.txt
+done
+bcftools annotate --rename-chrs chr_name_conv.txt ${vcf_gz} \\
+  -Oz -o ${plink_prefix}.pre.vcf.gz
+plink2 --make-bed --vcf ${plink_prefix}.pre.vcf.gz --out ${plink_prefix}
+sed -i s/^/chr/g ${plink_prefix}.bim
+sed -i s/^chr23/chrX/g ${plink_prefix}.bim
+
+rm ${vcf_gz}.tbi
+rm ${plink_prefix}.pre.vcf.gz*
     """
 }

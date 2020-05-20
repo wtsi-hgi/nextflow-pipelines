@@ -1,15 +1,15 @@
 nextflow.preview.dsl=2
 
 // required input parameters:
-params.inputs_dir = "/lustre/scratch114/projects/ukbb_scrna/tensorqtl/" // dir where input data is located
-params.plink_prefix = "plink_franke" // .bed,.bim,.fam must be in dir params.inputs_dir
-params.output_prefix ="franke_out" // prefix of tensorqtl outputs
-params.expression_bed = "franke_expression.1to22only.bed.gz"
-params.covariates_file = "franke_covariates.txt"
+params.inputs_dir = "/lustre/scratch114/projects/ukbb_scrna/tensorqtl/test_data" // dir where input data is located
+params.plink_prefix = "GEUVADIS.445_samples.GRCh38.20170504.maf01.filtered" // .bed,.bim,.fam must be in dir params.inputs_dir
+params.output_prefix ="GEUVADIS.445_samples" // prefix of tensorqtl outputs
+params.expression_bed = "GEUVADIS.445_samples.expression.bed.gz"
+params.covariates_file = "GEUVADIS.445_samples.covariates.txt"
 
 // must also choose input genotype data in either vcf or plink format:
-params.convert_vcf_format = true // if true, path to vcf file must be specified:
-params.vcf = 's1.45.rm40.vcf.gz' // vcf file name. vcf.gz compressed . File must be in dir params.inputs_dir
+params.convert_vcf_format = false // if true, path to vcf file must be specified:
+params.vcf = '' // vcf file name. vcf.gz compressed . File must be in dir params.inputs_dir
 
 // choose which tasks to run:
 params.filter_genotype_data  = true // if true, must set params.MAF_threshold and GT_miss_threshold:

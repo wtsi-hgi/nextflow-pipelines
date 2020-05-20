@@ -30,7 +30,7 @@ export R_LIBS=/lustre/scratch118/humgen/resources/rstudio_server_libs
 
 zcat ${expression_data} > tmp_expression.bed
 
-Rscript $workflow.projectDir/../bin/tensorqtl/filter_expression_bed.R tmp_expression.bed
+Rscript $workflow.projectDir/../bin/tensorqtl/filter_expression_bed.R tmp_expression.bed ${variance_threshold} ${pcent_samples}
 rm tmp_expression.bed
 
 bgzip -c expression_data.filtered.bed > expression_data.filtered.bed.gz

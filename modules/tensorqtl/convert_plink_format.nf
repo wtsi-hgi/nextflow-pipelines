@@ -26,10 +26,18 @@ process convert_plink_format {
     """
 export PATH=/lustre/scratch118/humgen/resources/conda_envs/tensorqtl/bin:\$PATH
 
-plink2 --bfile ${plink_prefix} --keep-allele-order --recode vcf --out ${plink_prefix}
-bgzip -c ${plink_prefix}.vcf > ${plink_prefix}.vcf.gz
+plink2 --bfile ${plink_prefix} --keep-allele-order --recode vcf --out ${plink_prefix}.pre
+bgzip -c ${plink_prefix}.pre.vcf > ${plink_prefix}.pre.vcf.gz
+tabix -p vcf ${plink_prefix}.pre.vcf.gz
 
-# tabix -p vcf ${plink_prefix}.vcf.gz
-rm -f ${plink_prefix}.vcf
+# add chr to chr names
+for i in {1..22} X Y MT
+do
+  echo \"\$i chr\$i\" >> chr_name_conv.txt
+done
+bcftools annotate --rename-chrs chr_name_conv.txt ${plink_prefix}.pre.vcf.gz \\
+  -Oz -o ${plink_prefix}.vcf.gz
+
+rm ${plink_prefix}.pre*
     """
 }
