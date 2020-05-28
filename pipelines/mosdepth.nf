@@ -1,76 +1,49 @@
 nextflow.preview.dsl=2
 
-// required input parameters:
-params.inputs_dir = "/lustre/scratch114/projects/ukbb_scrna/tensorqtl/" // dir where input data is located
-params.plink_prefix = "plink_franke" // .bed,.bim,.fam must be in dir params.inputs_dir
-params.output_prefix ="franke_out" // prefix of tensorqtl outputs
-params.expression_bed = "franke_expression.1to22only.bed.gz"
-params.covariates_file = "franke_covariates.txt"
+// list of cram from local disk, attached to a dummy study_id:
+params.local_crams = "$baseDir/../../inputs/cram_list.csv" // set to "" if no local crams
+// list of Irods study whose cram files must also be processed:
+params.irods_studies = "$baseDir/../../inputs/study_ids_list.csv" // set to "" if no Irods crams
 
-// must also choose input genotype data in either vcf or plink format:
-params.convert_vcf_format = true // if true, path to vcf file must be specified:
-params.vcf = 's1.45.rm40.vcf.gz' // vcf file name. vcf.gz compressed . File must be in dir params.inputs_dir
+// required for mosdepth: genome ref fasta, capture region and study alias name of each study_id:
+params.study_ref_capture = "$baseDir/../../inputs/study_ref_capture.csv"
 
-// choose which tasks to run:
-params.filter_genotype_data  = true // if true, must set params.MAF_threshold and GT_miss_threshold:
-params.MAF_threshold = 0.1 // 0.1%, minor allele frequency minimum threshold
-params.GT_miss_threshold = 0.9 // 90%, min % individuals with non missing genotype
-params.filter_expression_data = true // if true, must set:
-params.variance_threshold = 0.1 // 10%, quantile variance minimum threshold for expression data
-params.pcent_samples = 50 // required mininum percentage of samples expression level non missing and > 0 (run on all genes separately)
-params.run_tensorqtl = true
-params.convert_plink_to_vcf = true // convert unfiltered .bed,.bim,.fam to vcf format
-
-include convert_vcf_format from '../modules/tensorqtl/convert_vcf_format.nf' params(run:true, outdir: params.outdir)
-include convert_plink_format from '../modules/tensorqtl/convert_plink_format.nf' params(run:true, outdir: params.outdir)
-include filter_genotype_data from '../modules/tensorqtl/filter_genotype_data.nf' params(run:true, outdir: params.outdir)
-include filter_expression_data from '../modules/tensorqtl/filter_expression_data.nf' params(run:true, outdir: params.outdir)
-include tensorqtl from '../modules/tensorqtl/tensorqtl.nf' params(run:true, outdir: params.outdir)
+params.dropqc = ""
+include baton_study_id from '../modules/mosdepth/baton.nf' params(run: true, outdir: params.outdir)
+include mosdepth_from_irods from '../modules/mosdepth/mosdepth_from_irods.nf' params(run:true, outdir: params.outdir,dropqc: params.dropqc)
+include mosdepth_from_local from '../modules/mosdepth/mosdepth_from_local.nf' params(run:true, outdir: params.outdir,dropqc: params.dropqc)
 
 workflow {
+    ch_study_alias_ref_capture =Channel.fromPath(params.study_ref_capture)
+	.splitCsv(header: true, sep: ',')
+	.map{row->tuple(row.study_id, row.study_alias, row.ref, row.capture)}
     
-    if(params.convert_vcf_format) {
-	convert_vcf_format(Channel.fromPath("${params.inputs_dir}/${params.vcf}"), params.plink_prefix)
-	ch_bed_bim_fam = convert_vcf_format.out.bed_bim_fam
-    } else {
-	Channel.value(tuple(
-	    file("${params.inputs_dir}/${params.plink_prefix}.bed"),
-	    file("${params.inputs_dir}/${params.plink_prefix}.bim"),
-	    file("${params.inputs_dir}/${params.plink_prefix}.fam")))
-	    .set{ch_bed_bim_fam}
-    }
-    
-    if(params.convert_plink_to_vcf) {
-	convert_plink_format(ch_bed_bim_fam, params.plink_prefix)
-    }
-    
-    if (params.filter_genotype_data) {
-	filter_genotype_data(ch_bed_bim_fam, params.plink_prefix,
-			     params.MAF_threshold, params.GT_miss_threshold)
+    //// process cram files from local_disk:
+    ch_local_crams = params.local_crams == '' ? Channel.empty() :
+	Channel.fromPath(params.local_crams)
+	.splitCsv(header: true, sep: ',')
+	.map{row->tuple(row.study_id, row.cram)}
 
-	ch_plink_prefix = "${params.plink_prefix}.filtered"
-	ch_bed_bim_fam = filter_genotype_data.out.bed_bim_fam
-    } else {
-	ch_plink_prefix = params.plink_prefix 
-    }
-    
-    if (params.filter_expression_data) {
-	filter_expression_data(Channel.fromPath("${params.inputs_dir}/${params.expression_bed}"),
-			       params.variance_threshold,
-			       params.pcent_samples
-	)
+    ch_local_crams
+	.combine(ch_study_alias_ref_capture, by: 0)
+	.set{to_mosdepth_local}
+    to_mosdepth_local.view()
+    mosdepth_from_local(to_mosdepth_local.take(2))
 
-	ch_expression_bed = filter_expression_data.out.expression_data
-    } else {
-	ch_expression_bed = Channel.fromPath("${params.inputs_dir}/${params.expression_bed}")
-    }
+    //// process cram files from irods:
+    ch_irods_studies = params.irods_studies == '' ? Channel.empty() :
+	Channel.fromPath(params.irods_studies)
+	.splitCsv(header: true, sep: ',')
+	.map{row-> row.study_id}
     
-    if (params.run_tensorqtl) {
-	tensorqtl(
-	    params.output_prefix, // string
-	    ch_plink_prefix,  // string
-	    ch_bed_bim_fam, // tuple of 3 files, .bed .bim and .fam, filenames prefix must match with params.plink_prefix
-	    ch_expression_bed, // file
-	    Channel.fromPath("${params.inputs_dir}/${params.covariates_file}"))
-    }
+    baton_study_id(ch_irods_studies)
+    baton_study_id.out.samples_noduplicates_tsv
+	.map{a,b -> b}
+	.splitCsv(header: true, sep: '\t')
+	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
+	.map{a,b,c-> tuple(c,a)}
+	.combine(ch_study_alias_ref_capture, by: 0)
+	.set{to_mosdepth_irods}
+    to_mosdepth_irods.view()
+    mosdepth_from_irods(to_mosdepth_irods.take(2))
 }
