@@ -1,7 +1,7 @@
 params.run = true
 params.remove_crams = true
 
-process mosdepth_from_irods {
+process mosdepth_from_egans {
     memory = '10G'
     time '240m'
     cpus 1
@@ -25,22 +25,33 @@ process mosdepth_from_irods {
 
     script:
     """
-if bash -euo pipefail $workflow.projectDir/../bin/mosdepth/irods.sh -N ${task.cpus} -t ${studyid} -s ${samplename} ${params.dropqc}; then
-  true
-else
- stat=\$?
-  if [[ \$stat == 64 ]];
-    then tag='nofiles';
-    echo -e "${samplename}\\tirods\\t\$tag" > ${samplename}.lostcause.txt
-  else          
-    tag='UNKNOWN'
-    echo -e "${samplename}\\tirods\\t\$tag" > ${samplename}.lostcause.txt
-    exit \$stat
-  fi
+imeta qu -z seq -d sample_accession_number = \"${samplename}\" and target = \"library\" | grep collection | awk -F ' ' '{print \$2}' > collection.txt || true
+imeta qu -z seq -d sample_accession_number = \"${samplename}\" and target = \"library\" | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt || true
+paste -d '/' collection.txt dataObj.txt | grep '.cram\$' > to_iget.txt || true
+if [[ -f "to_iget.txt" && -s "to_iget.txt" ]]; then 
+    echo "target library exist and not empty"
+else 
+    echo "target library not exist or empty" 
+    echo try with target 1 instead
+    imeta qu -z seq -d sample_accession_number = \"${samplename}\" and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt || true
+    imeta qu -z seq -d sample_accession_number = \"${samplename}\" and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt || true
+    paste -d '/' collection.txt dataObj.txt | grep '.cram\$' > to_iget.txt || true
 fi
 
-# discard bam files, keep only cram
-# rm -f *.bam
+if [[ -f "to_iget.txt" && -s "to_iget.txt" ]]; then 
+    echo "target 1 exist and not empty"
+else 
+    echo "target 1 not exist or empty" 
+    exit 1
+fi
+
+cat to_iget.txt | while read line
+do
+    filename=\$(echo \${line} | sed s'/^.*\\///'g)
+    echo filename is \$filename
+    iget -K -f -v \${line} \$filename
+done
+
 
 export PATH=/lustre/scratch118/humgen/resources/conda_envs/mosdepth/bin:\$PATH
 # merge crams if more than one if found
@@ -72,6 +83,9 @@ if [ "$params.remove_crams" == "true" ]; then
     rm -f *.bam
     rm -f *.bam.bai
     rm -f *.fa.fai
+    rm dataObj.txt 
+    rm to_iget.txt
+    rm collection.txt 
 fi
     """
 }

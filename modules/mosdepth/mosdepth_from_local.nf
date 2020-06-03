@@ -7,8 +7,8 @@ process mosdepth_from_local {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     conda '/lustre/scratch118/humgen/resources/conda_envs/mosdepth'
     maxRetries 3
-    maxForks 12
-    publishDir "${params.outdir}/mosdepth/${samplename}/", mode: 'symlink', pattern: "${samplename}.mosdepth.*", overwrite: true
+    maxForks 500
+    publishDir "${params.outdir}/mosdepth/${study_alias}/${samplename}/", mode: 'copy', pattern: "${samplename}.mosdepth.*", overwrite: true
 
     when:
     params.run
@@ -34,6 +34,7 @@ mosdepth --threads ${task.cpus} --fast-mode \\
 
 # clean-up
 rm *.cram.crai
+rm -f *.fa.fai
     """
 }
 

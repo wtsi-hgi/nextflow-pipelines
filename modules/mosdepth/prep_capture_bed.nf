@@ -24,7 +24,7 @@ process prep_capture_bed {
 if [ "$remove_chr" == "true" ]; then
     cat ${bed_file} | grep -v '^@' | grep -v '^chrY' | grep -v '^chrX' | grep -v '^X' | grep -v '^Y' | sed s/^chr//g > ${study_id}.capture.bed
 else
-    cat ${bed_file} | grep -v '^@' | grep -v '^chrY' | grep -v '^chrX' | grep -v '^X' | grep -v '^Y' > ${study_id}.capture.bed
+    cat ${bed_file} | grep -v '^@' | grep -v '^chrY' | grep -v '^chrX' | grep -v '^X' | grep -v '^Y' | sed s'/^\\([1-9]\\)/chr\\1/'g > ${study_id}.capture.bed
 fi
     """
 }
