@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git checkout rna_seq_dddmouse
+git checkout mosdepth
 git pull --recurse-submodules 
 git submodule sync
 git submodule update --init --recursive --remote
