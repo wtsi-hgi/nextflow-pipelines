@@ -1,14 +1,14 @@
 params.run = true
 
 process 'iget' {
-    tag "iget $sample"
+    tag "$sample"
     memory = '3G'
     time '120m'
     cpus 1
     maxForks 12
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
-    publishDir "${params.outdir}/iget/", mode: 'symlink'
+    publishDir "${params.outdir}/iget/${sample}/", mode: 'symlink'
 
     when:
     params.run 
@@ -47,6 +47,5 @@ do
     iget --retries 2 -K -f -v \${line} \$filename
     iget --retries 2 -K -f -v \${line}.crai \$\{filename\}.crai
 done
-
    """
 }
