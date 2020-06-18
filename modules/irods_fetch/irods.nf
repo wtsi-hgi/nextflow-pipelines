@@ -21,25 +21,32 @@ process 'iget' {
 
   script:
     """
-imeta qu -z seq -d sample = ${sample} and target = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt
-imeta qu -z seq -d sample = ${sample} and target = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt
-paste -d '/' collection.txt dataObj.txt > ${sample}.to_iget.txt
+imeta qu -z seq -d sample = ${sample} and target = \"library\" and manual_qc = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt || true
+imeta qu -z seq -d sample = ${sample} and target = \"library\" and manual_qc = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt || true
+paste -d '/' collection.txt dataObj.txt | grep '.cram\$' > to_iget.txt || true
 
-sort -o ${sample}.to_iget.txt ${sample}.to_iget.txt
-num=1
-cat ${sample}.to_iget.txt | while read line
+if [[ -f "to_iget.txt" && -s "to_iget.txt" ]]; then 
+    echo "target library exist and not empty"
+else 
+    echo "target library not exist or empty" 
+    echo try with target 1 instead
+    imeta qu -z seq -d sample = ${sample} and target = 1 and manual_qc = 1 | grep collection | awk -F ' ' '{print \$2}' > collection.txt || true
+    imeta qu -z seq -d sample = ${sample} and target = 1 and manual_qc = 1 | grep dataObj | awk -F ' ' '{print \$2}' > dataObj.txt || true
+    paste -d '/' collection.txt dataObj.txt | grep '.cram\$' > to_iget.txt || true
+fi
+if [[ -f "to_iget.txt" && -s "to_iget.txt" ]]; then 
+    echo "target 1 exist and not empty"
+else 
+    echo "target 1 not exist or empty" 
+    exit 1
+fi
+cat to_iget.txt | while read line
 do
-    if [ \$num -gt 1 ]
-    then
-        iget -K -f -v \${line} ${sample}.\${num}.cram
-        iget -K -f -v \${line}.crai ${sample}.\${num}.cram.crai || true
-    else
-        iget -K -f -v \${line} ${sample}.cram
-        iget -K -f -v \${line}.crai ${sample}.cram.crai || true
-    fi
-    ((num++))
+    filename=\$(echo \${line} | sed s'/^.*\\///'g)
+    echo filename is \$filename
+    iget --retries 2 -K -f -v \${line} \$filename
+    iget --retries 2 -K -f -v \${line}.crai \$\{filename\}.crai
 done
+
    """
 }
- // study_id = ${study_id} and
- // study_id = ${study_id} and
