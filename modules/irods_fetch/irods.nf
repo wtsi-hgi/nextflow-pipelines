@@ -45,7 +45,7 @@ do
     filename=\$(echo \${line} | sed s'/^.*\\///'g)
     echo filename is \$filename
     iget --retries 2 -K -f -v \${line} \$filename
-    iget --retries 2 -K -f -v \${line}.crai \$\{filename\}.crai
+    iget --retries 2 -K -f -v \${line}.crai \${filename}.crai || true
 done
    """
 }
