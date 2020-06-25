@@ -19,6 +19,6 @@ export CONDA_ENVS_DIRS=/lustre/scratch118/humgen/resources/conda_envs
 conda activate $CONDA_ENVS_DIRS/nextflow
 
 echo starting bsub
-rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && bsub -G $GROUP -R'select[mem>8000] rusage[mem=8000] span[hosts=1]' -M 8000 -n 2 -o bsub.o -e bsub.e -q yesterday ./nextflow-pipelines/bin/rna_seq/nextflow.sh > bjob.id
+rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && bsub -G $GROUP -R'select[mem>6000] rusage[mem=6000] span[hosts=1]' -M 6000 -n 2 -o bsub.o -e bsub.e -q normal ./nextflow-pipelines/bin/mu_ddd/nextflow.sh > bjob.id
 echo finished bsub
 cat bjob.id

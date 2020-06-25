@@ -28,7 +28,7 @@ workflow {
 	.set{sample_file_father_mother}
 
     if (params.run_parent_trio) {
-	parent_trio(sample_file_father_mother.take(1), // -1 means run all samples	
+	parent_trio(sample_file_father_mother.take(2), // -1 means run all samples	
 		    Channel.fromPath(params.allDDD_irods_crams).collect(),
 		    Channel.fromPath(params.r_script_parent_trio).collect())
     }
