@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-git checkout rna_seq_dddmouse
-git pull --recurse-submodules 
-git submodule sync
-git submodule update --init --recursive --remote
-git add .gitmodules && git add nextflow-pipelines && git commit -m "modified submodule URL" && git push -u origin
+#git checkout mu_ddd
+#git pull --recurse-submodules 
+#git submodule sync
+#git submodule update --init --recursive --remote
+#git add .gitmodules && git add nextflow-pipelines && git commit -m "modified submodule URL" && git push -u origin
 
 # farm5 config
 export http_proxy=http://wwwcache.sanger.ac.uk:3128
@@ -21,4 +21,4 @@ eval "$(conda shell.bash hook)"
 export CONDA_ENVS_DIRS=/lustre/scratch118/humgen/resources/conda_envs
 conda activate $CONDA_ENVS_DIRS/nextflow
 
-rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./nextflow-pipelines/bin/mosdepth/nextflow.sh > nohup.log 2>&1 &
+rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./nextflow-pipelines/bin/mu_ddd/nextflow.sh > nohup.log 2>&1 &
