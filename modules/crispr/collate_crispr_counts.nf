@@ -3,6 +3,7 @@ params.runtag = 'runtag'
 
 process collate_crispr_counts {
     tag "collate counts"
+  //  conda '/software/hgi/installs/anaconda3/envs/nextflow20'
     // container "nfcore-rnaseq"
     // containerOptions = "--bind /lustre"
     publishDir "${params.outdir}/collate_counts", mode: 'symlink'
@@ -24,6 +25,8 @@ process collate_crispr_counts {
 
     shell:
     """
+export PATH=/software/hgi/installs/anaconda3/envs/nextflow20/bin/:\$PATH
+
     echo count_file > fofn_files.txt
     ls . | grep .counts.txt\$ | grep -v genes.counts.txt >> fofn_files.txt
 

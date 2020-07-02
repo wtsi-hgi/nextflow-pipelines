@@ -65,11 +65,20 @@ workflow {
 	    .mix(merge_fastq_batches.out[0]))
 
     multiqc(fastqc.out.collect())
-
-    merge_fastq_batches.out[0]
-	.combine(ch_samplename_library, by: 0)
-	.set{ch_samplename_fastq_library_includeG}
     
+    merge_fastq_batches.out[0].view()
+
+    //ch_samplename_library.view()
+    
+    merge_fastq_batches.out[0]
+	.map{sample,fastq ->tuple("$sample",fastq)}
+	.combine(ch_samplename_library
+		 .map{sample,lib,keepg ->tuple("$sample",lib,keepg)}
+		 , by: 0)
+	.set{ch_samplename_fastq_library_includeG}
+
+ //   ch_samplename_fastq_library_includeG.view()
+   // ch_library_files.view()
     count_crispr_reads(ch_samplename_fastq_library_includeG, ch_library_files.collect())
 
     collate_crispr_counts(
