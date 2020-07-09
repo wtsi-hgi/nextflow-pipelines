@@ -44,8 +44,9 @@ cat to_iget.txt | while read line
 do
     filename=\$(echo \${line} | sed s'/^.*\\///'g)
     echo filename is \$filename
-    iget -K -f -v \${line} \$filename
-    iget -K -f -v \${line}.crai \${filename}.crai || true
+    iget -K -f -v \${line} ${sample}__\$filename
+    # get index file if exists:
+    iget -K -f -v \${line}.crai ${sample}__\${filename}.crai || true
 done
    """
 }
