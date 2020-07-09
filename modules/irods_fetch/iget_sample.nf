@@ -10,7 +10,7 @@ process 'iget_sample' {
     maxForks 12
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
-    publishDir "${params.outdir}/iget/${sample}/", mode: "${params.copy_mode}"
+    publishDir "${params.outdir}/iget/no_study_id/${sample}/", mode: "${params.copy_mode}"
 
     when:
     params.run 
