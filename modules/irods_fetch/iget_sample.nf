@@ -1,14 +1,16 @@
 params.run = true
+params.copy_mode = "symlink"
 
-process 'iget' {
+
+process 'iget_sample' {
     tag "$sample"
     memory = '3G'
     time '120m'
     cpus 1
     maxForks 12
-    errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
-    maxRetries 1
-    publishDir "${params.outdir}/iget/${sample}/", mode: 'symlink'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    maxRetries 3
+    publishDir "${params.outdir}/iget/${sample}/", mode: "${params.copy_mode}"
 
     when:
     params.run 
