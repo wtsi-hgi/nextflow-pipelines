@@ -6,10 +6,12 @@ process salmon {
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     //container "salmon"
     conda '/lustre/scratch118/humgen/resources/conda/star'
-    queue 'long'
-    time '1400m'
-    errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
-    maxRetries 6
+    // queue 'long'
+    // time '1400m'
+    queue 'basement'
+    time '5760m'
+    errorStrategy { task.attempt <= 8 ? 'retry' : 'ignore' }
+    maxRetries 8
     
     publishDir "${params.outdir}/salmon", mode: 'symlink'
 

@@ -15,7 +15,7 @@ jq --arg study_id $study_id -n '{avus: [
        {attribute: "study_id", value: $study_id, o: "="}, 
        {attribute: "manual_qc", value: "1", o: "="}, 
       {attribute: "target", value: "1", o: "="}]}' |\
-singularity exec /software/hgi/containers/singularity-baton/baton.simg baton-metaquery \
+baton-metaquery \
 		--zone seq --obj --avu |\
 jq '.[] as $a| 
 "\($a.avus | .[] | select(.attribute == "sample") | .value)____\($a.avus | .[] | select(.attribute == "sample_supplier_name") | .value)____\($a.avus | .[] | select(.attribute == "id_run") | .value)____\($a.avus | .[] | select(.attribute == "is_paired_read") | .value)____\($a.avus | .[] | select(.attribute == "study_id") | .value)____\($a.avus | .[] | select(.attribute == "study") | .value)"' |\
@@ -48,3 +48,6 @@ sort | uniq >> samples.tsv
 #    singularity exec /software/hgi/containers/singularity-baton/baton.simg baton-metaquery \
 #		--zone seq --obj --avu | jq -r '.[] | .avus | .[] | select(.attribute == "sample") | .value' \
 #    | sort | uniq > samples.txt
+
+# singularity exec /software/hgi/containers/singularity-baton/baton.simg baton-metaquery \
+	    
