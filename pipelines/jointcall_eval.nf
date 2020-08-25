@@ -1,14 +1,15 @@
 nextflow.preview.dsl = 2
 
-params.restrict_vcf_to_region = true
-params.restrict_vcf_to_chr = true
-params.run_rtg_vcfeval = true
-params.run_bcftools_stats = true
-params.run_mendelian_errors = true
+params.restrict_vcf_to_chr = true // optional, speed up by e.g. restricting to chromosome 22
+params.restrict_vcf_to_region = true // optional, subset input vcf with bed file
+
+params.run_rtg_vcfeval = false
+params.run_bcftools_stats = false
+params.run_mendelian_errors = false
 
 params.genome = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_haplotype/hs38DH.fa"
 
-params.restrict_region = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/S04380110_Padded+1_merged.bed"
+params.restrict_region_bed = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/S04380110_Padded+1_merged.bed"
 params.restrict_chr = "chr22"
 
 params.tag = "hail"
@@ -30,6 +31,7 @@ include subset_sample_and_region from '../modules/jointcall_eval/subset_sample_a
 include subset_trio from '../modules/jointcall_eval/subset_trio.nf' params(run: true, outdir: params.outdir)
 include subset_trio_and_region from '../modules/jointcall_eval/subset_trio_and_region.nf' params(run: true, outdir: params.outdir)
 include subset_chr from '../modules/jointcall_eval/subset_chr.nf' params(run: true, outdir: params.outdir)
+
 include bcftools_stats from '../modules/jointcall_eval/bcftools_stats.nf' params(run: true, outdir: params.outdir)
 include rtg_vcfeval from '../modules/jointcall_eval/rtg_vcfeval.nf' params(run: true, outdir: params.outdir)
 include mendelian_errors from '../modules/jointcall_eval/mendelian_errors.nf' params(run: true, outdir: params.outdir)
@@ -44,7 +46,7 @@ workflow {
     }
     
     if (params.restrict_vcf_to_region) {
-	subset_sample_and_region(ch_subset_vcf, params.sample, params.restrict_region)
+	subset_sample_and_region(ch_subset_vcf, params.sample, params.restrict_region_bed)
 	ch_subset_vcf_tbi = subset_sample_and_region.out.vcf_tbi
     } else {
 	subset_sample(ch_subset_vcf, params.sample)
@@ -64,7 +66,7 @@ workflow {
     
     if (params.run_mendelian_errors) {
 	if (params.restrict_vcf_to_region) {
-	    subset_trio_and_region(ch_subset_vcf, params.vcf_trio, params.restrict_region)
+	    subset_trio_and_region(ch_subset_vcf, params.vcf_trio, params.restrict_region_bed)
 	    ch_subset_trio_vcf_tbi = subset_trio_and_region.out.vcf_tbi
 	} else {
 	    subset_trio(ch_subset_vcf, params.vcf_trio)
