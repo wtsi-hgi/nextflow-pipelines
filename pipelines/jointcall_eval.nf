@@ -1,138 +1,75 @@
 nextflow.preview.dsl = 2
 
-params.remove_crams = true // whether to keep crams pulled from Irods
-params.make_depth_plots = false
+params.restrict_vcf_to_region = true
+params.restrict_vcf_to_chr = true
+params.run_rtg_vcfeval = true
+params.run_bcftools_stats = true
+params.run_mendelian_errors = true
 
-// list of cram from local disk, attached to a dummy study_id:
-params.local_crams = "$baseDir/../../inputs/*.local_crams.csv" // set to "" if no local crams
-// list of crams to pull from Irods based on EGAN ID, attached to a dummy study_id:
-params.egan_irods_crams = "$baseDir/../../inputs/*.EGANS.csv" // set to "" if no crams from EGANS
-// list of Irods study whose cram files must also be processed:
-params.irods_studies = "" // set to "" if no Irods crams
-//params.irods_studies = "$baseDir/../../inputs/irods_studies.csv" // set to "" if no Irods crams
+params.genome = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_haplotype/hs38DH.fa"
 
-// required for mosdepth: genome ref fasta, capture region and study alias name of each study_id:
-params.study_ref_capture = "$baseDir/../../inputs/study_ref_capture.csv"
+params.restrict_region = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/S04380110_Padded+1_merged.bed"
+params.restrict_chr = "chr22"
 
-params.dropqc = ""
-include baton_study_id from '../modules/mosdepth/baton.nf' params(run: true, outdir: params.outdir)
-include mosdepth_from_local from '../modules/mosdepth/mosdepth_from_local.nf' params(run:true, outdir: params.outdir,dropqc: params.dropqc)
-include mosdepth_from_egans from '../modules/mosdepth/mosdepth_from_egans.nf' params(run:true, outdir: params.outdir,dropqc: params.dropqc, remove_crams: params.remove_crams)
-include mosdepth_from_irods from '../modules/mosdepth/mosdepth_from_irods.nf' params(run:true, outdir: params.outdir,dropqc: params.dropqc, remove_crams: params.remove_crams)
-include depth_plots_per_study from '../modules/mosdepth/depth_plots_per_study.nf' params(run:true, outdir: params.outdir)
-include depth_plots from '../modules/mosdepth/depth_plots.nf' params(run:true, outdir: params.outdir)
-include prep_capture_bed from '../modules/mosdepth/prep_capture_bed.nf' params(run:true, outdir: params.outdir)
+params.tag = "hail"
+params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/hail_dataproc/interval_wes.split_multi.vcf.gz" 
+params.vcf_sample = "Sample_Diag-excap51-HG002-EEogPU"
+params.vcf_trio = "Sample_Diag-excap51-HG004-EEogPU,Sample_Diag-excap51-HG003-EEogPU,Sample_Diag-excap51-HG002-EEogPU" // in order mother,father,child 
+
+params.rtg_vcf_baseline = "/lustre/scratch114/projects/interval_wes/giab_wes/rtg_vcfeval/refs/HG002_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_CHROM1-22_v3.2.2_highconf_chr.hg38.split.chr22.vcf.gz"
+params.rtg_sample = "INTEGRATION"
+params.rtg_genome_template = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_haplotype/hs38DH.fa.sdf"
+params.rtg_region = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/S04380110_Padded+1_merged.bed"
+
+//params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_vqsr/giab_gatk.vcf.gz" 
+//params.vcf_sample = "HG002"
+//params.vcf_trio = "HG004,HG003,HG002" // in order mother,father,child 
+
+include subset_sample from '../modules/jointcall_eval/subset_sample.nf' params(run: true, outdir: params.outdir)
+include subset_sample_and_region from '../modules/jointcall_eval/subset_sample_and_region.nf' params(run: true, outdir: params.outdir)
+include subset_trio from '../modules/jointcall_eval/subset_trio.nf' params(run: true, outdir: params.outdir)
+include subset_trio_and_region from '../modules/jointcall_eval/subset_trio_and_region.nf' params(run: true, outdir: params.outdir)
+include subset_chr from '../modules/jointcall_eval/subset_chr.nf' params(run: true, outdir: params.outdir)
+include bcftools_stats from '../modules/jointcall_eval/bcftools_stats.nf' params(run: true, outdir: params.outdir)
+include rtg_vcfeval from '../modules/jointcall_eval/rtg_vcfeval.nf' params(run: true, outdir: params.outdir)
+include mendelian_errors from '../modules/jointcall_eval/mendelian_errors.nf' params(run: true, outdir: params.outdir)
 
 workflow {
-    // check samples already processed:
-    Channel.fromPath("${params.outdir}/mosdepth/*/*/*.mosdepth.region.dist.txt", type: 'file')
-	.map{egan_dir -> tuple(egan_dir.getParent().getParent().getSimpleName(), // gives study_alias
-			       egan_dir.getParent().getSimpleName(),
-			       'already_processed')} // gives samplename
-	.set{samples_already_processed}
 
-    // prepare bed file: remove comments and ^chr if required
-    Channel.fromPath(params.study_ref_capture)
-	.splitCsv(header: true, sep: ',')
-	.map{row->tuple(row.study_id, file(row.capture), row.remove_capture_chr)}
-	.set{to_prep_capture_bed}
-//    to_prep_capture_bed.view()
-    prep_capture_bed(to_prep_capture_bed)
+    if (params.restrict_vcf_to_chr) {
+	subset_chr(params.vcf, params.restrict_chr)
+	ch_subset_vcf = subset_chr.out.vcf
+    } else {
+	ch_subset_vcf = params.vcf
+    }
     
-    Channel.fromPath(params.study_ref_capture)
-	.splitCsv(header: true, sep: ',')
-	.map{row->tuple(row.study_id, row.study_alias, file(row.ref))}
-	.combine(prep_capture_bed.out.study_capturebed, by: 0)
-	.set{ch_study_alias_ref_capture}
- //   ch_study_alias_ref_capture.view()
+    if (params.restrict_vcf_to_region) {
+	subset_sample_and_region(ch_subset_vcf, params.sample, params.restrict_region)
+	ch_subset_vcf_tbi = subset_sample_and_region.out.vcf_tbi
+    } else {
+	subset_sample(ch_subset_vcf, params.sample)
+	ch_subset_vcf_tbi = subset_sample.out.vcf_tbi
+    }
     
-    //// process cram files from local_disk:
-    ch_local_crams = params.local_crams == '' ? Channel.empty() :
-	Channel.fromPath(params.local_crams)
-	.splitCsv(header: true, sep: ',')
-	.map{row->tuple(row.study_id, row.samplename, file(row.cram))}
+    if (params.run_bcftools_stats) {
+	bcftools_stats(ch_subset_vcf_tbi) }
 
-    ch_local_crams
-	.combine(ch_study_alias_ref_capture, by: 0)
-	.set{to_mosdepth_local}
-    // to_mosdepth_local.view()
-    //tmp mosdepth_from_local(to_mosdepth_local.take(-1))
+    if (params.run_rtg_vcfeval) {
+	rtg_vcfeval(ch_subset_vcf_tbi,
+		    params.sample,
+		    params.rtg_sample,
+		    params.rtg_vcf_baseline,
+		    params.rtg_genome_template,
+		    params.rtg_region) }
+    
+    if (params.run_mendelian_errors) {
+	if (params.restrict_vcf_to_region) {
+	    subset_trio_and_region(ch_subset_vcf, params.vcf_trio, params.restrict_region)
+	    ch_subset_trio_vcf_tbi = subset_trio_and_region.out.vcf_tbi
+	} else {
+	    subset_trio(ch_subset_vcf, params.vcf_trio)
+	    ch_subset_trio_vcf_tbi = subset_trio.out.vcf_tbi
+	}
+	mendelian_errors(ch_subset_trio_vcf_tbi) }
 
-    //// process cram files from irods:
-    ch_irods_studies = params.irods_studies == '' ? Channel.empty() :
-	Channel.fromPath(params.irods_studies)
-	.splitCsv(header: true, sep: ',')
-	.map{row-> row.study_id}
-    
-//    // ch_irods_studies.view()
-//    baton_study_id(ch_irods_studies)
-//    baton_study_id.out.samples_noduplicates_tsv
-//	.map{a,b -> b}
-//	.splitCsv(header: true, sep: '\t')
-//	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
-//	.map{a,b,c-> tuple(c,a)}
-//	.combine(ch_study_alias_ref_capture, by: 0)
-//	.set{to_mosdepth_irods}
-    // to_mosdepth_irods.view()
-    //tmp mosdepth_from_irods(to_mosdepth_irods.take(-1))
-
-//    mosdepth_from_irods.out.study_samplename_regiondist
-//	.mix(mosdepth_from_local.out.study_samplename_regiondist)
-//	.set{ch_study_samplename_regiondist}
-    
-//	ch_study_samplename_regiondist
-//	    .map{a,b,c-> tuple(a,c)}
-//	    .groupTuple())
-
-    //// process cram files from Irods based on EGAN IDs:
-    ch_egan_irods_crams = params.egan_irods_crams == '' ? Channel.empty() :
-	Channel.fromPath(params.egan_irods_crams)
-	.splitCsv(header: true, sep: ',')
-	.map{row->tuple(row.study_id, row.egan_id)}
-	.combine(ch_study_alias_ref_capture, by: 0)
-	.set{to_mosdepth_egans} 
-    
-    to_mosdepth_egans
-	.map{studyid,samplename,study_alias,ref_fasta,capture_bed ->
-	tuple(study_alias, samplename)} // , studyid, ref_fasta,capture_bed)}
-	.join(samples_already_processed, remainder: true, by: [0,1])
-	.set{to_mosdepth_egans_checked} 
-    
-    to_mosdepth_egans_checked
-	.branch {
-	  done: it[2] == "already_processed"
-	  todo: true}
-	.set {to_mosdepth_egans_branched }
-    
-    samples_already_processed
-	.map{a,b,c -> "${a},${b},${c}"}
-	.collectFile(name: "${params.outdir}/tmp/samples_already_processed.txt", newLine: true)
-    to_mosdepth_egans
-	.map{a,b,c,d,e -> "${a},${b},${c},${d},${e}"}
-	.collectFile(name: "${params.outdir}/tmp/samples_to_mosdepth_egans.txt", newLine: true)
-   to_mosdepth_egans_checked
-	.map{a,b,c -> "${a},${b},${c}"}
-	.collectFile(name: "${params.outdir}/tmp/samples_checked.txt",newLine: true)
-    
-    to_mosdepth_egans_branched.done
-	.map{a,b,c -> "${a},${b},${c}"}
-	.collectFile(name: "${params.outdir}/tmp/samples.branched.done.txt",newLine: true)
-    to_mosdepth_egans_branched.todo
-	.map{a,b,c -> "${a},${b},${c}"}
-	.collectFile(name: "${params.outdir}/tmp/samples.branched.todo.txt",newLine: true)
-    
-    mosdepth_from_egans(to_mosdepth_egans_branched.todo
-			.map{a,b,c -> tuple(a,b)}
-			.combine(to_mosdepth_egans
-				 .map{studyid,samplename,study_alias,ref_fasta,capture_bed ->
-		tuple(study_alias, samplename, studyid, ref_fasta,capture_bed)}
-				 , by: [0,1]))
-    
-    //// make plots
-//    if (params.make_depth_plots) {
-//	depth_plots_per_study(
-//	    ch_study_samplename_regiondist
-//		.map{a,b,c-> tuple(a,c)}
-//		.groupTuple())
-  //  }
 }
