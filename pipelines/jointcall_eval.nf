@@ -13,10 +13,12 @@ params.restrict_region_bed = "/lustre/scratch118/humgen/resources/ref/Homo_sapie
 params.restrict_chr = "chr22"
 
 params.tag = "hail"
+// need index .tbi of vcf as well:
 params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/hail_dataproc/interval_wes.split_multi.vcf.gz" 
 params.vcf_sample = "Sample_Diag-excap51-HG002-EEogPU"
 params.vcf_trio = "Sample_Diag-excap51-HG004-EEogPU,Sample_Diag-excap51-HG003-EEogPU,Sample_Diag-excap51-HG002-EEogPU" // in order mother,father,child 
 
+// need index .tbi of vcf as well:
 params.rtg_vcf_baseline = "/lustre/scratch114/projects/interval_wes/giab_wes/rtg_vcfeval/refs/HG002_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_CHROM1-22_v3.2.2_highconf_chr.hg38.split.chr22.vcf.gz"
 params.rtg_sample = "INTEGRATION"
 params.rtg_genome_template = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_haplotype/hs38DH.fa.sdf"
@@ -37,41 +39,55 @@ include rtg_vcfeval from '../modules/jointcall_eval/rtg_vcfeval.nf' params(run: 
 include mendelian_errors from '../modules/jointcall_eval/mendelian_errors.nf' params(run: true, outdir: params.outdir)
 
 workflow {
+    
+    ch_input_vcf_tbi = Channel.from(params.vcf)
+	.map{a -> tuple(file("${a}"), file("${a}.tbi"))}
+						    
+    ch_rtg_vcf_baseline_tbi = ch_input_vcf_tbi = Channel.from(params.rtg_vcf_baseline)
+	.map{a -> tuple(file("${a}"), file("${a}.tbi"))}
+    
+    
+    ch_genome = Channel.fromPath(params.genome)
+    ch_rtg_region = Channel.fromPath(params.rtg_region)
+    ch_rtg_genome_template = Channel.fromPath(params.rtg_genome_template)
+    ch_restrict_region_bed = Channel.fromPath(params.restrict_region_bed)
 
+    
     if (params.restrict_vcf_to_chr) {
-	subset_chr(params.vcf, params.restrict_chr)
-	ch_subset_vcf = subset_chr.out.vcf
+	subset_chr(ch_input_vcf_tbi, params.restrict_chr)
+	ch_subset_vcf_tbi = subset_chr.out.vcf_tbi
     } else {
-	ch_subset_vcf = params.vcf
+	ch_subset_vcf_tbi = ch_input_vcf_tbi
     }
-    
-    if (params.restrict_vcf_to_region) {
-	subset_sample_and_region(ch_subset_vcf, params.sample, params.restrict_region_bed)
-	ch_subset_vcf_tbi = subset_sample_and_region.out.vcf_tbi
-    } else {
-	subset_sample(ch_subset_vcf, params.sample)
-	ch_subset_vcf_tbi = subset_sample.out.vcf_tbi
-    }
-    
-    if (params.run_bcftools_stats) {
-	bcftools_stats(ch_subset_vcf_tbi) }
-
-    if (params.run_rtg_vcfeval) {
-	rtg_vcfeval(ch_subset_vcf_tbi,
-		    params.sample,
-		    params.rtg_sample,
-		    params.rtg_vcf_baseline,
-		    params.rtg_genome_template,
-		    params.rtg_region) }
-    
-    if (params.run_mendelian_errors) {
-	if (params.restrict_vcf_to_region) {
-	    subset_trio_and_region(ch_subset_vcf, params.vcf_trio, params.restrict_region_bed)
-	    ch_subset_trio_vcf_tbi = subset_trio_and_region.out.vcf_tbi
-	} else {
-	    subset_trio(ch_subset_vcf, params.vcf_trio)
-	    ch_subset_trio_vcf_tbi = subset_trio.out.vcf_tbi
-	}
-	mendelian_errors(ch_subset_trio_vcf_tbi) }
-
+    ch_subset_vcf_tbi.view()   
+//    if (params.restrict_vcf_to_region) {
+//	subset_sample_and_region(ch_subset_vcf_tbi, params.sample, ch_restrict_region_bed)
+//	ch_subset_vcf_tbi = subset_sample_and_region.out.vcf_tbi
+//    } else {
+//	subset_sample(ch_subset_vcf, params.sample)
+//	ch_subset_vcf_tbi = subset_sample.out.vcf_tbi
+//    }
+//    
+//    if (params.run_bcftools_stats) {
+//	bcftools_stats(ch_subset_vcf_tbi) }
+//
+//    if (params.run_rtg_vcfeval) {
+//	rtg_vcfeval(ch_subset_vcf_tbi,
+//		    params.sample,
+//		    params.rtg_sample,
+//		    ch_rtg_vcf_baseline_tbi,
+//		    ch_rtg_genome_template,
+    //		    ch_rtg_region,
+    //              params.tag) }
+//    
+//    if (params.run_mendelian_errors) {
+//	if (params.restrict_vcf_to_region) {
+//	    subset_trio_and_region(ch_subset_vcf_tbi, params.vcf_trio, ch_restrict_region_bed)
+//	    ch_subset_trio_vcf = subset_trio_and_region.out.vcf_tbi
+//	} else {
+//	    subset_trio(ch_subset_vcf_tbi, params.vcf_trio)
+//	    ch_subset_trio_vcf = subset_trio.out.vcf_tbi
+//	}
+//	mendelian_errors(ch_subset_trio_vcf) }
+//
 }
