@@ -29,6 +29,6 @@ export PATH=/lustre/scratch118/humgen/resources/conda_envs/rtg_tools/bin:\$PATH
 bcftools view -Oz -o subset_trio_region.vcf.gz \\
 -s $trio -R $region_bed $vcf
 
-tabix -p subset_trio_region.vcf.gz
+tabix -p vcf subset_trio_region.vcf.gz
     """
 }

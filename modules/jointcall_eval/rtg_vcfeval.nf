@@ -1,14 +1,14 @@
 params.run = true
 
 process rtg_vcfeval {
-    tag "${sample}"
+    tag "${tag} ${sample}"
     memory = '4G'
     time '240m'
-    cpus 1
+    cpus 4
     errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
     maxRetries 1
     maxForks 12
-    publishDir "${params.outdir}/subset_sample/${sample}/", mode: 'symlink', overwrite: true
+    publishDir "${params.outdir}/${tag}/rtg_vcfeval/", mode: 'symlink', overwrite: true
     conda '/lustre/scratch118/humgen/resources/conda_envs/rtg_tools'
 
     when:
@@ -24,7 +24,7 @@ process rtg_vcfeval {
     val(tag)
     
     output: 
-    tuple file("subset_sample.vcf.gz"), file('subset_sample.vcf.gz.tbi'), emit: vcf_tbi
+    file("${tag}_${sample}")
 
     script:
     """
@@ -34,11 +34,11 @@ rtg vcfeval \\
 --baseline $rtg_vcf \\
 --calls $vcf \\
 --output ${tag}_${sample} \\
---evaluation-regions $bed \
---bed-regions $bed \
---template $template \
---sample "INTEGRATION,Sample_Diag-excap51-HG002-EEogPU" \
---threads=4 \
---output-mode "split"
+--evaluation-regions $rtg_region \\
+--bed-regions $rtg_region \\
+--template $rtg_genome_template \\
+--sample "${rtg_sample},${sample}" \\
+--threads=4 \\
+--output-mode \"split\"
     """
 }

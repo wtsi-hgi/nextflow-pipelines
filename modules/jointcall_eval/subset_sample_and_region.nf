@@ -29,6 +29,6 @@ export PATH=/lustre/scratch118/humgen/resources/conda_envs/rtg_tools/bin:\$PATH
 bcftools view -Oz -o subset_sample_region.vcf.gz \\
 -s $sample -R $region_bed $vcf
 
-tabix -p subset_sample_region.vcf.gz
+tabix -p vcf subset_sample_region.vcf.gz
     """
 }
