@@ -4,10 +4,10 @@ params.run_vep = true
 params.run_concat = true
 params.run_vqsr = true
 
-params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/vcfs_concatenated"
+params.vcfs_dir = "/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/IBD_12009/output/all_vcfs/"
 Channel.fromPath("${params.vcfs_dir}/*.vcf.gz")
 	.set{ch_vcfs_gz}
-Channel.fromPath("${params.vcfs_dir}/*.vcf.gz.csi")
+Channel.fromPath("${params.vcfs_dir}/*.vcf.gz.tbi")
 	.set{ch_vcfs_gz_csi}
 
 include strip_vcf from '../modules/variant_calling/strip_vcf.nf' params(run: true, outdir: params.outdir)
@@ -21,7 +21,8 @@ workflow {
 	.combine(
 	ch_vcfs_gz_csi
 	    .map{csi -> tuple(csi.getSimpleName(),csi)}, by: 0)
-	.take(8) // replace with take(-1) to select all inputs
+	.take(-1) // replace with take(-1) to select all inputs
+//	.take(8) // replace with take(-1) to select all inputs
 	.set{ch_name_vcf_csi}
 //   ch_name_vcf_csi.view()
 
