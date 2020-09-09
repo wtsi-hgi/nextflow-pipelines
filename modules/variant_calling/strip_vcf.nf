@@ -4,7 +4,7 @@ process strip_vcf {
     memory '6G'
     tag "$name"
     cpus 1
-    conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
+    // conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     //scratch '/tmp'
     //stageInMode 'copy'
     //stageOutMode 'copy'
