@@ -1,17 +1,17 @@
 params.run = true
 
 process vqsr_vcf {
-    memory '6G'
+    memory '65G'
     tag "vqsr $vcf"
-    cpus 2
+    cpus 1
     //conda '/lustre/scratch118/humgen/hgi/projects/ibdx10/variant_calling/joint_calling/ibd_concat_nextflow/bcftools'
     //scratch '/tmp'
     //stageInMode 'copy'
     //stageOutMode 'copy'
     time '700m'
-    queue 'normal'
+    queue 'long'
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    publishDir "${params.outdir}/vqsr_vcf/$name/", mode: 'symlink', overwrite: true, pattern: "*.pdf"
+    publishDir "${params.outdir}/vqsr_vcf/", mode: 'symlink', overwrite: true
     
     maxRetries 2
 
@@ -22,7 +22,8 @@ process vqsr_vcf {
     tuple file(vcf), file(tbi)
     
     output:
-    tuple file("${name}.snps.tranches"), file("${name}.indels.tranches"), emit: tranches
+    file("recal_snp_recal_indel${vcf}")
+    tuple file("${vcf}.snps.tranches"), file("${vcf}.indels.tranches"), emit: tranches
     tuple file("*.R"), file("*.pdf"), emit: plots
 
     script:
@@ -42,7 +43,7 @@ Mills_indel=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Mills_and_1000G
 axiomPoly_resource=/lustre/scratch118/humgen/resources/GATK/bundle/hg38/Axiom_Exome_Plus.genotypes.all_populations.poly.hg38.vcf.gz
 
 echo INDELS
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.8.0.sif /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
  	--reference \${ref_genome} \
  	-V ${vcf} \
  	--resource:mills,known=false,training=true,truth=true,prior=12.0 \${Mills_indel} \
@@ -63,15 +64,10 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
  	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
  	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
  	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
- 	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 \
- 	-tranche 89.0 -tranche 88.0 -tranche 87.0 -tranche 86.0 -tranche 85.0 \
- 	-tranche 84.0 -tranche 83.0 -tranche 82.0 -tranche 81.0 -tranche 80.0 \
-	-tranche 79.0 -tranche 78.0 -tranche 77.0 -tranche 76.0 -tranche 75.0 \
- 	-tranche 74.0 -tranche 73.0 -tranche 72.0 -tranche 71.0 -tranche 70.0 \
- 	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
+ 	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0
 
 echo SNPS
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.8.0.sif /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" VariantRecalibrator \
 	--reference \${ref_genome} \
 	-V ${vcf} \
 	--resource:hapmap,known=false,training=true,truth=true,prior=15.0 \${hapmap} \
@@ -94,29 +90,24 @@ singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /sof
 	-tranche 100.0 -tranche 99.9 -tranche 99.8 -tranche 99.7 -tranche 99.6 \
 	-tranche 99.5 -tranche 99.4 -tranche 99.3 -tranche 99.2 -tranche 99.1 \
 	-tranche 99.0 -tranche 98.0 -tranche 97.0 -tranche 96.0 -tranche 95.0 \
-	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0 \
-	-tranche 89.0 -tranche 88.0 -tranche 87.0 -tranche 86.0 -tranche 85.0 \
-	-tranche 84.0 -tranche 83.0 -tranche 82.0 -tranche 81.0 -tranche 80.0 \
-	-tranche 79.0 -tranche 78.0 -tranche 77.0 -tranche 76.0 -tranche 75.0 \
-	-tranche 74.0 -tranche 73.0 -tranche 72.0 -tranche 71.0 -tranche 70.0 \
-	-tranche 69.0 -tranche 68.0 -tranche 67.0 -tranche 66.0 -tranche 65.0
+	-tranche 94.0 -tranche 93.0 -tranche 92.0 -tranche 91.0 -tranche 90.0
 
 echo indel_apply
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.8.0.sif /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
  	-V ${vcf} \
  	-O recal_indel${vcf} \
- 	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.indels.tranches \
-        --recal-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.indels.recal \
+ 	--tranches-file ${vcf}.indels.tranches \
+        --recal-file ${vcf}.indels.recal \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.5 \
         -mode INDEL
 
 echo SNP_apply
-singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources -B /lustre/scratch119/humgen/projects/ibd_interval_15x/mercury/GATK_Variant_calling/output_vcf/stripped_vcf /software/hgi/containers/gatk-4.1.0.0.simg /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
- 	-V ${vcf} \
- 	-O "recal_snp${vcf} \
- 	--tranches-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.tranches \
-        --recal-file /lustre/scratch118/humgen/hgi/projects/wtsi_joint_exomes/output_vcf/stripped_vcf/genome.vcf.gz.snps.recal \
+singularity exec -B /lustre -B \$CWD -B /lustre/scratch118/humgen/resources /software/hgi/containers/gatk-4.1.8.0.sif /gatk/gatk --java-options "-XX:+UseSerialGC -Xmx64g -Xms64g -DGATK_STACKTRACE_ON_USER_EXCEPTION=true" ApplyVQSR \
+ 	-V recal_indel${vcf} \
+ 	-O recal_snp_recal_indel${vcf} \
+ 	--tranches-file ${vcf}.snps.tranches \
+        --recal-file ${vcf}.snps.recal \
  	--reference \${ref_genome} \
         --truth-sensitivity-filter-level 99.7 \
         -mode SNP
