@@ -7,7 +7,6 @@ params.runtag = 'HG_WC10018_RNAseq_6175'
 params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_100bp/"
 params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
 params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
-params.mbv_vcf_gz = "" // "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.min_reads = 500   // used by crams_to_fastq_gz
@@ -62,6 +61,7 @@ Channel.fromPath(params.biotypes_header)
 //    .set {ch_salmon_trans_gene}
 
 // "/lustre/scratch119/humgen/projects/gains_team282/Genotyping/All_genotyping_merged_filtered_b38.vcf.gz"
+params.mbv_vcf_gz = "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 Channel.fromPath(params.mbv_vcf_gz)
     .ifEmpty { exit 1, "MBV vcf not found: ${params.mbv_vcf_gz}" }
     .set { ch_mbv_vcf_gz }
@@ -130,7 +130,7 @@ workflow {
     if (params.run_get_egan_id) {
 	get_egan_id(iget_cram.out[0])
 	
-	get_egan_id.out.samplename_egan_id_csv                                                                    
+	get_egan_id.out.samplename_egan_id_csv
 	    .map { samplename,cram,csv_file -> csv_file }
 	    .splitCsv(header: true, sep: ',')
 	    .map { row -> "${row.samplename},${row.egan_id}"}
