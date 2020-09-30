@@ -1,12 +1,13 @@
 nextflow.preview.dsl=2
 
-// Study: HG_Vietnam Vaccine Perturbation Study - Full
-ch_studies = Channel.from('5855')
+// Study: HG_WC10018_RNAseq of GEL patients with protein-altering mutations in spliceosome genes
+ch_studies = Channel.from('6175')
+params.runtag = 'HG_WC10018_RNAseq_6175' 
 
 params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_100bp/"
 params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
 params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
-params.mbv_vcf_gz = "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
+params.mbv_vcf_gz = "" // "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 
 params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.min_reads = 500   // used by crams_to_fastq_gz
@@ -18,7 +19,6 @@ params.forward_stranded = false  // used by featurecounts
 params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'bioaid' // HG_RNASeq of cellular DDD models pilot
 params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 params.run_deseq2 = false
