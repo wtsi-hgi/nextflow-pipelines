@@ -14,13 +14,6 @@ params.restrict_chr = "chr22"
 params.restrict_region_bed = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH/intervals/Agilent_no_overlaps/S04380110_Padded+1_merged.bed"
 
 
-/////////////////////////////////////////////
-params.tag = "hail_HG002"
-// need index .tbi of vcf as well:
-params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/hail_dataproc/interval_wes.split_multi.vcf.gz" 
-params.vcf_sample = "Sample_Diag-excap51-HG002-EEogPU"
-params.vcf_trio = "Sample_Diag-excap51-HG004-EEogPU,Sample_Diag-excap51-HG003-EEogPU,Sample_Diag-excap51-HG002-EEogPU" // in order mother,father,child 
-
 // need index .tbi of vcf as well:
 params.rtg_vcf_baseline = "/lustre/scratch114/projects/interval_wes/giab_wes/rtg_vcfeval/refs/HG002_GIAB_highconf_IllFB-IllGATKHC-CG-Ion-Solid_CHROM1-22_v3.2.2_highconf_chr.hg38.split.chr22.vcf.gz"
 params.rtg_sample = "INTEGRATION"
@@ -29,7 +22,15 @@ params.rtg_region = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH
 /////////////////////////////////////////////
 
 
-// Illumina Dragen
+// Hail joint-call vcf
+/////////////////////////////////////////////
+//params.tag = "hail_HG002"
+//params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/hail_dataproc/interval_wes.split_multi.vcf.gz" // need index .tbi of vcf as well:
+//params.vcf_sample = "Sample_Diag-excap51-HG002-EEogPU"
+//params.vcf_trio = "Sample_Diag-excap51-HG004-EEogPU,Sample_Diag-excap51-HG003-EEogPU,Sample_Diag-excap51-HG002-EEogPU" // in order mother,father,child 
+/////////////////////////////////////////////
+
+// Illumina Dragen joint-call vcf
 /////////////////////////////////////////////
 //params.tag = "illumina_HG002"
 //params.vcf = "/lustre/scratch115/projects/interval_wes/illumina_dragen/openstack+GIAB/interval_wes_4070_QC_passed_diploid.vcf.gz"
@@ -37,12 +38,12 @@ params.rtg_region = "/lustre/scratch118/humgen/resources/ref/Homo_sapiens/HS38DH
 //params.vcf_trio = "Sample_Diag-excap51-HG004-EEogPU,Sample_Diag-excap51-HG003-EEogPU,Sample_Diag-excap51-HG002-EEogPU" // in order mother,father,child 
 /////////////////////////////////////////////
 
-// GATK vcf
+// GATK joint-call vcf
 /////////////////////////////////////////////
-//params.tag = "gatk_HG002"
-//params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_vqsr/giab_gatk.vcf.gz" 
-//params.vcf_sample = "HG002"
-//params.vcf_trio = "HG004,HG003,HG002" // in order mother,father,child 
+params.tag = "gatk_HG002"
+params.vcf = "/lustre/scratch114/projects/interval_wes/giab_wes/gatk_vqsr/giab_gatk.vcf.gz" 
+params.vcf_sample = "HG002"
+params.vcf_trio = "HG004,HG003,HG002" // in order mother,father,child 
 /////////////////////////////////////////////
 
 include subset_chr from '../modules/jointcall_eval/subset_chr.nf' params(run: true, outdir: params.outdir)
