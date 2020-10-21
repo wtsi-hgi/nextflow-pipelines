@@ -176,10 +176,13 @@ workflow {
 
     salmon(ch_samplename_crams, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
 
-    merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
+    //merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
+    //merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts}.set{ch_salmon_counts}
+    //ch_salmon_counts.view()
 
     tximport(salmon.out[0].collect())
-    heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
+    heatmap(tximport.out[1])
+    // heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
     
     //star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 

@@ -16,13 +16,13 @@ process heatmap {
     params.run
 
     input:
-    file (count_matrix_tsv)
+    file (count_matrix_csv)
 
     output:
     tuple file("outputs/salmon_PCA_unbiased_toppc.pdf"), file("outputs/salmon_heatmap_toppc.pdf"), emit: pca_heatmap
 
     script:
     """
-    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/heatmap.R $count_matrix_tsv
+    /usr/bin/Rscript $workflow.projectDir/../bin/rna_seq/heatmap.R $count_matrix_csv
     """
 }

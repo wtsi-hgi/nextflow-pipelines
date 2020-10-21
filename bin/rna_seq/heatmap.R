@@ -6,8 +6,6 @@ if (length(args)==0) {
 
 print(args[1])
 
-library(gplots)
-library(biomaRt)
 library(reshape2)
 library(ggplot2)
 library(broom)
@@ -30,7 +28,10 @@ dir.create('./outputs', showWarnings = FALSE)
 
 rename = dplyr::rename
 select = dplyr::select
-data = read_tsv(args[1]) 
+#data = read_tsv(args[1]) 
+data = read.csv(args[1]) %>%
+    as.data.frame %>%
+    dplyr::rename(ENSEMBL_ID = X)
 print(data)
 
 meths = c("euclidean", "maximum", "manhattan", "canberra","binary","minkowski")
