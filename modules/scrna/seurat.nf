@@ -2,41 +2,23 @@ params.run = true
 
 process seurat {
     tag "seurat $samplename $raw_filtered"
-
-    //// FCE
-    disk '100 GB'
-    scratch '/tmp'
-    stageInMode 'symlink'
-    stageOutMode 'rsync'
-    cpus = 8
-    time '8000m'
-    container "single_cell"
-    containerOptions = "--bind /"
-    memory = {  100.GB + 50.GB * (task.attempt-1) }
-    maxForks 100
-    ////// FCE 
-
-    /// farm
-    // containerOptions = "--bind /tmp --bind /lustre"
-    // queue 'long'
-    // time '1400m'
-    // memory = '80G'
-    // cpus 2
-    // errorStrategy { task.attempt < 3 ? 'retry' : 'ignore' }
-    // maxRetries 2
-    // scratch false
-    /// farm
-
     container "singularity-rstudio-seurat-tximport"
+    containerOptions = "--bind /tmp --bind /lustre"
+    queue 'long'
+    time '1400m'
+    memory = '80G'
+    cpus 2
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
+    maxRetries 3
     publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
+    scratch false 
 
     when:
     params.run
 
     input:
     set val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
-    file(rscript)
-    
+
     output:
     tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_TSNEPlot.pdf"), emit: tsneplot_pdf
     tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx"), emit: stats_xslx
@@ -45,7 +27,6 @@ process seurat {
 
     script:
     """
-    /usr/bin/Rscript $rscript $samplename $cellranger_matrix_dir $raw_filtered $metrics_summary_csv
-
+    /usr/bin/Rscript $workflow.projectDir/../bin/scrna/seurat.R $samplename $cellranger_matrix_dir $raw_filtered $metrics_summary_csv
     """
 }

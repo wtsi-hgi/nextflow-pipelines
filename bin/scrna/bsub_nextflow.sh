@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-## on farm5
 export http_proxy=http://wwwcache.sanger.ac.uk:3128
 export https_proxy=http://wwwcache.sanger.ac.uk:3128
 export HTTP_PROXY=http://wwwcache.sanger.ac.uk:3128
@@ -14,6 +13,9 @@ export PATH=/software/singularity-v3.5.1/bin/:$PATH
 #export CAPSULE_CACHE_DIR=/software/hgi/installs/anaconda3/capsule_cache
 eval "$(conda shell.bash hook)"
 #conda activate $CONDA_ENVS_DIRS/nextflow20
-conda activate nextflow
+conda activate nextflow20
 
-rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && rm -f nohup.log && rm -f nohup.out && nohup ./nextflow-pipelines/bin/scrna/nextflow.sh > nohup.log 2>&1 &
+echo starting bsub
+rm -f hs_err_pid* && rm -f timeline* && rm -f trace* && rm -rf report* && rm -f bsub.o && rm -f bsub.e && rm -f .nextflow.log && bsub -G hgi -R'select[mem>5000] rusage[mem=5000] span[hosts=1]' -M 5000 -n 1 -o bsub.o -e bsub.e -q normal ./nextflow-pipelines/bin/scrna/nextflow.sh > bjob.id
+echo finished bsub
+cat bjob.id

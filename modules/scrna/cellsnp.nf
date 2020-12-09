@@ -1,24 +1,16 @@
 params.run = true
 
 process 'cellsnp' {
-
-    disk '200 GB'
-    scratch '/tmp'
-    stageInMode 'symlink'
-    stageOutMode 'rsync'
-
-    cpus = 24
-    time '8000m'
-    // queue 'basement'
-
     tag "cellSNP $samplename"
     container "single_cell"
-    containerOptions = "--bind /"
-
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    memory = {  100.GB + 50.GB * (task.attempt-1) }
+    cpus = 20 
+    memory = {  220.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
+    scratch false
+    queue 'basement'
+    time '8000m'
 
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
 
