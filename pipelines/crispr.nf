@@ -1,5 +1,5 @@
 nextflow.preview.dsl=2
-params.runtag = 'novaseq'
+params.runtag = '7jan2021_sunay'
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
