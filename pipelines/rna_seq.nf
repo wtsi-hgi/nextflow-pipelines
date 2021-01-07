@@ -25,7 +25,8 @@ params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used gen
 params.dropqc = ""
 
 params.run_iget = false
-params.from_fastq = true
+// or:
+params.from_fastq = false
 params.fastq_csv = "${baseDir}/../../inputs/crams_to_fastq_gz_out_0_sortuniq4179.txt" // if params.from_fastq
 
 params.run_salmon = true
