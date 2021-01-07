@@ -2,7 +2,8 @@ params.run = true
 
 process 'star_2pass_basic' {
     tag "${samplename}"
-    container "nfcore-rnaseq"
+    //container "nfcore-rnaseq"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
     time '600m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
@@ -37,11 +38,12 @@ process 'star_2pass_basic' {
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     set file("*.Log.final.out"), file("*.Log.out"), file("*.progress.out") //into ch_alignment_logs_star
     file "*.SJ.out.tab"
+    tuple val(samplename), file("${samplename}.ReadsPerGene.out.tab"), emit: samplename_readspergene_tab
 
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
     STAR --genomeDir ${genomeDir} \\
         --sjdbGTFfile $gtf \\

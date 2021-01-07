@@ -29,7 +29,7 @@ process 'iget_cellranger' {
     
     output:
     set val(samplename), file("cellranger_${samplename}") optional true
-    set val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai"), file("cellranger_${samplename}/raw_feature_bc_matrix/barcodes.tsv.gz")  optional true
+    set val(samplename), file("cellranger_${samplename}/*.bam"), file("cellranger_${samplename}/*.bam.bai"), file("cellranger_${samplename}/filtered_feature_bc_matrix/barcodes.tsv.gz")  optional true
     set val(samplename), file("cellranger_${samplename}/raw_feature_bc_matrix") optional true
     set val(samplename), file("cellranger_${samplename}/filtered_feature_bc_matrix") optional true
     set val(samplename), file("cellranger_${samplename}/metrics_summary.csv") optional true

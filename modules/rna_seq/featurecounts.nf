@@ -8,7 +8,8 @@ params.unstranded = false
 
 process featureCounts {
     tag "${samplename}"
-    container "nfcore-rnaseq"
+    // container "nfcore-rnaseq"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
     memory = '5G'
     time '300m'
     cpus 1
@@ -50,7 +51,7 @@ process featureCounts {
     }
     outfile = "${tag}.gene.fc.txt"
     """
-    export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
     featureCounts -T ${task.cpus} -a $gtf -g gene_id          \\
       -o ${outfile} $pairedend                                \\

@@ -2,7 +2,8 @@ params.run = true
 
 process 'star_2pass_1st_pass' {
     tag "1st pass ${samplename}"
-    container "nfcore-rnaseq"
+    // container "nfcore-rnaseq"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
     time '600m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
@@ -36,15 +37,25 @@ process 'star_2pass_1st_pass' {
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
-    # first pass 
-    STAR --genomeDir ${genomeDir} \\
-        --sjdbGTFfile $gtf \\
-        --readFilesIn $reads --readFilesCommand zcat \\
-        --runThreadN ${task.cpus} \\
-        --outSAMtype BAM Unsorted \\
-        --outFileNamePrefix ${samplename}.
+# first pass 
+
+STAR --genomeDir ${genomeDir} \\
+--sjdbGTFfile $gtf \\
+--readFilesIn $reads --readFilesCommand zcat \\
+--runThreadN ${task.cpus} \\
+--outSAMtype BAM Unsorted \\
+--outFileNamePrefix ${samplename}. \\
+--outFilterType BySJout \\
+--outFilterMultimapNmax 20 \\
+--alignSJoverhangMin 8 \\
+--alignSJDBoverhangMin 1 \\
+--outFilterMismatchNmax 999 \\
+--outFilterMismatchNoverReadLmax 0.04 \\
+--alignIntronMin 20 \\
+--alignIntronMax 1000000 \\
+--alignMatesGapMax 1000000
 
   rm *.bam
   """

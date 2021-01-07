@@ -2,7 +2,8 @@ params.run = true
 
 process 'star_2pass_2nd_pass' {
     tag "2nd pass ${samplename}"
-    container "nfcore-rnaseq"
+    // container "nfcore-rnaseq"
+    conda '/lustre/scratch118/humgen/resources/conda/star'
     queue "long"
     time '2800m'
 
@@ -16,6 +17,8 @@ process 'star_2pass_2nd_pass' {
     publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.bam.bai"
     publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.out"
     publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*Unmapped.out.mate1"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*Unmapped.out.mate2"
     
     publishDir "${params.outdir}/star_pass2_2ndpass_multiqc/", mode: 'copy',
         saveAs: { filename ->
@@ -39,21 +42,32 @@ process 'star_2pass_2nd_pass' {
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     set file("*.Log.final.out"), file("*.Log.out"), file("*.progress.out") //into ch_alignment_logs_star
     file "*.SJ.out.tab"
+    set val(samplename), file("*Unmapped.out.mate1"), file ("*Unmapped.out.mate2") //into star_aligned
 
   script:
 
   """
-  export PATH=/opt/conda/envs/nf-core-rnaseq-1.3/bin:\$PATH
+export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
   # 2nd pass
-  STAR --genomeDir ${genomeDir} \
-       --readFilesIn ${reads} \
-       --runThreadN ${task.cpus} \
-       --readFilesCommand zcat \
-       --limitSjdbInsertNsj 10000000 \
-       --sjdbFileChrStartEnd ${filtered_tab} \
-       --outSAMtype BAM SortedByCoordinate \
-       --outFileNamePrefix ${samplename}.
+STAR --genomeDir ${genomeDir} \\
+--readFilesIn ${reads} \\
+--runThreadN ${task.cpus} \\
+--readFilesCommand zcat \\
+--limitSjdbInsertNsj 10000000 \\
+--sjdbFileChrStartEnd ${filtered_tab} \\
+--outSAMtype BAM SortedByCoordinate \\
+--outFileNamePrefix ${samplename}. \\
+--outFilterType BySJout \\
+--outFilterMultimapNmax 20 \\
+--alignSJoverhangMin 8 \\
+--alignSJDBoverhangMin 1 \\
+--outFilterMismatchNmax 999 \\
+--outFilterMismatchNoverReadLmax 0.04 \\
+--alignIntronMin 20 \\
+--alignIntronMax 1000000 \\
+--alignMatesGapMax 1000000 \\
+--outReadsUnmapped Fastx
 
   # Index the BAM file
   samtools index ${samplename}.Aligned.sortedByCoord.out.bam
