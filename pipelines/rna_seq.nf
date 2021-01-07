@@ -1,8 +1,9 @@
 nextflow.preview.dsl=2
 
-// Study: HG_WC10018_RNAseq of GEL patients with protein-altering mutations in spliceosome genes
-ch_studies = Channel.from('6175')
-params.runtag = 'HG_WC10018_RNAseq_6175' 
+// ch_studies = Channel.from('6175')
+// params.runtag = 'HG_WC10018_RNAseq_6175' 
+ch_studies = Channel.from('6329')
+params.runtag = 'RNAseq_6329' 
 
 params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_100bp/"
 params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
