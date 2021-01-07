@@ -13,7 +13,8 @@ Channel.fromPath(params.guide_libraries)
 // add guide library of each sample:
 // params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
 // params.samplename_library = "${baseDir}/../../inputs/walkup103_libraries.csv"
-params.samplename_library = "${baseDir}/../../inputs/novaseq_libraries.csv"
+// params.samplename_library = "${baseDir}/../../inputs/novaseq_libraries.csv"
+params.samplename_library = "${baseDir}/../../inputs/crispr_7jan2021_sunay_dolcetto_june35_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
@@ -46,7 +47,7 @@ workflow {
 
     // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
     // Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
-    Channel.fromPath("${baseDir}/../../inputs/novaseq_fastqs.csv")
+Channel.fromPath("${baseDir}/../../inputs/crispr_7jan2021_sunay_dolcetto_june35_fastqs.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
