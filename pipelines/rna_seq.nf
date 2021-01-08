@@ -17,7 +17,11 @@ params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
 params.runtag = 'bioaid' // HG_RNASeq of cellular DDD models pilot
+<<<<<<< HEAD
+params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used genome version
+=======
 params.ensembl_lib = "Ensembl 99 EnsDb" // used by tximport, must match used genome version
+>>>>>>> 02221316fb3d2868fada95f788563067f2177f7f
 params.dropqc = ""
 params.run_deseq2 = false
 params.deseq2_tsv = "$baseDir/../../inputs/DESeq2.tsv"
@@ -179,7 +183,11 @@ workflow {
     tximport(salmon.out[0].collect())
     heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
     
+<<<<<<< HEAD
+    //star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+=======
     star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+>>>>>>> 02221316fb3d2868fada95f788563067f2177f7f
 
     star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
@@ -187,13 +195,16 @@ workflow {
 
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
+<<<<<<< HEAD
+    //star_tabgenes_matrix(star_out.samplename_readspergene_tab.collect())
+=======
+>>>>>>> 02221316fb3d2868fada95f788563067f2177f7f
 
     if(params.run_mbv) {
 	//mbv(star_out[0].map{samplename,bam,bai -> tuple(samplename,bam)},
 	mbv(iget_cram.out[0],
 	    ch_mbv_vcf_gz.collect()) }
     //// 
-    star_tabgenes_matrix(star_2pass_basic.out.samplename_readspergene_tab.collect())
     
     leafcutter_bam2junc(star_out[0])
     leafcutter_clustering(leafcutter_bam2junc.out.collect())
