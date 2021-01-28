@@ -116,30 +116,30 @@ include get_egan_id from '../modules/rna_seq/get_egan_id.nf' params(run: true, o
 workflow {
 
     // multiple study_ids 
-    baton_study_id(ch_studies)
-
-    to_iget = baton_study_id.out.samples_noduplicates_tsv
-	.map{a,b -> b}
-	.splitCsv(header: true, sep: '\t')
-	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
-	.map{a,b,c-> tuple(a,c)}
-	//.toSortedList()
+    ////baton_study_id(ch_studies)
+    ////
+    ////to_iget = baton_study_id.out.samples_noduplicates_tsv
+    ////	.map{a,b -> b}
+    ////	.splitCsv(header: true, sep: '\t')
+    ////	.map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
+    ////	.map{a,b,c-> tuple(a,c)}
+    ////	//.toSortedList()
     
     //to_iget.view()
-    iget_cram(to_iget)
-
-    if (params.run_get_egan_id) {
-	get_egan_id(iget_cram.out[0])
+    ////iget_cram(to_iget)
+    ////
+    //// if (params.run_get_egan_id) {
+    ////	get_egan_id(iget_cram.out[0])
 	
-	get_egan_id.out.samplename_egan_id_csv
-	    .map { samplename,cram,csv_file -> csv_file }
-	    .splitCsv(header: true, sep: ',')
-	    .map { row -> "${row.samplename},${row.egan_id}"}
-	    .collectFile(name: 'samplename_egan_id.csv', newLine: true,
-			 seed: "samplename,egan_id",
-			 storeDir: "${params.outdir}/", sort: true)
-	    .set{ch_samplename_egan_id_csv}
-    }
+    ////	get_egan_id.out.samplename_egan_id_csv
+    ////	    .map { samplename,cram,csv_file -> csv_file }
+    ////	    .splitCsv(header: true, sep: ',')
+    ////	    .map { row -> "${row.samplename},${row.egan_id}"}
+    ////	    .collectFile(name: 'samplename_egan_id.csv', newLine: true,
+    ////			 seed: "samplename,egan_id",
+    ////			 storeDir: "${params.outdir}/", sort: true)
+    ////	    .set{ch_samplename_egan_id_csv}
+    ////}
     
 // one study_id only
 //    baton_study_id("5494")
@@ -159,23 +159,31 @@ workflow {
     //iget_cram(
     //	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
     //	    .flatMap{ it.readLines()}, "5933")
-    crams_to_fastq_gz(iget_cram.out[0])
+    //crams_to_fastq_gz(iget_cram.out[0])
     ////
 
-    //// from cram files:
-    ////Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
-    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
+    ////from cram files:
+    ////Channel.fromPath('/lustre/scratch123/hgi/projects/sle/gse116006_fastq/*.fastq.gz').
+    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).fastq.gz/, "\$1"), it ] }.
     ////groupTuple(sort: true). //take(4).
     ////set{ch_cram_files}
     ////crams_to_fastq_gz(ch_cram_files)
-    ////
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
-	.set{ch_samplename_crams}
     
-    fastqc(ch_samplename_crams)
+    ////crams_to_fastq_gz.out[0]
+    ////.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
+    ////.set{ch_samplename_crams} 
 
-    salmon(ch_samplename_crams, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
+
+    params.reads = '/lustre/scratch123/hgi/projects/sle/gse116006_fastq/*_{1,2}.fastq.gz'
+    Channel
+    .fromFilePairs( '/lustre/scratch123/hgi/projects/sle/gse116006_fastq/*_{1,2}.fastq.gz' )
+    .ifEmpty { error "Cannot find any reads matching: ${params.reads}" }
+    .set { ch_read_pairs }    
+
+
+    fastqc(ch_read_pairs)
+
+    salmon(ch_read_pairs, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
 
     //merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
     //merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts}.set{ch_salmon_counts}
@@ -187,9 +195,9 @@ workflow {
     
     //star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
 
-    star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+    star_2pass_1st_pass(ch_read_pairs, ch_star_index.collect(), ch_gtf_star.collect())
     star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
-    star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
+    star_2pass_2nd_pass(ch_read_pairs, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
 
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
@@ -222,10 +230,10 @@ workflow {
 
     merge_featureCounts(featureCounts.out[0].map{samplename, gene_fc_txt -> gene_fc_txt}.collect())
 
-    crams_to_fastq_gz.out[1]
-	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
-	.set{ch_lostcause }
-    lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
+    ////crams_to_fastq_gz.out[1]
+    ////	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
+    ////	.set{ch_lostcause }
+    ////    lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
 
     featureCounts.out[1]
 	.filter{ pick_aligner(it[0]) }
@@ -237,7 +245,7 @@ workflow {
 	.map{ it[1] }
 	.set{ ch_multiqc_fcbiotype_aligner }
     
-    multiqc(lostcause.out.collect().ifEmpty([]),
+    multiqc(//lostcause.out.collect().ifEmpty([]),
 	    fastqc.out.collect().ifEmpty([]),
 	    mapsummary.out.collect().ifEmpty([]),
 	    ch_multiqc_fc_aligner.collect().ifEmpty([]),
