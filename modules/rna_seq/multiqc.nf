@@ -25,7 +25,7 @@ process multiqc {
     params.run
 
     input:
-    file ('lostcause/*') //from ch_multiqc_lostcause.collect().ifEmpty([])
+//    file ('lostcause/*') //from ch_multiqc_lostcause.collect().ifEmpty([])
     file (fastqc:'fastqc/*') //from ch_multiqc_fastqc.collect().ifEmpty([])
     file ('mapsummary/*') //from ch_multiqc_mapsum.collect().ifEmpty([])
     file ('featureCounts/*') //from ch_multiqc_fc_aligner.collect().ifEmpty([])
