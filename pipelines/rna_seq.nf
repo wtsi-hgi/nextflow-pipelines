@@ -1,6 +1,17 @@
 nextflow.preview.dsl=2
 
+params.runtag = '5591'
+ch_studies = Channel.from('5591')
+params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_75bp/"
+params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
+params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
+params.mbv_vcf_gz = "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 
+///lustre/scratch115/projects/interval_gwas_qc/genotyped
+//interval_qced_24.8.18.vcf.gza
+// csi
+
+params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.min_reads = 500   // used by crams_to_fastq_gz
 // params.genome = 'GRCh38' // used by star aligner
 params.fcextra = ""      // used by featurecounts
@@ -9,16 +20,24 @@ params.singleend = false       // used by featurecounts
 params.forward_stranded = false  // used by featurecounts
 params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
-params.biotypes_header= "$baseDir/../assets/biotypes_header.txt" // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.runtag = 'study5494' // HG_RNASeq of cellular DDD models pilot
-params.ensembl_lib = "Ensembl 99 EnsDb" // used by tximport, must match used genome version
+params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
+
+params.run_iget = false
+params.from_fastq = true
+params.fastq_csv = "/lustre/scratch119/humgen/projects/interval_rna/nf_ci_cram_fastqs_5591/results/crams_to_fastq/fastq/fastqs.txt" // if params.from_fastq
+// params.fastq_csv = "${baseDir}/../../inputs/fastq_n5188.txt" // if params.from_fastq
+// params.fastq_csv = "${baseDir}/../../inputs/crams_to_fastq_gz_out_0_sortuniq4179.txt" // if params.from_fastq
+
+params.run_salmon = true
 params.run_deseq2 = false
 params.deseq2_tsv = "$baseDir/../../inputs/DESeq2.tsv"
 params.run_mbv = true
-
+params.run_get_egan_id = false
 params.run_star = true
+params.run_star_basic = false
+
 def pick_aligner(String aligner) {
     return  aligner == 'star' || (!params.run_star && aligner == 'hisat2')
     ? true
@@ -28,13 +47,17 @@ def pick_aligner(String aligner) {
 // params.se_suffix    = '.fastq.gz'
 
 // params.star_index = params.genome ? params.genomes[ params.genome ].star ?: false : false
-params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_100bp"
+
 Channel.fromPath(params.star_index)
     .ifEmpty { exit 1, "star index file not found: ${params.star_index}" }
     .set { ch_star_index}
+
+// params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
+Channel.fromPath(params.salmon_index)
+    .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
+    .set {ch_salmon_index}
     
 // params.gtf = params.genome ? params.genomes[ params.genome ].gtf ?: false : false
-params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
 Channel.fromPath(params.gtf)
     .ifEmpty { exit 1, "GTF annotation file not found: ${params.gtf}" }
     .set { ch_gtf_star }
@@ -43,12 +66,6 @@ Channel.fromPath(params.biotypes_header)
     .ifEmpty { exit 1, "biotypes header file not found: ${params.biotypes_header}" }
     .set { ch_biotypes_header }
 
-// params.salmon_index = params.genome ? params.genomes[ params.genome ].salmon ?: false : false
-params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all"
-Channel.fromPath(params.salmon_index)
-    .ifEmpty { exit 1, "Salmon index dir not found: ${params.salmon_index}" }
-    .set {ch_salmon_index}
-
 // params.salmon_trans_gene = params.genome ? params.genomes[ params.genome ].salmon_trans_gene ?: false : false
 //params.salmon_trans_gene = "/lustre/scratch115/projects/interval_wgs/nextflow/salmon14_index/trans_gene.txt"
 //Channel.fromPath(params.salmon_trans_gene)
@@ -56,7 +73,6 @@ Channel.fromPath(params.salmon_index)
 //    .set {ch_salmon_trans_gene}
 
 // "/lustre/scratch119/humgen/projects/gains_team282/Genotyping/All_genotyping_merged_filtered_b38.vcf.gz"
-params.mbv_vcf_gz = "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 Channel.fromPath(params.mbv_vcf_gz)
     .ifEmpty { exit 1, "MBV vcf not found: ${params.mbv_vcf_gz}" }
     .set { ch_mbv_vcf_gz }
@@ -83,6 +99,9 @@ include filter_star_aln_rate from '../modules/rna_seq/filter_star_aln_rate.nf' p
 									     min_pct_aln: params.min_pct_aln)
 include leafcutter_bam2junc from '../modules/rna_seq/leafcutter_bam2junc.nf' params(run: true, outdir: params.outdir)
 include leafcutter_clustering from '../modules/rna_seq/leafcutter_clustering.nf' params(run: true, outdir: params.outdir)
+include leafcutter_bam2junc_regtools from '../modules/rna_seq/leafcutter_bam2junc.nf' params(run: true, outdir: params.outdir)
+include leafcutter_clustering_regtools from '../modules/rna_seq/leafcutter_clustering.nf' params(run: true, outdir: params.outdir)
+
 include featureCounts from '../modules/rna_seq/featurecounts.nf' params(run: true,outdir: params.outdir,
 							       fcextra: params.fcextra,
 							       singleend: params.singleend, 
@@ -105,67 +124,72 @@ include heatmap from '../modules/rna_seq/heatmap.nf' params(run: true, outdir: p
 include deseq2 from '../modules/rna_seq/deseq2.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
 include star_tabgenes_matrix from '../modules/rna_seq/star_tabgenes_matrix.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
 include mbv from '../modules/rna_seq/mbv.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
+include get_egan_id from '../modules/rna_seq/get_egan_id.nf' params(run: true, outdir: params.outdir, runtag: params.runtag)
 
 
 workflow {
 
-    baton_study_id("5494")
+    baton_study_id(ch_studies)
     
-    iget_cram(baton_study_id.out.samples_tsv
-	      .map{a,b -> b}
-	      .splitCsv(header: true, sep: '\t')
-	      .map{row->tuple(row.sample, row.sample_supplier_name)}
-	      //.filter { it[1] ==~ /^[rR].*/} //.filter { it[1] ==~ /^[cC].*/}
-	      .map{a,b->a}
-	      , "5494")
+    if (params.run_iget) {
+	to_iget = baton_study_id.out.samples_noduplicates_tsv
+	    .map{a,b -> b}
+	    .splitCsv(header: true, sep: '\t')
+	    .map{row->tuple(row.sample, row.sample_supplier_name, row.study_id)}
+	    .map{a,b,c-> tuple(a,c)}
+	iget_cram(to_iget)
+	
+	if(params.run_mbv) { mbv(iget_cram.out[0], ch_mbv_vcf_gz.collect()) }
+	
+	if (params.run_get_egan_id) {
+	    get_egan_id(iget_cram.out[0])
+	    get_egan_id.out.samplename_egan_id_csv                                                                    
+		.map { samplename,cram,csv_file -> csv_file }
+		.splitCsv(header: true, sep: ',')
+		.map { row -> "${row.samplename},${row.egan_id}"}
+		.collectFile(name: 'samplename_egan_id.csv', newLine: true,
+			     seed: "samplename,egan_id",
+			     storeDir: "${params.outdir}/", sort: true)
+		.set{ch_samplename_egan_id_csv}}
+    }
     
-    //.filter { it[1] ==~ /^[cC].*/} //.filter { it[1] ==~ /^[cC].*/}
-    
-    //// from irods studyid and list of samplenames
-    //iget_cram(
-    //	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
-    //	    .flatMap{ it.readLines()}, "5933")
-    crams_to_fastq_gz(iget_cram.out[0])
-    ////
-
-    //// from cram files:
-    ////Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
-    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
-    ////groupTuple(sort: true). //take(4).
-    ////set{ch_cram_files}
-    ////crams_to_fastq_gz(ch_cram_files)
-    ////
-    crams_to_fastq_gz.out[0]
-	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
-	.set{ch_samplename_crams}
+    if (params.from_fastq) {
+	Channel
+	    .fromPath(params.fastq_csv)
+	    .splitCsv(header:false)
+	    .map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
+	    .set { ch_samplename_crams }}
     
     fastqc(ch_samplename_crams)
-
-    salmon(ch_samplename_crams, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
-
-    merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
-
-    tximport(salmon.out[0].collect())
-    heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
     
-    star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
+    if(params.run_salmon) {
+	salmon(ch_samplename_crams, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
+	
+//	merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
+	
+	tximport(salmon.out[0].collect())
+//	heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
+	
+	if(params.run_deseq2) {
+	    deseq2(salmon.out[0].collect(), Channel.fromPath(params.deseq2_tsv))}
+    }
+    
+    if(params.run_star_basic) {
+	star_2pass_basic(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect()) }
 
     star_2pass_1st_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect())
     star_2pass_merge_junctions(star_2pass_1st_pass.out[1].collect())
     star_2pass_2nd_pass(ch_samplename_crams, ch_star_index.collect(), ch_gtf_star.collect(), star_2pass_merge_junctions.out)
-
+    
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
 
-    if(params.run_mbv) {
-	mbv(star_out[0].map{samplename,bam,bai -> tuple(samplename,bam)},
-	    ch_mbv_vcf_gz.collect()) }
-    //// 
-    star_tabgenes_matrix(star_2pass_basic.out.samplename_readspergene_tab.collect())
-    
-    leafcutter_bam2junc(star_out[0])
-    leafcutter_clustering(leafcutter_bam2junc.out.collect())
 
+    // leafcutter_bam2junc(star_out[0])
+    // leafcutter_clustering(leafcutter_bam2junc.out.collect())
+    leafcutter_bam2junc_regtools(star_out[0])
+    leafcutter_clustering_regtools(leafcutter_bam2junc.out.collect())
+    
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
     
     filter_star_aln_rate.out.branch {
@@ -184,8 +208,9 @@ workflow {
 
     merge_featureCounts(featureCounts.out[0].map{samplename, gene_fc_txt -> gene_fc_txt}.collect())
 
-    crams_to_fastq_gz.out[1]
-	.mix(star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]})
+//    crams_to_fastq_gz.out[1]
+	//.mix(
+	star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]}//)
 	.set{ch_lostcause }
     lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
 
@@ -198,16 +223,47 @@ workflow {
 	.filter{ pick_aligner(it[0]) }
 	.map{ it[1] }
 	.set{ ch_multiqc_fcbiotype_aligner }
-    
-    multiqc(lostcause.out.collect().ifEmpty([]),
-	    fastqc.out.collect().ifEmpty([]),
-	    mapsummary.out.collect().ifEmpty([]),
-	    ch_multiqc_fc_aligner.collect().ifEmpty([]),
-	    ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-	    star_out[2].collect().ifEmpty([]),
-	    salmon.out[2].collect().ifEmpty([]))
- 
-    if(params.run_deseq2)
-	deseq2(salmon.out[0].collect(), Channel.fromPath(params.deseq2_tsv))
-       
+
+    if (params.run_salmon) {
+	multiqc(lostcause.out.collect().ifEmpty([]),
+		fastqc.out.collect().ifEmpty([]),
+		mapsummary.out.collect().ifEmpty([]),
+		ch_multiqc_fc_aligner.collect().ifEmpty([]),
+		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+		star_out[2].collect().ifEmpty([]),
+		salmon.out[0].collect().ifEmpty([]))}
+    else {
+	multiqc(lostcause.out.collect().ifEmpty([]),
+		fastqc.out.collect().ifEmpty([]),
+		mapsummary.out.collect().ifEmpty([]),
+		ch_multiqc_fc_aligner.collect().ifEmpty([]),
+		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+		star_out[2].collect().ifEmpty([]),
+		[])}
 }
+
+
+
+
+
+    //.filter { it[1] ==~ /^[cC].*/} //.filter { it[1] ==~ /^[cC].*/}
+    
+    //// from irods studyid and list of samplenames
+    //iget_cram(
+    //	Channel.fromPath("${baseDir}/../../inputs/samples.txt")
+    //	    .flatMap{ it.readLines()}, "5933")
+//    crams_to_fastq_gz(iget_cram.out[0])
+    ////
+
+    //// from cram files:
+    ////Channel.fromPath('/lustre/scratch115/projects/interval_rna/inputs/*.cram').
+    ////map{ it -> [ it.toString().replaceAll(~/.*\/(.*).cram/, "\$1"), it ] }.
+    ////groupTuple(sort: true). //take(4).
+    ////set{ch_cram_files}
+    ////crams_to_fastq_gz(ch_cram_files)
+    ////
+//    crams_to_fastq_gz.out[0]
+//	.map{ samplename, fastq1, fastq2 -> tuple( samplename, tuple(fastq1, fastq2) ) }
+//	.set{ch_samplename_crams}
+    
+    // from fastqs:
