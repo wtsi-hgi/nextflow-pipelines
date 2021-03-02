@@ -53,10 +53,10 @@ process 'leafcutter_clustering_regtools' {
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
     
-    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'symlink', pattern: "*.junc.clust.sorted.gz"
-    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'symlink', pattern: "clust_*"
-    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'symlink', pattern: "juncfiles.txt"
-    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'symlink', pattern: "fofn_junctions_files.txt"
+    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "*.junc.clust.sorted.gz"
+    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "clust_*"
+    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "juncfiles.txt"
+    publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "fofn_junctions_files.txt"
 
     input:
     file (junc_files) //from star_bam2junc.collect()
