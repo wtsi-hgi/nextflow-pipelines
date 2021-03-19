@@ -71,11 +71,11 @@ process 'leafcutter_clustering_regtools' {
 
     script:
   """
-  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:\$PATH
+  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:/home/regtools/build:/home/regtools/scripts:/opt/conda/envs/conda_leafcutter/bin:/opt/conda/bin:\$PATH
 
   ls . | grep .junc\$ > fofn_junctions_files.txt
   # pre regtools leafcutter leafcutter_cluster.py -j fofn_junctions_files.txt -m 50 -o clust -l 500000
   
-  python2 /home/leafcutter/clustering/leafcutter_cluster_regtools.py -j fofn_junctions_files.txt --checkchrom -m 50 -r clust -o clust -l 500000  
+  python2 /home/leafcutter/clustering/leafcutter_cluster_regtools.py -j fofn_junctions_files.txt --checkchrom -m 50 -o clust -l 500000  
   """
 }

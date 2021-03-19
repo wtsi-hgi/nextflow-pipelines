@@ -61,7 +61,7 @@ process 'leafcutter_bam2junc_regtools' {
   script:
 
   """
-  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:\$PATH
+  export PATH=/home/leafcutter/scripts:/home/leafcutter/clustering:/home/regtools/build:/home/regtools/scripts:/opt/conda/envs/conda_leafcutter/bin:/opt/conda/bin:\$PATH
 
   echo Converting ${bamfile} to ${samplename}.junc
   # pre regootls method: sh /home/leafcutter/scripts/bam2junc.sh ${bamfile} ${samplename}.junc

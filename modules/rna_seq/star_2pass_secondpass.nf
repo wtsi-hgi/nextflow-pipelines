@@ -42,7 +42,7 @@ process 'star_2pass_2nd_pass' {
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     set file("*.Log.final.out"), file("*.Log.out"), file("*.progress.out") //into ch_alignment_logs_star
     file "*.SJ.out.tab"
-    set val(samplename), file("*Unmapped.out.mate1"), file ("*Unmapped.out.mate1") //into star_aligned
+    set val(samplename), file("*Unmapped.out.mate1"), file ("*Unmapped.out.mate2") //into star_aligned
 
   script:
 
@@ -50,15 +50,24 @@ process 'star_2pass_2nd_pass' {
 export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH 
 
   # 2nd pass
-  STAR --genomeDir ${genomeDir} \
-       --readFilesIn ${reads} \
-       --runThreadN ${task.cpus} \
-       --readFilesCommand zcat \
-       --limitSjdbInsertNsj 10000000 \
-       --sjdbFileChrStartEnd ${filtered_tab} \
-       --outSAMtype BAM SortedByCoordinate \
-       --outFileNamePrefix ${samplename}. \
-       --outReadsUnmapped Fastx
+STAR --genomeDir ${genomeDir} \\
+--readFilesIn ${reads} \\
+--runThreadN ${task.cpus} \\
+--readFilesCommand zcat \\
+--limitSjdbInsertNsj 10000000 \\
+--sjdbFileChrStartEnd ${filtered_tab} \\
+--outSAMtype BAM SortedByCoordinate \\
+--outFileNamePrefix ${samplename}. \\
+--outFilterType BySJout \\
+--outFilterMultimapNmax 20 \\
+--alignSJoverhangMin 8 \\
+--alignSJDBoverhangMin 1 \\
+--outFilterMismatchNmax 999 \\
+--outFilterMismatchNoverReadLmax 0.04 \\
+--alignIntronMin 20 \\
+--alignIntronMax 1000000 \\
+--alignMatesGapMax 1000000 \\
+--outReadsUnmapped Fastx
 
   # Index the BAM file
   samtools index ${samplename}.Aligned.sortedByCoord.out.bam

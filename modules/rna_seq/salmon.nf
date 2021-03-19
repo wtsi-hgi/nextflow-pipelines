@@ -6,10 +6,12 @@ process salmon {
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     //container "salmon"
     conda '/lustre/scratch118/humgen/resources/conda/star'
-    queue 'long'
-    time '1400m'
-    errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
-    maxRetries 6
+    // queue 'long'
+    // time '1400m'
+    queue 'basement'
+    time '10000m'
+    errorStrategy { task.attempt <= 9 ? 'retry' : 'ignore' }
+    maxRetries 9
     
     publishDir "${params.outdir}/salmon", mode: 'symlink'
 
@@ -42,11 +44,9 @@ export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
         -o . \\
         -1 ${reads[0]} \\
         -2 ${reads[1]} \\
-        -g ${salmon_trans_gene_txt} \\
         --useVBOpt \\
         --numBootstraps 100
     mv quant.sf ${samplename}.quant.sf
-    mv quant.genes.sf ${samplename}.quant.genes.sf
     mkdir -p my_outs/${samplename}/libParams
     mkdir -p my_outs/${samplename}/aux_info
     ln -f aux_info/meta_info.json my_outs/${samplename}/aux_info/meta_info.json
@@ -57,3 +57,6 @@ export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
     // Include the row names so merger can check identity.
     // The merge step will concatenate the rows and re-transpose to obtain final result.
 }
+
+        // mv quant.genes.sf ${samplename}.quant.genes.sf
+        // -g ${salmon_trans_gene_txt} \\
