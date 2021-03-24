@@ -24,7 +24,7 @@ params.forward_stranded = false  // used by featurecounts
 params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used genome version
+params.ensembl_lib = "Ensembl 99 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 
 params.run_iget = false
@@ -190,13 +190,13 @@ workflow {
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
 
-    if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
+//    if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
 
     // leafcutter_bam2junc(star_out[0])
     // leafcutter_clustering(leafcutter_bam2junc.out.collect())
     // or regtools:
-    // leafcutter_bam2junc_regtools(star_out[0])
-    // leafcutter_clustering_regtools(leafcutter_bam2junc_regtools.out.collect())
+//    leafcutter_bam2junc_regtools(star_out[0])
+//    leafcutter_clustering_regtools(leafcutter_bam2junc_regtools.out.collect())
     
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
     

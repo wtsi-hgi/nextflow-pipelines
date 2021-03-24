@@ -4,10 +4,6 @@ args = commandArgs(trailingOnly=TRUE)
 if (length(args)==0) {
   stop("At least one argument must be supplied", call.=FALSE)}
 
-local_libs = "/lustre/scratch118/humgen/resources/conda/star/lib/R/library"
-.libPaths(local_libs)
-.libPaths()
-
 library(AnnotationHub)
 library(tximport)
 library(magrittr)
