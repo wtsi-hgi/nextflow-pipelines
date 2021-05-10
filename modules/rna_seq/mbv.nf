@@ -3,13 +3,14 @@ params.run = true
 process mbv {
     tag "mbv $samplename"
     memory = '10G'
+    cpus 1
     // conda '/lustre/scratch118/humgen/resources/conda/star'
     queue 'normal'
     time '700m'
-    errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
-    maxRetries 2
+    errorStrategy { task.attempt <= 1 ? 'retry' : 'ignore' }
+    maxRetries 1
     
-    publishDir "${params.outdir}/mbv", mode: 'symlink'
+    publishDir "${params.outdir}/mbv", mode: 'rellink'
 
     when:
     params.run

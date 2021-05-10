@@ -6,8 +6,8 @@ params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_in
 params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
 params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
 
-params.mbv_vcf_gz = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.vcf.gz"
-params.mbv_vcf_gz_csi = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.vcf.gz.csi"
+params.mbv_vcf_gz = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.fixed.vcf.gz"
+params.mbv_vcf_gz_csi = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.fixed.vcf.gz.csi"
 //params.mbv_vcf_gz = "/lustre/scratch115/projects/bioaid/Genotyping/MBV/BioAID_mid_QC.vcf.gz"
 
 ///lustre/scratch115/projects/interval_gwas_qc/genotyped
@@ -190,7 +190,7 @@ workflow {
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
 
-//    if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
+    if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
 
     // leafcutter_bam2junc(star_out[0])
     // leafcutter_clustering(leafcutter_bam2junc.out.collect())
