@@ -2,9 +2,15 @@ nextflow.preview.dsl=2
 
 params.runtag = '5591'
 ch_studies = Channel.from('5591')
-params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_75bp/"
-params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
-params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
+
+// v99 gencode 33:
+//// params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/star_index_Homo_sapiens.GRCh38.99_75bp/"
+//// params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
+//// params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
+// v97 31:
+params.star_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/GRCh38.97/star_index_Homo_sapiens.GRCh38.97_75bp_ftp/"
+params.salmon_index = "/lustre/scratch118/humgen/resources/rna_seq_genomes/GRCh38.97/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
+params.gtf = "/lustre/scratch118/humgen/resources/rna_seq_genomes/GRCh38.97/Homo_sapiens.GRCh38.97.gtf"
 
 params.mbv_vcf_gz = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.vcf.gz"
 params.mbv_vcf_gz_csi = "/lustre/scratch119/humgen/projects/interval_rna/interval_rna_seq_n5188/genotype_data_mbv_formatting/cohort.chr1.vcf.gz.csi"
@@ -24,7 +30,7 @@ params.forward_stranded = false  // used by featurecounts
 params.reverse_stranded = true  // used by featurecounts
 params.unstranded = false  // used by featurecounts
 params.mito_name = 'MT' // used by mapsummary
-params.ensembl_lib = "Ensembl 98 EnsDb" // used by tximport, must match used genome version
+params.ensembl_lib = "Ensembl 97 EnsDb" // used by tximport, must match used genome version
 params.dropqc = ""
 
 params.run_iget = false
@@ -166,7 +172,7 @@ workflow {
 	    .map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
 	    .set { ch_samplename_crams }}
     
-    fastqc(ch_samplename_crams)
+  //  fastqc(ch_samplename_crams)
     
     if(params.run_salmon) {
 	salmon(ch_samplename_crams, ch_salmon_index.collect()) // salmon(ch_samplename_crams, ch_salmon_index.collect(), ch_salmon_trans_gene.collect())
@@ -190,13 +196,13 @@ workflow {
     star_out = star_2pass_2nd_pass.out // choose star_2pass_basic.out or star_2pass_2ndpass.out 
     // star_out = star_2pass_basic.out
 
-    if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
+    // if(params.run_mbv) { mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect()) }
 
     // leafcutter_bam2junc(star_out[0])
     // leafcutter_clustering(leafcutter_bam2junc.out.collect())
     // or regtools:
-    // leafcutter_bam2junc_regtools(star_out[0])
-    // leafcutter_clustering_regtools(leafcutter_bam2junc_regtools.out.collect())
+    leafcutter_bam2junc_regtools(star_out[0])
+    leafcutter_clustering_regtools(leafcutter_bam2junc_regtools.out.collect())
     
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
     
@@ -231,23 +237,23 @@ workflow {
 	.filter{ pick_aligner(it[0]) }
 	.map{ it[1] }
 	.set{ ch_multiqc_fcbiotype_aligner }
-
-    if (params.run_salmon) {
-	multiqc(lostcause.out.collect().ifEmpty([]),
-		fastqc.out.collect().ifEmpty([]),
-		mapsummary.out.collect().ifEmpty([]),
-		ch_multiqc_fc_aligner.collect().ifEmpty([]),
-		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-		star_out[2].collect().ifEmpty([]),
-		salmon.out[0].collect().ifEmpty([]))}
-    else {
-	multiqc(lostcause.out.collect().ifEmpty([]),
-		fastqc.out.collect().ifEmpty([]),
-		mapsummary.out.collect().ifEmpty([]),
-		ch_multiqc_fc_aligner.collect().ifEmpty([]),
-		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-		star_out[2].collect().ifEmpty([]),
-		[])}
+//
+//    if (params.run_salmon) {
+//	multiqc(lostcause.out.collect().ifEmpty([]),
+//		fastqc.out.collect().ifEmpty([]),
+//		mapsummary.out.collect().ifEmpty([]),
+//		ch_multiqc_fc_aligner.collect().ifEmpty([]),
+//		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+//		star_out[2].collect().ifEmpty([]),
+//		salmon.out[0].collect().ifEmpty([]))}
+//    else {
+//	multiqc(lostcause.out.collect().ifEmpty([]),
+//		fastqc.out.collect().ifEmpty([]),
+//		mapsummary.out.collect().ifEmpty([]),
+//		ch_multiqc_fc_aligner.collect().ifEmpty([]),
+//		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+//		star_out[2].collect().ifEmpty([]),
+//		[])}
 }
 
 

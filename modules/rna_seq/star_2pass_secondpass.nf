@@ -13,12 +13,12 @@ process 'star_2pass_2nd_pass' {
     memory = {  80.GB + 20.GB * (task.attempt-1) }
     maxRetries 4
     
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.bam"
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.bam.bai"
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*.tab"
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*Unmapped.out.mate1"
-    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'symlink', pattern: "*Unmapped.out.mate2"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*.bam"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*.bam.bai"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*.out"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*Unmapped.out.mate1"
+    publishDir "${params.outdir}/star_pass2_2ndpass/$samplename", mode: 'rellink', pattern: "*Unmapped.out.mate2"
     
     publishDir "${params.outdir}/star_pass2_2ndpass_multiqc/", mode: 'copy',
         saveAs: { filename ->

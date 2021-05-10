@@ -3,7 +3,7 @@ params.runtag = 'runtag'
 
 process lostcause {
 
-    publishDir "${params.outdir}/combined", mode: 'symlink'
+    publishDir "${params.outdir}/combined", mode: 'rellink'
 
     input:
     file (inputs) //from ch_lostcause.collectFile{ ['lostcause.txt', it.text] }

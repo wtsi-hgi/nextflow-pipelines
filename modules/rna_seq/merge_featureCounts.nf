@@ -7,7 +7,7 @@ process merge_featureCounts {
     stageInMode 'copy'
     stageOutMode 'rsync'
     container "nfcore-rnaseq"
-    publishDir "${params.outdir}/combined", mode: 'symlink'
+    publishDir "${params.outdir}/combined", mode: 'rellink'
     containerOptions = "--bind /lustre"
     label 'merge_feature'
     memory = '100G'

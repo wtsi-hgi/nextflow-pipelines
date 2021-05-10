@@ -15,7 +15,7 @@ process featureCounts {
     cpus 1
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
-    publishDir "${params.outdir}/featureCounts/", mode: 'symlink',
+    publishDir "${params.outdir}/featureCounts/", mode: 'rellink',
         saveAs: {filename ->
             if (filename.indexOf(".biotype_counts_mqc.txt") > 0) "biotype_counts_mqc/$filename"
             else if (filename.indexOf(".biotype.fc.txt") > 0) "biotype_counts/$filename"

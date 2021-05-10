@@ -3,7 +3,7 @@ params.mito_name = 'MT'
 process mapsummary {
     tag "${samplename}"
     // container "nfcore-rnaseq"
-    publishDir "${params.outdir}/mapsummary/", mode: 'symlink'
+    publishDir "${params.outdir}/mapsummary/", mode: 'rellink'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     memory = '8G'

@@ -9,7 +9,7 @@ process get_egan_id {
     errorStrategy { task.attempt <= 4 ? 'retry' : 'ignore' }
     maxRetries 4
     maxForks 50
-    //publishDir "${params.outdir}/egan_id", mode: 'symlink'
+    //publishDir "${params.outdir}/egan_id", mode: 'rellink'
 
     when:
     params.run

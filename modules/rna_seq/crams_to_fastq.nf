@@ -19,7 +19,7 @@ process crams_to_fastq_gz {
 //  if (params.scratch) {    // This is tricky; need to get job requirements correct to ensure space exists.
 //     scratch true          // At the moment we don't use this. Perhaps with a retry regime ... but a lot of fuss to solve.
 //  }                        // I've left it as a reminder it's an option (svd).
-    publishDir "${params.outdir}/fastq12/", mode: 'symlink'
+    publishDir "${params.outdir}/fastq12/", mode: 'rellink'
     
     when:
     params.run

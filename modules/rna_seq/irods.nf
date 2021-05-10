@@ -9,8 +9,8 @@ process iget_cram {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     maxForks 12
-    publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'symlink', pattern: "*.lostcause.txt", overwrite: true
-    publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'symlink', pattern: "*.cram", overwrite: true
+    publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'rellink', pattern: "*.lostcause.txt", overwrite: true
+    publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'rellink', pattern: "*.cram", overwrite: true
 
     when:
     params.run
@@ -51,8 +51,8 @@ process iget_cram {
 //    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
 //    maxRetries 3
 //    maxForks 12
-//    publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'symlink', pattern: "*.lostcause.txt", overwrite: true
-//    publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'symlink', pattern: "*.cram", overwrite: true
+//    publishDir "${params.outdir}/irods_lost/${samplename}/", mode: 'rellink', pattern: "*.lostcause.txt", overwrite: true
+//    publishDir "${params.outdir}/irods_crams/${samplename}/", mode: 'rellink', pattern: "*.cram", overwrite: true
 //
 //    when:
 //    params.run

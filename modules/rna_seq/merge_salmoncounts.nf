@@ -7,7 +7,7 @@ process merge_salmoncounts {
     stageInMode 'copy'
     stageOutMode 'rsync'
     container "nfcore-rnaseq"
-    publishDir "${params.outdir}/combined", mode: 'symlink'
+    publishDir "${params.outdir}/combined", mode: 'rellink'
     errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
     containerOptions = "--bind /lustre"
     maxRetries 6

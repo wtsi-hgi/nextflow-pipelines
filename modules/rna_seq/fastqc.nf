@@ -14,7 +14,7 @@ process 'fastqc' {
     // singularity pull --name nfcore-rnaseq.img docker://nfcore/rnaseq
     // have fastqc version FastQC v0.11.8, was pulled Thursday May 16th 2019
     // publishDir "${params.outdir}/STAR_2pass_bams/${samplename}/", mode: 'copy'
-    publishDir "${params.outdir}/fastqc/", mode: 'symlink',
+    publishDir "${params.outdir}/fastqc/", mode: 'rellink',
         saveAs: {filename -> filename.indexOf(".zip") > 0 ? "zips/$filename" : "$filename"}
 
     when:

@@ -8,7 +8,7 @@ process samtools_index_idxstats {
     time '300m'
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
-    publishDir "${params.outdir}/idxstats/", mode: 'symlink', pattern: "*.idxstats"
+    publishDir "${params.outdir}/idxstats/", mode: 'rellink', pattern: "*.idxstats"
 
     when:
     params.run

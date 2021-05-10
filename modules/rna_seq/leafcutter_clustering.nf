@@ -13,10 +13,10 @@ process 'leafcutter_clustering' {
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
     
-    publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "*.junc.clust.sorted.gz"
-    publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "clust_*"
-    publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "juncfiles.txt"
-    publishDir "${params.outdir}/leafcutter/clustering", mode: 'symlink', pattern: "fofn_junctions_files.txt"
+    publishDir "${params.outdir}/leafcutter/clustering", mode: 'rellink', pattern: "*.junc.clust.sorted.gz"
+    publishDir "${params.outdir}/leafcutter/clustering", mode: 'rellink', pattern: "clust_*"
+    publishDir "${params.outdir}/leafcutter/clustering", mode: 'rellink', pattern: "juncfiles.txt"
+    publishDir "${params.outdir}/leafcutter/clustering", mode: 'rellink', pattern: "fofn_junctions_files.txt"
 
     input:
     file (junc_files) //from star_bam2junc.collect()
@@ -46,12 +46,14 @@ process 'leafcutter_clustering_regtools' {
     scratch '/tmp'
     stageInMode 'copy'
     stageOutMode 'rsync'
-    queue 'long'
+    queue 'basement'
+    time '43000m'
+    //queue 'long'
+    // time '2800m'
     memory ='100G'
     cpus 4
-    time '2800m'
-    errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
-    maxRetries 5
+    errorStrategy { task.attempt <= 6 ? 'retry' : 'ignore' }
+    maxRetries 6
     
     publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "*.junc.clust.sorted.gz"
     publishDir "${params.outdir}/leafcutter_regtools/clustering", mode: 'rellink', pattern: "clust_*"

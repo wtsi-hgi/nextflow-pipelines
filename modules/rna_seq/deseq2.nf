@@ -11,7 +11,7 @@ process deseq2 {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
-    publishDir "${params.outdir}/DESeq2/", mode: 'symlink'
+    publishDir "${params.outdir}/DESeq2/", mode: 'rellink'
 
     when:
     params.run

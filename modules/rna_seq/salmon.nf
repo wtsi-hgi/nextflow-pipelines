@@ -13,7 +13,7 @@ process salmon {
     errorStrategy { task.attempt <= 9 ? 'retry' : 'ignore' }
     maxRetries 9
     
-    publishDir "${params.outdir}/salmon", mode: 'symlink'
+    publishDir "${params.outdir}/salmon", mode: 'rellink'
 
     when:
     params.run

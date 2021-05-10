@@ -9,7 +9,7 @@ process mbv {
     errorStrategy { task.attempt <= 2 ? 'retry' : 'ignore' }
     maxRetries 2
     
-    publishDir "${params.outdir}/mbv", mode: 'symlink'
+    publishDir "${params.outdir}/mbv", mode: 'rellink'
 
     when:
     params.run

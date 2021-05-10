@@ -10,7 +10,7 @@ process heatmap {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
-    publishDir "${params.outdir}/heatmap/", mode: 'symlink'
+    publishDir "${params.outdir}/heatmap/", mode: 'rellink'
 
     when:
     params.run

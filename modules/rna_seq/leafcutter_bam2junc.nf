@@ -12,7 +12,7 @@ process 'leafcutter_bam2junc' {
     memory = {  10.GB + 20.GB * (task.attempt-1) }
     maxRetries 4
     
-    publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'symlink', pattern: "*.junc"
+    publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'rellink', pattern: "*.junc"
     // publishDir "${params.outdir}/leafcutter/bam2junc", mode: 'copy', pattern: "*.bam.bed"
 
   input:
