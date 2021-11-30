@@ -4,7 +4,6 @@ params.read2 = 'discard'
 
 process count_crispr_reads {
     tag "read_counts $samplename"
- //   conda '/software/hgi/installs/anaconda3/envs/nextflow20'
     // container "nfcore-rnaseq"
     // containerOptions = "--bind /lustre"
     publishDir "${params.outdir}/read_counts", mode: 'symlink',
@@ -33,8 +32,6 @@ process count_crispr_reads {
 
     shell:
     """
-export PATH=/software/hgi/installs/anaconda3/envs/nextflow20/bin/:\$PATH
-
     if [ \"${params.read2}\"  == \"discard\" ]; then
     rm -f *_2.fastq.gz
     fi

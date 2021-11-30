@@ -8,7 +8,7 @@ process multiqc {
     container "nfcore-rnaseq"
     errorStrategy = { task.attempt <= 5 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
-    memory = {  60.GB + 20.GB * (task.attempt-1) }
+    memory = {  40.GB + 20.GB * (task.attempt-1) }
     maxRetries 5
     cpus 2
     queue 'long'

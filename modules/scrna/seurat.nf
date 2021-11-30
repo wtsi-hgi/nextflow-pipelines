@@ -1,29 +1,26 @@
 params.run = true 
+params.ensembl_lib = "Ensembl 91 EnsDb"
 
 process seurat {
-    tag "seurat $samplename $raw_filtered"
+    tag "seurat $params.ensembl_lib"
     container "singularity-rstudio-seurat-tximport"
     containerOptions = "--bind /tmp --bind /lustre"
-    queue 'long'
-    time '1400m'
+    time '900m'
     memory = '80G'
     cpus 2
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
-    publishDir "${params.outdir}/seurat/$raw_filtered/", mode: 'symlink'
-    scratch false 
+    
+    publishDir "${params.outdir}/seurat", mode: 'symlink'
 
     when:
     params.run
 
     input:
-    set val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
+    val(samplename), file(cellranger_matrix_dir), val(raw_filtered), file(metrics_summary_csv)
 
     output:
-    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_TSNEPlot.pdf"), emit: tsneplot_pdf
-    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_stats.tsv"), file("${samplename}_${raw_filtered}_stats.xlsx"), emit: stats_xslx
-    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_clusters_markers_FindAllMarkers.xlsx"), emit: diffexp_xlsx
-    tuple val(samplename), val(raw_filtered), file("${samplename}_${raw_filtered}_seuratimage.rdata"), emit: seurat_rdata
+    file("${samplename}_seurat_image.rdata")
 
     script:
     """

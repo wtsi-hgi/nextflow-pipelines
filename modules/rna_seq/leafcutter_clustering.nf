@@ -8,8 +8,7 @@ process 'leafcutter_clustering' {
     stageOutMode 'rsync'
     memory ='100G'
     cpus 4
-    queue 'long'
-    time '900m'
+    time '600m'
     errorStrategy { task.attempt <= 5 ? 'retry' : 'ignore' }
     maxRetries 5
     

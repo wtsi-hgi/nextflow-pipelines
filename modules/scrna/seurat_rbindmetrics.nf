@@ -1,18 +1,17 @@
 params.run = true 
-params.ensembl_lib = "Ensembl 99 EnsDb"
+params.ensembl_lib = "Ensembl 91 EnsDb"
 
-process tximport {
-    tag "tximport $params.ensembl_lib"
+process seurat {
+    tag "seurat $params.ensembl_lib"
     memory = '80G'
-    //container "singularity-rstudio-seurat-tximport"
-    //containerOptions = "--bind /tmp --bind /lustre"
-    conda "/lustre/scratch118/humgen/resources/conda/star"
+    container "singularity-rstudio-seurat-seurat"
+    containerOptions = "--bind /tmp --bind /lustre"
     time '400m'
     cpus 1
     errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
     maxRetries 3
     
-    publishDir "${params.outdir}/tximport", mode: 'symlink'
+    publishDir "${params.outdir}/seurat", mode: 'symlink'
 
     when:
     params.run
@@ -25,17 +24,16 @@ process tximport {
     file("txi_gene_counts.csv")
     file("txi_transcript_counts.csv")
     file("txi_lengthScaledTPM_gene_counts.csv")
-    file("tximport.rdata")
+    file("seurat.rdata")
     //file "${samplename}.quant.sf" // into ch_salmon_trans
     //file "${samplename}.quant.genes.sf" //into ch_salmon_genes
     // file "my_outs/${samplename}" optional true // into ch_alignment_logs_salmon
 
     script:
     """
-    export PATH=/lustre/scratch118/humgen/resources/conda/star/bin:\$PATH
     ls . | grep .quant.sf\$ > fofn_quantfiles.txt
 
-    Rscript $workflow.projectDir/../bin/rna_seq/tximport.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
+    /usr/bin/Rscript $workflow.projectDir/../bin/scrna/seurat.R \"$params.ensembl_lib\" fofn_quantfiles.txt 
     """
 
     // TODO: prepare columns for merging; extract correct column and transpose (paste) it.

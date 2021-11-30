@@ -5,12 +5,12 @@ process 'cellsnp' {
     container "single_cell"
 
     errorStrategy = { task.attempt <= 4 ? 'retry' : 'ignore' }
-    cpus = 20 
+    cpus = 2 
     memory = {  220.GB + 50.GB * (task.attempt-1) }
     maxRetries 4
     scratch false
-    queue 'basement'
-    time '8000m'
+    queue 'long'
+    time '2800m'
 
     publishDir "${params.outdir}/cellsnp/", mode: 'symlink'
 
@@ -22,13 +22,13 @@ process 'cellsnp' {
     file(region_vcf)
     
     output:
-    tuple val(samplename), file("cellsnp_${samplename}"), emit: cellsnp_output_dir
+    set val(samplename), file("cellsnp_${samplename}") 
 
   script:
    """
 export PATH=/opt/conda/envs/conda_env/bin:/opt/conda/bin:\$PATH
 zcat ${barcodes_tsv_gz} > barcodes.txt
-cellSNP -s ${bam_file} -b barcodes.txt -O cellsnp_${samplename} -R ${region_vcf} -p 20 --minMAF 0.1 --minCOUNT 60
+cellSNP -s ${bam_file} -b barcodes.txt -O cellsnp_${samplename} -R ${region_vcf} -p 20 --minMAF 0.1 --minCOUNT 20
    """
 }
 // hg19: genome1K.phase3.SNP_AF5e2.chr1toX.hg19.vcf.gz (http://ufpr.dl.sourceforge.net/project/cellsnp/SNPlist/genome1K.phase3.SNP_AF5e2.chr1toX.hg38.vcf.gz)

@@ -1,19 +1,18 @@
 nextflow.preview.dsl=2
-params.runtag = 'novaseq'
+params.runtag = 'walkup103_v1.1.0'
 params.read2 = 'discard' // used by count_crispr_reads
 params.min_reads = 500   // used by crams_to_fastq_gz
 
 // collect library tables:
-params.guide_libraries = "${baseDir}/../../guide_libraries/*.guide_library.csv"
-//params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
+// params.guide_libraries = "${baseDir}/../../guide_libraries/*.guide_library.csv"
+params.guide_libraries = "${baseDir}/../../guide_libraries/tim_7nov.csv"
 //params.guide_libraries = "${baseDir}/../../guide_libraries/tim_contamination.csv"
 Channel.fromPath(params.guide_libraries)
     .set{ch_library_files}
 
 // add guide library of each sample:
 // params.samplename_library = "${baseDir}/../../inputs/walkup101_libraries.csv"
-// params.samplename_library = "${baseDir}/../../inputs/walkup103_libraries.csv"
-params.samplename_library = "${baseDir}/../../inputs/novaseq_libraries.csv"
+params.samplename_library = "${baseDir}/../../inputs/walkup103_libraries.csv"
 Channel.fromPath(params.samplename_library)
     .splitCsv(header: true)
     .map { row -> tuple("${row.samplename}", "${row.library}", "${row.includeG}") }
@@ -46,7 +45,7 @@ workflow {
 
     // 1.B: or directly from fastq (if from basespace/lustre location rather than irods)
     // Channel.fromPath("${baseDir}/../../inputs/walkup101_fastqs.csv")
-    Channel.fromPath("${baseDir}/../../inputs/novaseq_fastqs.csv")
+    Channel.fromPath("${baseDir}/../../inputs/walkup103_fastqs.csv")
 	.splitCsv(header: true)
 	.map { row -> tuple("${row.samplename}", "${row.batch}", "${row.start_trim}", file("${row.fastq}")) }
 	.set{ch_samplename_batch_fastqs}
@@ -65,20 +64,11 @@ workflow {
 	    .mix(merge_fastq_batches.out[0]))
 
     multiqc(fastqc.out.collect())
-    
-    merge_fastq_batches.out[0].view()
 
-    //ch_samplename_library.view()
-    
     merge_fastq_batches.out[0]
-	.map{sample,fastq ->tuple("$sample",fastq)}
-	.combine(ch_samplename_library
-		 .map{sample,lib,keepg ->tuple("$sample",lib,keepg)}
-		 , by: 0)
+	.combine(ch_samplename_library, by: 0)
 	.set{ch_samplename_fastq_library_includeG}
-
- //   ch_samplename_fastq_library_includeG.view()
-   // ch_library_files.view()
+    
     count_crispr_reads(ch_samplename_fastq_library_includeG, ch_library_files.collect())
 
     collate_crispr_counts(

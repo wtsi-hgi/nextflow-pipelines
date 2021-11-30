@@ -19,7 +19,7 @@ process 'vireo' {
     set val(samplename), file(cell_data), val(n_pooled)
     
     output:
-    tuple val(samplename), file("vireo_${samplename}"), emit: vireo_output_dir
+    set val(samplename), file("cellsnp_${samplename}") 
 
   script:
    """

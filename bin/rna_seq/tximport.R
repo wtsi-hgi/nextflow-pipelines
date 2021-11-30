@@ -1,4 +1,7 @@
 #!/usr/bin/env Rscript
+Sys.setenv(LANG="en_US.UTF-8")
+lustre_libs = "/lustre/scratch118/humgen/resources/rstudio_server_libs"
+.libPaths(lustre_libs)
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args)==0) {
@@ -8,7 +11,8 @@ library(AnnotationHub)
 library(tximport)
 library(magrittr)
 library(readr)
-queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+#queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+queries = query(AnnotationHub(), c(args[1], "Mus musculus"))
 edb = queries[[1]]
 edb
 Tx <- transcripts(edb, return.type="DataFrame")

@@ -1,22 +1,21 @@
 params.run = true
 
-process 'star_2pass_basic' {
+process 'star_transcriptomesam' {
     tag "${samplename}"
     // container "nfcore-rnaseq"
     conda "/lustre/scratch118/humgen/resources/conda/star"
-    time '600m'
+    time '700m'
 
     errorStrategy = { task.attempt <= 2 ? 'retry' : 'ignore' }
     cpus =   {  2 * 2 * Math.min(2, task.attempt) }
     memory = {  80.GB + 40.GB * (task.attempt-1) }
     maxRetries 3
     
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.bam.bai"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.out"
-    publishDir "${params.outdir}/star_pass2_basic/$samplename", mode: 'symlink', pattern: "*.tab"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.bam"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.out"
+    publishDir "${params.outdir}/star_transcriptomesam/$samplename/", mode: 'symlink', pattern: "*.tab"
     
-    publishDir "${params.outdir}/star_pass2_basic_multiqc/", mode: 'copy',
+    publishDir "${params.outdir}/star_transcriptomesam_multiqc/", mode: 'copy',
         saveAs: { filename ->
             if (filename ==~ /.*\.out\.tab/) "STARcounts/$filename"
             else if (filename.indexOf(".bam") == -1) "STARlogs/$filename"
@@ -33,12 +32,11 @@ process 'star_2pass_basic' {
     params.run
     
   output:
-    set val(samplename), file ('*.bam'), file ('*.bai') //into star_aligned_with_bai
+    set val(samplename), file ("${samplename}.Aligned.toTranscriptome.out.bam") //into star_aligned_with_bai
     set val(samplename), file("*Log.final.out"), file ('*.bam') //into star_aligned
     // file "*.ReadsPerGene.out.tab" into ch_merge_starcounts
     set file("*.Log.final.out"), file("*.Log.out"), file("*.progress.out") //into ch_alignment_logs_star
     file "*.SJ.out.tab"
-    tuple val(samplename), file("${samplename}.ReadsPerGene.out.tab"), emit: samplename_readspergene_tab
 
   script:
 
@@ -54,12 +52,14 @@ process 'star_2pass_basic' {
         --outSAMtype BAM SortedByCoordinate \\
         --outSAMunmapped Within \\
         --runDirPerm All_RWX \\
-        --quantMode GeneCounts \\
+        --quantMode TranscriptomeSAM \\
         --outFileNamePrefix ${samplename}.
 
   # Index the BAM file
-  samtools index ${samplename}.Aligned.sortedByCoord.out.bam
+  rm ${samplename}.Aligned.sortedByCoord.out.bam
   rm -f Log.out 
   rm -f log.out 
   """
 }
+
+  // samtools index ${samplename}.Aligned.toTranscriptome.out.bam

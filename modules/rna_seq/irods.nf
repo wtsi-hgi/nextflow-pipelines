@@ -2,7 +2,7 @@ params.run = true
 params.dropqc = ""
 
 process iget_cram {
-    tag "iget cram ${samplename}"
+    tag "iget cram ${samplename} ${studyid}"
     memory = '10G'
     time '240m'
     cpus 1
@@ -16,8 +16,7 @@ process iget_cram {
     params.run
 
     input: 
-    val samplename //from sample_list_irods.flatMap{ it.readLines() }
-    val studyid //from sample_list_irods.flatMap{ it.readLines() }
+    tuple val(samplename), val(studyid)
 
     output: 
     set val(samplename), file('*.cram') optional true // into ch_cram_files
